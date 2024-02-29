@@ -1,14 +1,13 @@
 let fs = require('fs');
 
-class ProductManager{
+module.exports = class ProductManager{
     constructor(){
-        /*El path debera ser modificado segun donde se ejecute*/ 
-        this.path = "C:/Users/User/Desktop/Curso Backend/Segundo Desafio/products.txt"
+        this.path = `${__dirname}/productos.json` // Ruta del archivo de productos
     }
     
     async writeIntoFile(products){
         try{
-            await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
+            await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
         }catch(err){
             console.error('Error al escribir en el archivo')
         }
@@ -90,40 +89,85 @@ class ProductManager{
     }
 }
 
-/*Tests*/
 
-let pm = new ProductManager()
+// let pm = new ProductManager();
 
-let Product = {
-    title: 'producto prueba',
-    description: 'Este es un producto prueba',
-    price: 200,
-    thumbnail: 'Sin imagen',
-    code: 'abc123',
-    stock: 25
-}
 
-let Product2 = {
-    title: 'producto prueba 2',
-    description: 'Este es un producto prueba 2',
-    price: 300,
-    thumbnail: 'Sin imagen',
-    code: 'abc124',
-    stock: 25
-}
 
-//Los productos se agregan correctamente
+// let Product = {
+
+//     title: 'producto prueba',
+
+//     description: 'Este es un producto prueba',
+
+//     price: 200,
+
+//     thumbnail: 'Sin imagen',
+
+//     code: 'abc123',
+
+//     stock: 25
+
+// };
+
+
+
+// let Product2 = {
+
+//     title: 'producto prueba 2',
+
+//     description: 'Este es un producto prueba 2',
+
+//     price: 300,
+
+//     thumbnail: 'Sin imagen',
+
+//     code: 'abc124',
+
+//     stock: 25
+
+// };
+
+
+
+// // Primero, agregamos el primer producto
 
 // pm.addProduct(Product).then(() => {
+
+//     // Después de agregar el primer producto, agregamos el segundo
+
 //     pm.addProduct(Product2).then(() => {
+
+//         // Una vez ambos productos han sido agregados, obtenemos todos los productos
+
 //         pm.getProducts().then((products) => {
-//             console.log(products)
-//         })
-//     })
-// })
 
-// pm.getProductById(1).then((product) => {
-//     console.log(product)
-// })
+//             console.log('Todos los productos:', products);
 
-//pm.updateProduct(1,{title: 'asdfasdfasdvaerg27y27i',description: 'asdfasdfasdfaf',price: 242414,thumbnail: 'Otra imaasdfgenaaaaaaaaaaaaaaaa'})
+//             // Ahora intentamos obtener el producto por ID
+
+//             pm.getProductById(1).then((product) => {
+
+//                 console.log('Producto obtenido por ID:', product);
+
+//             }).catch((error) => {
+
+//                 // Manejo de errores si el producto no se encuentra
+
+//                 console.error(error);
+
+//             });
+
+//         });
+
+//     });
+
+// }).catch((error) => {
+
+//     // Manejo de errores para las operaciones de agregar productos
+
+//     console.error(error);
+
+// });
+
+
