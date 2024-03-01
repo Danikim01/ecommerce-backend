@@ -66,108 +66,28 @@ module.exports = class ProductManager{
         }
     }
 
-    updateProduct(id,fields){
-        this.getProducts().then((products) => {
-            this.getProductById(id).then((product) => {
-                let index = products.findIndex(p => p.id == id)
-                Object.assign(product,fields)
-                products[index] = product 
-                this.writeIntoFile(products)
-            })
-        }).catch((err) => {
+    async updateProduct(id,fields){
+        try{
+            let products = await this.getProducts()
+            let product = await this.getProductById(id)
+            let index = products.findIndex(p => p.id == id)
+            Object.assign(product,fields)
+            products[index] = product 
+            this.writeIntoFile(products)
+        }catch(err){
             console.error('Error al obtener los productos:', err);
-        })
+        }
     }
 
-    deleteProduct(id){
-        this.getProducts().then((products) => {
+    async deleteProduct(id){
+        try{
+            let products = await this.getProducts()
             let index = products.findIndex(p => p.id == id)
             if (index == -1) throw new Error('Producto no encontrado')
             products.splice(index,1)
-            this.writeIntoFile(products)   
-        })
+            this.writeIntoFile(products)
+        }catch(err){
+            console.error('Error al obtener los productos:', err);
+        }
     }
 }
-
-
-// let pm = new ProductManager();
-
-
-
-// let Product = {
-
-//     title: 'producto prueba',
-
-//     description: 'Este es un producto prueba',
-
-//     price: 200,
-
-//     thumbnail: 'Sin imagen',
-
-//     code: 'abc123',
-
-//     stock: 25
-
-// };
-
-
-
-// let Product2 = {
-
-//     title: 'producto prueba 2',
-
-//     description: 'Este es un producto prueba 2',
-
-//     price: 300,
-
-//     thumbnail: 'Sin imagen',
-
-//     code: 'abc124',
-
-//     stock: 25
-
-// };
-
-
-
-// // Primero, agregamos el primer producto
-
-// pm.addProduct(Product).then(() => {
-
-//     // Después de agregar el primer producto, agregamos el segundo
-
-//     pm.addProduct(Product2).then(() => {
-
-//         // Una vez ambos productos han sido agregados, obtenemos todos los productos
-
-//         pm.getProducts().then((products) => {
-
-//             console.log('Todos los productos:', products);
-
-//             // Ahora intentamos obtener el producto por ID
-
-//             pm.getProductById(1).then((product) => {
-
-//                 console.log('Producto obtenido por ID:', product);
-
-//             }).catch((error) => {
-
-//                 // Manejo de errores si el producto no se encuentra
-
-//                 console.error(error);
-
-//             });
-
-//         });
-
-//     });
-
-// }).catch((error) => {
-
-//     // Manejo de errores para las operaciones de agregar productos
-
-//     console.error(error);
-
-// });
-
-
