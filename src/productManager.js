@@ -1,15 +1,21 @@
-let fs = require('fs');
+import fs from 'fs';
 
-module.exports = class ProductManager{
-    constructor(){
-        this.path = `${__dirname}/productos.json` // Ruta del archivo de productos
+export default class ProductManager {
+    constructor() {
+        const url = new URL(import.meta.url);
+        let pathname = url.pathname;
+        if (pathname.startsWith('/')) {
+            pathname = pathname.slice(1);
+        }
+        this.path = pathname.trim().split('/').slice(0, -1).join('/').replace(/%20/g, ' ') + '/products.json';
+        console.log(this.path);
     }
-    
-    async writeIntoFile(products){
-        try{
+
+    async writeIntoFile(products) {
+        try {
             await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
-        }catch(err){
-            console.error('Error al escribir en el archivo')
+        } catch (err) {
+            console.error('Error al escribir en el archivo');
         }
     }
 
@@ -27,66 +33,66 @@ module.exports = class ProductManager{
         try {
             if (!fs.existsSync(this.path)) {
                 console.log('El archivo no existe');
-                return [] // Si el archivo no existe, devolver un array vacío
+                return []; // Si el archivo no existe, devolver un array vacío
             }
             let content = await this.readFromFile();
-            return content
+            return content;
         } catch (error) {
             console.error('Error al obtener los productos:', error);
             return []; // Devolver un array vacío si ocurre algún error
         }
     }
-    
-    static id = 0
-    async addProduct(product){
+
+    async addProduct(product,id) {
         try {
-            let id = ProductManager.id++
             let products = await this.getProducts(); // Leer productos existentes
             products.forEach(p => {
-                if (p.code == product.code) throw new Error('El producto ya existe')
+                if (p.code == product.code) throw new Error('El producto ya existe');
             });
-            products.push({id,...product}); // Agregar el nuevo producto
+            products.push({ id, ...product }); // Agregar el nuevo producto
             await this.writeIntoFile(products); // Escribir todos los productos de vuelta al archivo
         } catch (error) {
             console.error('Error al agregar producto:', error);
         }
     }
 
-    async getProductById(id){
-        try{
-            let products = await this.getProducts()
-            let p = products.find(p => p.id == id)
-            if (p){
-                return p
-            }else{
-                throw new Error('Producto no encontrado')
+    async getProductById(id) {
+        try {
+            let products = await this.getProducts();
+            let p = products.find(p => p.id == id);
+            if (p) {
+                return p;
+            } else {
+                throw new Error('Producto no encontrado');
             }
-        }catch(err){
-            console.error('Error al obtener el producto:', err)
+        } catch (err) {
+            console.error('Error al obtener el producto:', err);
         }
     }
 
-    async updateProduct(id,fields){
-        try{
-            let products = await this.getProducts()
-            let product = await this.getProductById(id)
-            let index = products.findIndex(p => p.id == id)
-            Object.assign(product,fields)
-            products[index] = product 
-            this.writeIntoFile(products)
-        }catch(err){
+    async updateProduct(id, fields) {
+        try {
+            let products = await this.getProducts();
+            let product = await this.getProductById(id);
+            let index = products.findIndex(p => p.id == id);
+            Object.assign(product, fields);
+            products[index] = product;
+            this.writeIntoFile(products);
+        } catch (err) {
             console.error('Error al obtener los productos:', err);
         }
     }
 
-    async deleteProduct(id){
-        try{
-            let products = await this.getProducts()
-            let index = products.findIndex(p => p.id == id)
-            if (index == -1) throw new Error('Producto no encontrado')
-            products.splice(index,1)
-            this.writeIntoFile(products)
-        }catch(err){
+    async deleteProduct(id) {
+        try {
+            let products = await this.getProducts();
+            let index = products.findIndex(p => p.id == id);
+            if (index == -1) {
+                throw new Error('Producto no encontrado');
+            };
+            products.splice(index, 1);
+            this.writeIntoFile(products);
+        } catch (err) {
             console.error('Error al obtener los productos:', err);
         }
     }

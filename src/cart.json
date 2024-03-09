@@ -1,0 +1,23 @@
+[
+	{
+		"cart_id": "EUAQU3GL",
+		"products": [
+			{
+				"id": "mB3WRrax",
+				"quantity": 25
+			},
+			{
+				"id": "ghxmxJDH",
+				"quantity": 11
+			},
+			{
+				"id": "A",
+				"quantity": 3
+			},
+			{
+				"id": "B",
+				"quantity": 2
+			}
+		]
+	}
+]
