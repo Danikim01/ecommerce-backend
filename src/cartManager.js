@@ -18,9 +18,10 @@ export default class CartManager {
             for (let i = 0; i < content.length; i++){
                 if(cart_id == content[i].cart_id) return content[i].products;
             }
-            throw new Error('El carrito con id ' + cart_id + ' no existe');
+            return new Error('El carrito con id ' + cart_id + ' no existe');
         } catch (err) {
             console.error('Error al leer el archivo:', err);
+            return err
         }
     }
 
@@ -28,7 +29,7 @@ export default class CartManager {
         try{
             if (!fs.existsSync(this.path)) {
                 console.log('El archivo no existe');
-                return []; // Si el archivo no existe, devolver un array vacío
+                return []; 
             }
             let content = await this.readFromFile(cart_id);
             return content;
@@ -41,7 +42,7 @@ export default class CartManager {
         try {
             await fs.promises.writeFile(this.path, JSON.stringify(carts, null, '\t'));
         } catch (err) {
-            console.error('Error al escribir en el archivo');
+            return console.error('Error al escribir en el archivo');
         }
     }
 
@@ -50,7 +51,7 @@ export default class CartManager {
             let carts = []
             !fs.existsSync(this.path) ? carts = [] : carts = JSON.parse(await fs.promises.readFile(this.path, "utf8"));
             carts.push({cart_id,...products});
-            await this.writeIntoFile(carts);
+            return await this.writeIntoFile(carts);
         }catch(err){
             console.error('Error al agregar carrito:', err);
         }
@@ -81,10 +82,10 @@ export default class CartManager {
                 carts[indexOfCart] = cart;
                 await this.writeIntoFile(carts);
             }else{
-                throw new Error('El carrito con id ' + cart_id + ' no existe');
+                return new Error('El carrito con id ' + cart_id + ' no existe');
             }
         }catch(err){
-            console.error('Error al agregar producto al carrito:', err);
+            return console.error('Error al agregar producto al carrito:', err);
         }
     }
     

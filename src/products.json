@@ -1,24 +1,25 @@
 [
 	{
-		"id": "mB3WRrax",
-		"title": "producto prueba 4",
-		"description": "Este es un producto prueba 4",
-		"price": 300,
-		"thumbnail": "Sin imagen",
-		"code": "abc400",
-		"category": "A",
-		"status": "true",
-		"stock": 30
-	},
-	{
 		"id": "ghxmxJDH",
 		"title": "producto prueba 5",
 		"description": "Este es un producto prueba 5",
-		"price": 300,
+		"price": 500,
 		"thumbnail": "Sin imagen",
 		"code": "abc500",
 		"category": "A",
 		"status": "true",
-		"stock": 30
+		"stock": 90,
+		"un_field_desconocido": "fafafa"
+	},
+	{
+		"id": "mB3WRrax",
+		"title": "producto prueba 4",
+		"description": "Este es un producto prueba 4",
+		"price": 100,
+		"thumbnail": "Sin imagen",
+		"code": "abc400",
+		"category": "A",
+		"status": "true",
+		"stock": 900
 	}
 ]

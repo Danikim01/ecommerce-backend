@@ -12,11 +12,15 @@
 			},
 			{
 				"id": "A",
-				"quantity": 3
+				"quantity": 4
 			},
 			{
 				"id": "B",
-				"quantity": 2
+				"quantity": 4
+			},
+			{
+				"id": "D",
+				"quantity": 1
 			}
 		]
 	}

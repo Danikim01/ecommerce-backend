@@ -1,3 +1,4 @@
+import { error } from 'console';
 import fs from 'fs';
 
 export default class ProductManager {
@@ -46,12 +47,13 @@ export default class ProductManager {
         try {
             let products = await this.getProducts(); // Leer productos existentes
             products.forEach(p => {
-                if (p.code == product.code) throw new Error('El producto ya existe');
+                if (p.code == product.code) return new Error('El producto ya existe');
             });
             products.push({ id, ...product }); // Agregar el nuevo producto
             await this.writeIntoFile(products); // Escribir todos los productos de vuelta al archivo
         } catch (error) {
             console.error('Error al agregar producto:', error);
+            return error
         }
     }
 
@@ -62,7 +64,7 @@ export default class ProductManager {
             if (p) {
                 return p;
             } else {
-                throw new Error('Producto no encontrado');
+                return new Error('Producto no encontrado');
             }
         } catch (err) {
             console.error('Error al obtener el producto:', err);
@@ -72,13 +74,17 @@ export default class ProductManager {
     async updateProduct(id, fields) {
         try {
             let products = await this.getProducts();
-            let product = await this.getProductById(id);
             let index = products.findIndex(p => p.id == id);
+            if (index == -1) {
+                return new Error('Producto no encontrado');
+            }
+            let product = await this.getProductById(id);
             Object.assign(product, fields);
             products[index] = product;
             this.writeIntoFile(products);
         } catch (err) {
             console.error('Error al obtener los productos:', err);
+            return error
         }
     }
 
@@ -87,12 +93,13 @@ export default class ProductManager {
             let products = await this.getProducts();
             let index = products.findIndex(p => p.id == id);
             if (index == -1) {
-                throw new Error('Producto no encontrado');
+                return new Error('Producto no encontrado');
             };
             products.splice(index, 1);
             this.writeIntoFile(products);
         } catch (err) {
             console.error('Error al obtener los productos:', err);
+            return error
         }
     }
 }
