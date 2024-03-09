@@ -8,7 +8,6 @@ export default class ProductManager {
             pathname = pathname.slice(1);
         }
         this.path = pathname.trim().split('/').slice(0, -1).join('/').replace(/%20/g, ' ') + '/products.json';
-        console.log(this.path);
     }
 
     async writeIntoFile(products) {

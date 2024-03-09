@@ -29,7 +29,7 @@ router.get("/:pid", async (req,res) => {
 router.post("/", async (req,res) => {
     try{
         let product = req.body
-        if (!product.title || !product.price || !product.thumbnail || !product.code || !product.stock || !product.description || !product.status || !product.category) res.status(400).send({error: "Campos de producto incompletos"})
+        if (!product.title || !product.price || !product.thumbnail || !product.code || !product.stock || !product.description || !product.status || !product.category) return res.status(400).send({error: "Campos de producto incompletos"})
         await pm.addProduct(product,generateUniqueString(8))
         res.status(200).send({message: "Producto agregado correctamente"})
     }catch(err){
