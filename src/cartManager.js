@@ -46,11 +46,11 @@ export default class CartManager {
         }
     }
 
-    async addCart(cart_id,products){
+    async addCart(cart_id){
         try{
             let carts = []
             !fs.existsSync(this.path) ? carts = [] : carts = JSON.parse(await fs.promises.readFile(this.path, "utf8"));
-            carts.push({cart_id,...products});
+            carts.push({cart_id,products:[]});
             return await this.writeIntoFile(carts);
         }catch(err){
             console.error('Error al agregar carrito:', err);

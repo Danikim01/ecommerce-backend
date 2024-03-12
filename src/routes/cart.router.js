@@ -19,8 +19,7 @@ router.get("/:cart_id", async (req,res) => {
 router.post("/",async (req,res) => {
     try{
         let cart_id = generateUniqueString(8)
-        let products = req.body
-        let result = await cm.addCart(cart_id,products)
+        let result = await cm.addCart(cart_id)
         if (result instanceof Error) return res.status(400).send({error: result.message})
         res.status(200).send({message: "Carrito agregado correctamente"})
     }catch(err){
