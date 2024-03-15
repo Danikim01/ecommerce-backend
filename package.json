@@ -5,13 +5,16 @@
   "description": "",
   "main": "primer_desafio.js",
   "scripts": {
-    "start":"nodemon src/app.js",
+    "start": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "handlebars": "^4.7.8",
+    "socket.io": "^4.7.5"
   }
 }

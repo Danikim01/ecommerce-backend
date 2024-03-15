@@ -49,7 +49,8 @@ export default class ProductManager {
             products.forEach(p => {
                 if (p.code == product.code) return new Error('El producto ya existe');
             });
-            products.push({ id, ...product }); // Agregar el nuevo producto
+            //status por defecto true
+            products.push({ id, ...product,status:true,thumbnail:"Sin Imagen"}); // Agregar el nuevo producto
             await this.writeIntoFile(products); // Escribir todos los productos de vuelta al archivo
         } catch (error) {
             console.error('Error al agregar producto:', error);

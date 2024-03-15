@@ -1,7 +1,6 @@
 import ProductManager from "../productManager.js";
 import { Router } from 'express';
 import { generateUniqueString } from "../utils/generateId.js";
-
 let pm = new ProductManager();
 
 let router = Router()
@@ -30,10 +29,10 @@ router.get("/:pid", async (req,res) => {
 router.post("/", async (req,res) => {
     try{
         let product = req.body
-        if (!product.title || !product.price || !product.thumbnail || !product.code || !product.stock || !product.description || !product.status || !product.category) return res.status(400).send({error: "Campos de producto incompletos"})
+        if (!product.title || !product.price || !product.code || !product.stock || !product.description || !product.category) return res.status(400).send({error: "Campos de producto incompletos"})
         let result = await pm.addProduct(product,generateUniqueString(8))
         if (result instanceof Error) return res.status(400).send({error: result.message})
-        res.status(200).send({message: "Producto agregado correctamente"})
+        res.redirect("http://localhost:8080/api/realtimeproducts")
     }catch(err){
         res.status(400).send({error: "Error al agregar el producto"})
     }
