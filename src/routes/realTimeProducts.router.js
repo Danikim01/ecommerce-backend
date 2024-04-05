@@ -1,5 +1,7 @@
 import { Router } from "express";
+import ProductManagerDB from "../dao/productManagerDB.js";
 const router = Router();
+const pm = new ProductManagerDB();
 
 router.get("/", async (req, res) => { 
     res.render(
@@ -7,6 +9,7 @@ router.get("/", async (req, res) => {
         {
             title: "Productos a tiempo real",
             style: "index.css",
+            products: await pm.getAllProducts()
         }
     )
 });

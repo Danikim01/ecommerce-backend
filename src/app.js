@@ -2,13 +2,13 @@ import express from "express";
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/cart.router.js"
 import realTimeProductsRouter from "./routes/realTimeProducts.router.js"
-import indexRouter from "./routes/index.router.js"
 import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import __dirname from "./path.js";
-import ProductManager from "./productManager.js";
-import { generateUniqueString } from "./utils/generateId.js";
-
+import ProductManager from "./dao/productManagerDB.js";
+import mongoose from "mongoose";
+import websocket from "./websocket.js";
+import viewsRouter from "./routes/viewsRouter.js";
 
 const app = express();
 let pm = new ProductManager();
@@ -28,8 +28,19 @@ app.use(express.urlencoded({extended: true}));
 app.use("/api/realtimeproducts",realTimeProductsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/", indexRouter);
+app.use("/", viewsRouter);
 
+
+const connection = async () => {
+    try{
+        await mongoose.connect("mongodb+srv://danikim:D46334737@cluster0.4erp6rc.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
+        console.log("Conexion exitosa a la base de datos")
+    }catch(error){
+        console.log("Error al conectar a la base de datos: ", error);
+    }
+}
+
+connection();
 
 const PORT = 8080;
 const httpServer = app.listen(PORT, () => {
@@ -38,24 +49,26 @@ const httpServer = app.listen(PORT, () => {
 
 const socketServer = new Server(httpServer);
 
-socketServer.on("connection", async socket => {
-    console.log("Nuevo cliente conectado -----> ", socket.id);
+websocket(socketServer);
 
-    socket.on("sendProduct", async product => {
-        console.log("Recibi el producto: ", product);
-        await pm.addProduct(product,generateUniqueString(8))
-    });
+// socketServer.on("connection", async socket => {
+//     console.log("Nuevo cliente conectado -----> ", socket.id);
 
-    let allProducts = await pm.getProducts();
-    if (allProducts.length !== 0){
-        console.log("Enviando todos los productos");
-        socket.emit("sendingAllProducts",allProducts);
-    }
+//     socket.on("sendProduct", async product => {
+//         console.log("Recibi el producto: ", product);
+//         await pm.createProduct(product)
+//     });
 
-    socket.on("deleteProduct",async id => {
-        await pm.deleteProduct(id)
-        let allProducts = await pm.getProducts();
-        console.log("Enviando todos los productos despues de eliminar");
-        socket.emit("sendingAllProducts",allProducts);
-    })
-});
+//     let allProducts = await pm.getAllProducts();
+//     if (allProducts.length !== 0){
+//         console.log("Enviando todos los productos");
+//         socket.emit("sendingAllProducts",allProducts);
+//     }
+
+//     socket.on("deleteProduct",async id => {
+//         await pm.deleteProduct(id)
+//         let allProducts = await pm.getAllProducts();
+//         console.log("Enviando todos los productos despues de eliminar");
+//         socket.emit("sendingAllProducts",allProducts);
+//     })
+// });

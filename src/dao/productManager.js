@@ -22,6 +22,8 @@ export default class ProductManager {
     async readFromFile() {
         try {
             let content = await fs.promises.readFile(this.path, "utf8");
+            //if empty file return empy array
+            if (content.length == 0) return [];
             return JSON.parse(content);
         } catch (err) {
             console.error('Error al leer el archivo:', err);
@@ -50,7 +52,7 @@ export default class ProductManager {
                 if (p.code == product.code) return new Error('El producto ya existe');
             });
             //status por defecto true
-            products.push({ id, ...product,status:true,thumbnail:"Sin Imagen"}); // Agregar el nuevo producto
+            products.push({ id, ...product,status:true}); // Agregar el nuevo producto
             await this.writeIntoFile(products); // Escribir todos los productos de vuelta al archivo
         } catch (error) {
             console.error('Error al agregar producto:', error);

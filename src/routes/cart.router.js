@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { generateUniqueString } from "../utils/generateId.js";
-import CartManager from '../cartManager.js';
+//import CartManager from '../cartManager.js';
+import CartManager from '../dao/cartManager.js';
 
 let cm = new CartManager();
 

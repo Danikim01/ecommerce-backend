@@ -30,43 +30,55 @@ function send(){
 
 const contenedorProductos = document.querySelector("#productos");
 
-function crearProducto(product){
-    const div = document.createElement("div");
-    div.classList.add("product-card");
-    div.innerHTML = `
-        <h3>${product.title}</h3>
-        <p>${product.description}</p>
-        <p>Precio: $${product.price}</p>
-        <p>Stock: ${product.stock}</p>
-    `;
-    return div;
-}
+// function crearProducto(product){
+//     const div = document.createElement("div");
+//     div.classList.add("product-card");
+//     div.innerHTML = `
+//         <h3>${product.title}</h3>
+//         <p>${product.description}</p>
+//         <p>Precio: $${product.price}</p>
+//         <p>Stock: ${product.stock}</p>
+//         <button class="delete-button" onclick="deleteProduct(${product.id})" data-product-id="${product.id}">Eliminar</button>
+//     `;
+//     return div;
+// }
 
 function crearProductos(productos){
     let html = "";
-    productos.forEach(p => {
-        html += `
-            <div class="product-card">
-                <h3>${p.title}</h3>
-                <p>${p.description}</p>
-                <p>Precio: $${p.price}</p>
-                <p>Stock: ${p.stock}</p>
-                <button class="delete-button" data-product-id="${p.id}">Eliminar</button>
-            </div>
-        `;
+    productos.forEach(product => {
+        html += 
+        `<div class="product-card">
+            <h3>${product.title}</h3>
+            <hr>
+            <p>Categoria: ${product.category}</p>
+            <p>Descripción: ${product.description}</p>
+            <p>Precio: $ ${product.price}</p>
+            <button id="button-delete" onclick="deleteProduct(${product.id})">Eliminar</button>
+        </div>`;
     });
     return html;
 }
 
 socket.on("sendingAllProducts", (products) => {
+    console.log("Recibiendo todos los productos: ", products);
     contenedorProductos.innerHTML = crearProductos(products);
 });
 
+socket.on("statusError", (error) => {
+    console.error(error);
+    alert(error)
+});
 
-contenedorProductos.addEventListener("click", (e) => {
-    if (e.target.classList.contains('delete-button')){
-        let id = e.target.getAttribute("data-product-id");
-        console.log("Eliminando producto con id: ", id);
-        socket.emit("deleteProduct", id);
-    }
-})
+
+function deleteProduct(pid) {
+    console.log("Eliminando producto con id: ", pid);
+    socket.emit('deleteProduct', { pid });
+}
+
+// contenedorProductos.addEventListener("click", (e) => {
+//     if (e.target.classList.contains('delete-button')){
+//         let id = e.target.getAttribute("data-product-id");
+//         console.log("Eliminando producto con id: ", id);
+//         socket.emit("deleteProduct", id);
+//     }
+// })
