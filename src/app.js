@@ -9,6 +9,7 @@ import ProductManager from "./dao/productManagerDB.js";
 import mongoose from "mongoose";
 import websocket from "./websocket.js";
 import viewsRouter from "./routes/viewsRouter.js";
+import chatRouter from "./routes/chat.router.js";
 
 const app = express();
 let pm = new ProductManager();
@@ -28,6 +29,7 @@ app.use(express.urlencoded({extended: true}));
 app.use("/api/realtimeproducts",realTimeProductsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/chat", chatRouter);
 app.use("/", viewsRouter);
 
 
@@ -50,25 +52,3 @@ const httpServer = app.listen(PORT, () => {
 const socketServer = new Server(httpServer);
 
 websocket(socketServer);
-
-// socketServer.on("connection", async socket => {
-//     console.log("Nuevo cliente conectado -----> ", socket.id);
-
-//     socket.on("sendProduct", async product => {
-//         console.log("Recibi el producto: ", product);
-//         await pm.createProduct(product)
-//     });
-
-//     let allProducts = await pm.getAllProducts();
-//     if (allProducts.length !== 0){
-//         console.log("Enviando todos los productos");
-//         socket.emit("sendingAllProducts",allProducts);
-//     }
-
-//     socket.on("deleteProduct",async id => {
-//         await pm.deleteProduct(id)
-//         let allProducts = await pm.getAllProducts();
-//         console.log("Enviando todos los productos despues de eliminar");
-//         socket.emit("sendingAllProducts",allProducts);
-//     })
-// });

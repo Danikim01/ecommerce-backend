@@ -1,5 +1,7 @@
 import productManagerDB from "./dao/productManagerDB.js";
+import messageManagerDB from "./dao/messageManagerDB.js";
 const ProductManagerDB = new productManagerDB();
+const MessageManagerDB = new messageManagerDB();
 
 export default io => {
     io.on("connection", async socket => {
@@ -26,6 +28,11 @@ export default io => {
             }
         });
 
+        socket.on("send_message",async message => {
+            console.log("Recibiendo mensaje: ", message);
+            await MessageManagerDB.createMessage(message);
+            
+        })
 
     });
 }

@@ -1,6 +1,4 @@
-import { ObjectId } from 'mongodb';
 import productModel from './models/productModel.js';
-import mongoose from 'mongoose';
 
 
 export default class productManagerDB {
@@ -50,7 +48,6 @@ export default class productManagerDB {
 
     async deleteProduct(pid) {
         try {
-            console.log("pid desde backend", pid);;
             const result = await productModel.deleteOne({_id: pid});
             if (result.deletedCount === 0) throw new Error(`El producto ${pid} no existe!`);
             return result;

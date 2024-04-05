@@ -76,3 +76,28 @@ input[type="text"], input[type="number"]{
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     width: 200px;
 }
+
+h1{
+    text-align: center;
+}
+
+.box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    gap: 20px;
+}
+
+
+#email,#chatBox{
+    width: 50%;
+    padding: 10px;
+    margin: 10px 0;
+    outline: none;
+    border:none;
+    font-size: 30px;
+    color: white;
+    border-bottom: 2px solid white;
+}
