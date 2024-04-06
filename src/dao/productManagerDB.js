@@ -31,7 +31,7 @@ export default class productManagerDB {
             return result;
         } catch (error) {
             console.error(error.message);
-            throw new Error('Error al crear el producto');
+            throw new Error('Error al crear el producto desde product manager');
         }
     }
 

@@ -1,4 +1,3 @@
-//import ProductManager from "../productManager.js";
 import ProductManagerDB from "../dao/productManagerDB.js";
 import { Router } from 'express';
 import { uploader } from "../utils.js";
@@ -29,14 +28,16 @@ router.get("/:pid", async (req,res) => {
 
 router.post("/", uploader.array("thumbnail"), async (req,res) => {
     try{
-        //if (req.files.length === 0) return res.status(400).send({error: "Imagen de producto requerida"})
         let product = req.body
-        console.log(req.files)
-        let paths_array = req.files.map(file => file.path)
-        product.thumbnail = paths_array
+        if (!req.files || req.files.length === 0){
+            product.thumbail = []
+        }else{
+            let paths_array = req.files.map(file => file.path)
+            product.thumbnail = paths_array
+        }
         if (!product.title || !product.price || !product.code || !product.stock || !product.description || !product.category) return res.status(400).send({error: "Campos de producto incompletos"})
-        let result = await pm.createProduct(product)
-        if (result instanceof Error) return res.status(400).send({error: result.message})
+        console.log(product)
+        await pm.createProduct(product)
         return res.status(200).send({message: "Producto agregado correctamente"})
     }catch(err){
         res.status(400).send({error: "Error al agregar el producto"})
