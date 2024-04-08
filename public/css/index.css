@@ -86,18 +86,30 @@ h1{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 100vh;
     gap: 20px;
 }
 
 
 #email,#chatBox{
-    width: 50%;
-    padding: 10px;
-    margin: 10px 0;
+    width: 50%;;
     outline: none;
     border:none;
-    font-size: 30px;
+    font-size: 20px;
     color: white;
     border-bottom: 2px solid white;
+}
+
+#messageLogs{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 60%;
+    height: 70%;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: #7469B6;
+    color: white;
 }

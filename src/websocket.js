@@ -28,11 +28,19 @@ export default io => {
             }
         });
 
-        socket.on("send_message",async message => {
+        
+        let messages = await MessageManagerDB.getAllMessages();
+        if(messages.length > 0){
+            io.emit("sendingAllMessages", messages);
+        }
+
+        socket.on("send_message", async message => {
             console.log("Recibiendo mensaje: ", message);
             await MessageManagerDB.createMessage(message);
-            
-        })
+            const messages = await MessageManagerDB.getAllMessages(); // Actualiza la lista de mensajes
+            io.emit("sendingAllMessages", messages);
+        });
+        
 
     });
 }

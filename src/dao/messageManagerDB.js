@@ -9,4 +9,13 @@ export default class messageModelDB {
             throw new Error("Error al crear el mensaje");
         }
     }
+
+    async getAllMessages(){
+        try{
+            return await messageModel.find().lean();
+        }catch(err){
+            console.error(err.message);
+            throw new Error("Error al buscar los mensajes");
+        }
+    }
 }

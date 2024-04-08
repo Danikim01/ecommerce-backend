@@ -13,3 +13,16 @@ function send_message(){
     user_email.value = "";
     socket.emit("send_message", message);
 }
+
+
+const messages_container = document.querySelector("#messageLogs");
+
+socket.on("sendingAllMessages", (data) => {
+    let messages = "";
+
+    data.forEach(chat => {
+        messages += `<p>${chat.user}: ${chat.message}</p>`;
+    });
+
+    messages_container.innerHTML = messages;
+})
