@@ -20,5 +20,10 @@ const cartSchema = new mongoose.Schema({
     }
 });
 
+//Midleware para poblar los productos
+cartSchema.pre("findOne", function() {
+    this.populate("products.product");
+});
+
 const cartModel = mongoose.model(cartCollection, cartSchema);
 export default cartModel;
