@@ -1,0 +1,18 @@
+<div class="box">
+    <h1 style="text-align: center;margin-top: 50px;">Carrito: </h1>
+    {{#if isValid}}
+        {{#each payload}}
+            <div class="cart-product-card">
+                <div class="product-info">
+                    <h2>{{this.title}}</h2>
+                    <p>Price: ${{this.price}}</p>
+                </div>
+                <div class="quantity">
+                    <span>Cantidad: {{this.quantity}}</span>
+                </div>
+            </div>
+        {{/each}}
+    {{else}}
+       <h2>Carrito Vacio</h2>
+    {{/if}}
+</div>

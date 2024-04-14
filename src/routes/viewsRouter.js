@@ -34,21 +34,36 @@ router.get("/api/realtimeproducts", async (req, res) => {
 
 })
 
-router.get("/carts/:cid",async (req,res) => {
-    try{
+router.get("/carts/:cid", async (req, res) => {
+    try {
         let products = await cm.getProductsFromCart(req.params.cid);
-        res.render(
-            "cart",
-            {
-                title: "Carrito",
-                style: "index.css",
-                products: products
-            }
-        )
-    }catch(err){
-        res.status(400).send({error: "Error al obtener el carrito"})
+        let isValid = products.length > 0;
+        let transformedProducts = products.map(item => {
+            return {
+                _id: item.product._id,
+                title: item.product.title,
+                description: item.product.description,
+                code: item.product.code,
+                price: item.product.price,
+                status: item.product.status,
+                stock: item.product.stock,
+                category: item.product.category,
+                thumbnails: item.product.thumbnails,
+                quantity: item.quantity 
+            };
+        });
+
+        console.log(transformedProducts);
+        res.render("cart", {
+            title: "Carrito",
+            style: "index.css",
+            isValid: isValid,
+            payload: transformedProducts 
+        });
+    } catch (err) {
+        res.status(400).send({ error: "Error al obtener el carrito" });
     }
-})
+});
 
 
 export default router;

@@ -5,10 +5,10 @@ import mongoose from 'mongoose';
 
 let router = Router()
 
-router.get("/:cart_id", async (req,res) => {
+router.get("/:cid", async (req,res) => {
     try{
-        const c_id = new mongoose.Types.ObjectId(req.params.cart_id);
-        let cart = await cm.getProductsFromCart(c_id)
+        let cid = req.params.cid
+        let cart = await cm.getProductsFromCart(cid)
         if (cart instanceof Error) return res.status(400).send({error: cart.message})
         res.status(200).send({products: cart})
     }catch(err){
