@@ -99,15 +99,20 @@ router.get("/", async (req, res) => {
             prevLink: prevLink,
             nextLink: nextLink,
             isValid: isValid,
-            style:"index.css"
         };
 
-        // res.render(
-        //     "index",
-        //     response
-        // )
+        res.render(
+            "index",
+            {
+                ...response,
+                style: "index.css"
+            }
+        )
         
-        return res.status(200).send(response);
+        // return res.status(200).send({
+        //     ...response,
+        //     style: "index.css"
+        // });
     } catch (err) {
         return res.status(400).send({ error: "Error al obtener los productos" });
     }

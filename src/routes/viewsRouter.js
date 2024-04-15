@@ -1,6 +1,7 @@
 import ProductManagerDB from "../dao/productManagerDB.js";
 import CartManagerDB from "../dao/cartManagerDB.js";
 import productModel from "../dao/models/productModel.js";
+import axios from "axios";
 import { Router } from 'express';
 
 let pm = new ProductManagerDB();
@@ -52,8 +53,6 @@ router.get("/carts/:cid", async (req, res) => {
                 quantity: item.quantity 
             };
         });
-
-        console.log(transformedProducts);
         res.render("cart", {
             title: "Carrito",
             style: "index.css",
@@ -66,4 +65,18 @@ router.get("/carts/:cid", async (req, res) => {
 });
 
 
+router.get("/api/views/products/:cid",async (req,res) => {
+    try{
+        let productDetails = await pm.getProductByID(req.params.cid)
+        if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})
+        console.log(productDetails)
+        productDetails.style = "index.css"
+        res.render(
+            "product",
+            productDetails
+        )
+    }catch(err){
+        res.status(400).send({error: "Error al obtener el carrito"})
+    }
+})
 export default router;

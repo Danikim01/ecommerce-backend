@@ -1,29 +1,36 @@
+<h1 style="text-align: center;margin-top: 50px;">Productos: </h1>
 <div class="box">
-    <h1 style="text-align: center;margin-top: 50px;">Productos: </h1>
     {{#if isValid}}
-        {{#each payload}}
-            <div class="product-card">
-                <div class="product-card">
+        <div id="productos">
+            {{#each payload}}
+                <div class="product-card" onclick="viewDetails('{{this._id}}')" style="cursor: pointer;">
                     <h2>{{this.title}}</h2>
                     <p>{{this.description}}</p>
-                    <p>Price: ${{this.price}}</p>
-                    <p>Category: {{this.category}}</p>
-                    <p>Code: {{this.code}}</p>
-                    <p>Stock: {{this.stock}}</p>
+                    <p>Precio: ${{this.price}}</p>
                 </div>
-            </div>
-        {{/each}}
-        <div>
-            {{#if hasPrevPage}}
-                <a href="{{this.prevLink}}"><< Anterior</a>
-            {{/if}}
+            {{/each}}
         </div>
-        <div>
-            {{#if hasNextPage}}
-                <a href="{{this.nextLink}}">Siguiente >></a>
-            {{/if}}
+        <div class="paginacion">
+            <div>
+                {{#if hasPrevPage}}
+                    <a href="{{this.prevLink}}"><< Anterior</a>
+                {{/if}}
+            </div>
+            <div>
+                {{#if hasNextPage}}
+                    <a href="{{this.nextLink}}">Siguiente >></a>
+                {{/if}}
+            </div>
         </div>
     {{else}}
        <h2>No hay productos para mostrar</h2>
     {{/if}}
 </div>
+
+<script>
+    function viewDetails(id){
+        const url = `http://localhost:8080/api/views/products/${id}`;
+        window.open(url, '_blank');
+    }
+</script>
+

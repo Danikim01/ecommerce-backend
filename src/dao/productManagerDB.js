@@ -14,9 +14,7 @@ export default class productManagerDB {
 
     async getProductByID(pid) {
         const product = await productModel.findOne({_id: pid});
-
         if (!product) throw new Error(`El producto ${pid} no existe!`);
-
         return product;
     }
 
