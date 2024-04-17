@@ -19,7 +19,7 @@ router.get("/chat", (req, res) => {
     )
 })
 
-router.get("/api/realtimeproducts", async (req, res) => { 
+router.get("/realtimeproducts", async (req, res) => { 
     try{
         res.render(
             "realTimeProducts",
@@ -65,7 +65,47 @@ router.get("/carts/:cid", async (req, res) => {
 });
 
 
-router.get("/api/views/products/:cid",async (req,res) => {
+router.get("/views/products", async (req, res) => {
+    try{
+        let limit = parseInt(req.query.limit) || 10;
+        let page = parseInt(req.query.page) || 1;
+        let query = req.query.query;
+        let sort = req.query.sort === "asc" ? 1 : req.query.sort === "desc" ? -1 : undefined;
+        let filter = {};
+
+        let products_per_page = 3;
+        if (query) {
+            if (!isNaN(query)) {
+                filter.$or = [{ price: parseInt(query) }, { stock: parseInt(query) }];
+            } else {
+                filter.$or = [{ title: query }, { code: query }, { category: query }];
+            }
+        }
+
+        let options = { page, limit:products_per_page, lean: true };
+
+        if (sort !== undefined) {
+            options.sort = { price: sort };
+        }
+
+        let paginateResult = await productModel.paginate(filter, options);
+
+        let baseURL = "http://localhost:8080/views/products";
+        paginateResult.prevLink = paginateResult.hasPrevPage ? `${baseURL}?page=${paginateResult.prevPage}` : null;
+        paginateResult.nextLink = paginateResult.hasNextPage ? `${baseURL}?page=${paginateResult.nextPage}` : null;
+        paginateResult.isValid = !(page <= 0 || page > paginateResult.totalPages);
+        paginateResult.style = "index.css"
+
+        res.render(
+            "index",
+            paginateResult
+        )
+    }catch(err){
+        res.status(400).send({error: "Error al obtener los productos"})
+    }
+})
+
+router.get("/views/products/:cid",async (req,res) => {
     try{
         let productDetails = await pm.getProductByID(req.params.cid)
         if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})

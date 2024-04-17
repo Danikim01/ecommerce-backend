@@ -19,100 +19,36 @@ let router = Router()
 
 router.get("/", async (req, res) => {
     try {
-        let limit = req.query.limit ? parseInt(req.query.limit) : 10;
-        let page = req.query.page ? parseInt(req.query.page) : 1;
+        let limit = parseInt(req.query.limit) || 10;
+        let page = parseInt(req.query.page) || 1;
         let query = req.query.query;
-        let sort = req.query.sort;
-        if (sort){
-            sort = sort === "asc" ? 1 : -1;
-        }
+        let sort = req.query.sort === "asc" ? 1 : req.query.sort === "desc" ? -1 : undefined;
+        let filter = {};
 
-        let result = await pm.getAllProducts();
-
-        result = result.slice(0,limit);
-
-        // Aplicar filtro
+        let products_per_page = 3;
         if (query) {
-            result = result.filter(product => {
-                for (let field in product) {
-                    if (product[field] == query) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-        }
-
-        // Aplicar ordenamiento
-        if (sort !== undefined) {
-            result = result.sort((a, b) => {
-                if (a.price > b.price) return sort;
-                if (a.price < b.price) return -sort;
-                return 0;
-            });
-        }
-
-
-        let products_per_page = 3
-
-        // Calcular el número total de páginas
-        let totalPages = Math.ceil(result.length / products_per_page);
-
-        // Obtener los productos para la página actual
-        let startIndex = (page - 1) * products_per_page;
-        let endIndex = startIndex + products_per_page;
-        let pageItems = result.slice(startIndex, endIndex);
-
-        // Determinar si hay una página previa y siguiente
-        let hasPrevPage = page > 1;
-        let hasNextPage = page < totalPages;
-
-        //la base URL tiene que tambien contener los parametros que fueron ingresados
-        
-        let baseURL = "http://localhost:8080/api/products";
-        let prevLink = hasPrevPage ? `${baseURL}?page=${page - 1}&limit=${limit}` : null;
-        if (query) {
-            prevLink += `&query=${query}`;
-        }
-        if (sort) {
-            prevLink += `&sort=${sort}`;
-        }
-
-        let nextLink = hasNextPage ? `${baseURL}?page=${page + 1}&limit=${limit}` : null;
-        if (query) {
-            nextLink += `&query=${query}`;
-        }
-        if (sort) {
-            nextLink += `&sort=${sort}`;
-        }
-        let isValid = !(page <= 0 || page > result.totalPages);
-        
-        let response = {
-            status: "success",
-            payload: pageItems,
-            totalPages: totalPages,
-            prevPage: hasPrevPage ? page - 1 : null,
-            nextPage: hasNextPage ? page + 1 : null,
-            page: page,
-            hasPrevPage: hasPrevPage,
-            hasNextPage: hasNextPage,
-            prevLink: prevLink,
-            nextLink: nextLink,
-            isValid: isValid,
-        };
-
-        res.render(
-            "index",
-            {
-                ...response,
-                style: "index.css"
+            if (!isNaN(query)) {
+                filter.$or = [{ price: parseInt(query) }, { stock: parseInt(query) }];
+            } else {
+                filter.$or = [{ title: query }, { code: query }, { category: query }];
             }
-        )
-        
-        // return res.status(200).send({
-        //     ...response,
-        //     style: "index.css"
-        // });
+        }
+
+        let options = { page, limit:products_per_page, lean: true };
+
+        if (sort !== undefined) {
+            options.sort = { price: sort };
+        }
+
+        let paginateResult = await productModel.paginate(filter, options);
+
+        let baseURL = "http://localhost:8080/api/products";
+        paginateResult.prevLink = paginateResult.hasPrevPage ? `${baseURL}?page=${paginateResult.prevPage}` : null;
+        paginateResult.nextLink = paginateResult.hasNextPage ? `${baseURL}?page=${paginateResult.nextPage}` : null;
+        paginateResult.isValid = !(page <= 0 || page > paginateResult.totalPages);
+
+        return res.status(200).send(paginateResult);
+      
     } catch (err) {
         return res.status(400).send({ error: "Error al obtener los productos" });
     }

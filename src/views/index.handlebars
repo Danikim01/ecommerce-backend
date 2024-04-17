@@ -2,7 +2,7 @@
 <div class="box">
     {{#if isValid}}
         <div id="productos">
-            {{#each payload}}
+            {{#each docs}}
                 <div class="product-card" onclick="viewDetails('{{this._id}}')" style="cursor: pointer;">
                     <h2>{{this.title}}</h2>
                     <p>{{this.description}}</p>
@@ -29,7 +29,7 @@
 
 <script>
     function viewDetails(id){
-        const url = `http://localhost:8080/api/views/products/${id}`;
+        const url = `http://localhost:8080/views/products/${id}`;
         window.open(url, '_blank');
     }
 </script>
