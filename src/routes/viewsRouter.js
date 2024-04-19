@@ -3,11 +3,23 @@ import CartManagerDB from "../dao/cartManagerDB.js";
 import productModel from "../dao/models/productModel.js";
 import axios from "axios";
 import { Router } from 'express';
-
+import {auth} from "../middlewares/auth.js";
 let pm = new ProductManagerDB();
 let cm = new CartManagerDB();
 
 let router = Router()
+
+router.get("/home", auth,(req, res) => {
+    res.render(
+        'home',
+        {
+            title: 'Home',
+            style: 'index.css',
+            user: req.session.user,
+            isAdmin: req.session.admin
+        }
+    )
+})
 
 router.get("/chat", (req, res) => {
     res.render(
@@ -65,7 +77,7 @@ router.get("/carts/:cid", async (req, res) => {
 });
 
 
-router.get("/views/products", async (req, res) => {
+router.get("/views/products", auth, async (req, res) => {
     try{
         let limit = parseInt(req.query.limit) || 10;
         let page = parseInt(req.query.page) || 1;
@@ -91,6 +103,7 @@ router.get("/views/products", async (req, res) => {
         let paginateResult = await productModel.paginate(filter, options);
 
         let baseURL = "http://localhost:8080/views/products";
+
         paginateResult.prevLink = paginateResult.hasPrevPage ? `${baseURL}?page=${paginateResult.prevPage}` : null;
         paginateResult.nextLink = paginateResult.hasNextPage ? `${baseURL}?page=${paginateResult.nextPage}` : null;
         paginateResult.isValid = !(page <= 0 || page > paginateResult.totalPages);
@@ -119,4 +132,41 @@ router.get("/views/products/:cid",async (req,res) => {
         res.status(400).send({error: "Error al obtener el carrito"})
     }
 })
+
+
+router.get("/login", (req, res) => {
+    res.render(
+        'login',
+        {
+            title: 'Login',
+            style: 'index.css',
+            failLogin: req.session.failLogin ?? false
+        }
+    )
+});
+
+router.get("/register", (req, res) => {
+    res.render(
+        'register',
+        {
+            title: 'Register',
+            style: 'index.css',
+            failRegister: req.session.failRegister ?? false
+        }
+    )
+});
+
+router.get("/logout", (req, res) => {
+    req.session.destroy(error => {
+        if (error) {
+            return res.send({
+                status: "Logout ERROR",
+                body: error
+            });
+        }else{
+            return res.redirect("/login");
+        }
+    })
+})
+
 export default router;
