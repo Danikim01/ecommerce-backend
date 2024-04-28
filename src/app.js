@@ -10,6 +10,8 @@ import viewsRouter from "./routes/viewsRouter.js";
 import session from "express-session";
 import mongoStore from "connect-mongo";
 import usersRouter from "./routes/users.router.js";
+import passport from "passport";
+import initializatePassport from './config/passportConfig.js';
 
 const app = express();
 
@@ -50,6 +52,10 @@ app.use(session(
         saveUninitialized: true
     }
 ))
+
+initializatePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/sessions', usersRouter);
 app.use("/api/products", productsRouter);

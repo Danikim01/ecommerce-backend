@@ -156,6 +156,17 @@ router.get("/register", (req, res) => {
     )
 });
 
+router.get("/restore",(req,res)=> {
+    res.render(
+        'restore',
+        {
+            title: 'Restore',
+            style: 'index.css',
+            failRestore: req.session.failRestore ?? false
+        }
+    )
+})
+
 router.get("/logout", (req, res) => {
     req.session.destroy(error => {
         if (error) {

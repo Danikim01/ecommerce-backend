@@ -10,3 +10,5 @@ const storage = multer.diskStorage({
 })
 
 export const uploader = multer({storage})
+//export all functions and also the multer uploader
+//export {generateToken, authToken, uploader}
