@@ -5,24 +5,35 @@ import passport from 'passport';
 
 const router = Router();
 
-router.post("/restore",async (req, res) => {
-    try{
-        req.session.failRestore = false;
-        const user = await userModel.findOne({email: req.body.email});
-        if (!user) {
-            req.session.failRestore = true;
-            return res.redirect("/restore");
-        }
-        const newPassword = createHash(req.body.password);
-        user.password = newPassword;
-        await user.save();
-        res.redirect("/login");
-    }catch(e){
-        console.log(e.message);
-        req.session.failRestore = true;
-        res.redirect("/restore");
-    }
+// router.post("/restore",async (req, res) => {
+//     try{
+//         req.session.failRestore = false;
+//         const user = await userModel.findOne({email: req.body.email});
+//         if (!user) {
+//             req.session.failRestore = true;
+//             return res.redirect("/restore");
+//         }
+//         const newPassword = createHash(req.body.password);
+//         user.password = newPassword;
+//         await user.save();
+//         res.redirect("/login");
+//     }catch(e){
+//         console.log(e.message);
+//         req.session.failRestore = true;
+//         res.redirect("/restore");
+//     }
+// })
+
+router.post("/restore", passport.authenticate("restore", {failureRedirect: "/api/sessions/failRestore"}), (req, res) => {
+    req.session.failRestore = false;
+    res.redirect("/login");
 })
+
+router.get("/failRestore", (req, res) => {
+    req.session.failRestore = true;
+    res.redirect("/restore");
+})
+
 
 // router.post("/register",async (req, res) => {
 //     try {

@@ -37,7 +37,7 @@ const initializatePassport = () => {
                 done(null, user);
             }
         } catch(error) {
-            return done(error);
+            return done(null,false);
         }
     }));
 
@@ -62,7 +62,7 @@ const initializatePassport = () => {
 
                 return done(null, result);
             } catch (error) {
-                return done(error.message);
+                return done(null,false);
             }
         }
     ))
@@ -86,10 +86,33 @@ const initializatePassport = () => {
                 return done(null, user);
             } catch(error) {
                 console.log(error.message);
-                return done(error.message);
+                return done(null,false);
             }
         }
     ));
+
+    passport.use('restore', new localStratergy(
+        {
+            usernameField: 'email'
+        },
+        async (username, password, done) => {
+            try {
+                const user = await userModel.findOne({ email: username });
+                if (!user) {
+                    console.log("User not found!");
+                    return done(null, false);
+                }
+                const newPassword = createHash(password);
+                user.password = newPassword;
+                await userModel.updateOne({email: username}, user);
+                return done(null, user);
+            } catch(error) {
+                console.log(error.message);
+                return done(null,false);
+            }
+        }
+    ));
+
 
     passport.serializeUser((user, done) => done(null, user._id));
 

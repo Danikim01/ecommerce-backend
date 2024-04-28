@@ -1,12 +1,39 @@
 <div class="user-box">
     <h1>Restore</h1>
-    <form class="user-form" method="post" action="/api/sessions/restore">
+    <form class="user-form" method="post" action="/api/sessions/restore" id="restore-form">
         <label for="email">Email</label>
         <input class="input-text" type="email" name="email" >
 
         <label for="password">New Password</label>
-        <input class="input-text" type="password" name="password">
+        <input class="input-text" type="password" name="password" required="true" id="new-password">
+
+        <label for="confirm-password">Confirm New Password</label>
+        <input class="input-text" type="password" name="confirm-password" required="true" id="confirm-new-password">
 
         <button type="submit" class="button-home">Submit</button>
     </form>
 </div>
+
+
+<script>
+    document.getElementById("restore-form").addEventListener("submit", function(event) {
+        // Validar las contraseñas aquí
+        const newPassword = document.getElementById("new-password").value;
+        const confirmNewPassword = document.getElementById("confirm-new-password").value;
+
+        if (newPassword !== confirmNewPassword) {
+            alert("Passwords do not match!");
+            event.preventDefault(); // Prevenir la acción predeterminada de enviar el formulario
+            return false; // No enviar el formulario si las contraseñas no coinciden
+        }
+
+        return true
+    });
+</script>
+
+
+{{#if failRestore}}
+    <script type="text/javascript">
+        alert('Restore Failed!');
+    </script>
+{{/if}}
