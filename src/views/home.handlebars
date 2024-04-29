@@ -4,10 +4,18 @@
 <div class="box" style="margin-top: 20px;">
     <h1>Bienvenido!</h1>
     <div class="box">
-        <p><b>Nombre:</b> {{user.first_name}}</p>
-        <p><b>Apellido:</b> {{user.last_name}}</p>
-        <p><b>Email:</b> {{user.email}}</p>
-        <p><b>Age:</b> {{user.age}}</p>
+        {{#if user.first_name}}
+            <p><b>Nombre:</b> {{user.first_name}}</p>
+        {{/if}}
+        {{#if user.last_name}}
+            <p><b>Apellido:</b> {{user.last_name}}</p>
+        {{/if}}        
+        {{#if user.email}}
+            <p><b>Email:</b> {{user.email}}</p>
+        {{/if}}
+        {{#if user.age}}
+            <p><b>Edad:</b> {{user.age}}</p>
+        {{/if}}
         {{#if isAdmin}}
             <p><b>Rol:</b> Admin</p>
         {{else}}
