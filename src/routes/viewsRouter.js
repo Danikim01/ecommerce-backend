@@ -1,7 +1,6 @@
 import ProductManagerDB from "../dao/productManagerDB.js";
 import CartManagerDB from "../dao/cartManagerDB.js";
 import productModel from "../dao/models/productModel.js";
-import axios from "axios";
 import { Router } from 'express';
 import {auth} from "../middlewares/auth.js";
 let pm = new ProductManagerDB();
@@ -140,7 +139,6 @@ router.get("/login", (req, res) => {
         {
             title: 'Login',
             style: 'index.css',
-            failLogin: req.session.failLogin ?? false
         }
     )
 });
@@ -151,7 +149,6 @@ router.get("/register", (req, res) => {
         {
             title: 'Register',
             style: 'index.css',
-            failRegister: req.session.failRegister ?? false
         }
     )
 });
@@ -162,7 +159,6 @@ router.get("/restore",(req,res)=> {
         {
             title: 'Restore',
             style: 'index.css',
-            failRestore: req.session.failRestore ?? false
         }
     )
 })

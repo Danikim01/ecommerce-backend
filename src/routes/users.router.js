@@ -2,8 +2,10 @@ import {Router} from 'express';
 import userModel from '../dao/models/userModel.js';
 import {createHash, isValidPassword} from '../utils/functionsUtil.js';
 import passport from 'passport';
+import { userManagerDB } from '../dao/userManagerDb.js';
 
 const router = Router();
+const sessionService = new userManagerDB();
 
 // router.post("/restore",async (req, res) => {
 //     try{
@@ -89,13 +91,21 @@ router.get("/githubcallback", passport.authenticate('github', {failureRedirect: 
 });
 
 
-router.post("/register", passport.authenticate("register", { failureRedirect: "/api/sessions/failRegister" }), (req, res) => {
-    req.session.failRegister = false;
-    res.redirect("/login");
+// router.post("/register", passport.authenticate("register", { failureRedirect: "/api/sessions/failRegister" }), (req, res) => {
+//     req.session.failRegister = false;
+//     res.redirect("/login");
+// })
+
+router.post("/register", async (req, res) => {
+    try{
+        await sessionService.register(req.body);
+        res.redirect("/login");
+    }catch(error){
+        res.redirect("/register");
+    }
 })
 
 router.get("/failRegister", (req, res) => {
-    req.session.failRegister = true;
     res.redirect("/register");
 })
 
@@ -155,24 +165,53 @@ router.get("/failRegister", (req, res) => {
 //     }
 // });
 
-router.post("/login",passport.authenticate("login", {failureRedirect: "/api/sessions/failLogin"}), (req, res) => {
-    req.session.failLogin = false;
-    if (!req.user){
+// router.post("/login",passport.authenticate("login", {failureRedirect: "/api/sessions/failLogin"}), (req, res) => {
+//     req.session.failLogin = false;
+//     if (!req.user){
+//         req.session.failLogin = true;
+//         return res.redirect("/login");
+//     }
+//     req.session.user = {
+//         first_name: req.user.first_name,
+//         last_name: req.user.last_name,
+//         email: req.user.email,
+//         age: req.user.age
+//     }
+//     return res.redirect("/home");
+// })
+
+router.get("/login",async (req, res) => {
+    try{
+        const user = await sessionService.login(req.body.email, req.body.password);
+        req.session.user = user;
+        res.redirect("/home");
+    }catch(error){
         req.session.failLogin = true;
-        return res.redirect("/login");
+        res.redirect("/login");
     }
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age
-    }
-    return res.redirect("/home");
 })
 
 router.get("/failLogin", (req, res) => {
-    req.session.failLogin = true;
     res.redirect("/login");
+})
+
+router.get("/:uid",async (req, res) => {
+    try{
+        const user = await sessionService.getUser(req.params.uid);
+        res.send(
+            {
+                status: "success",
+                payload: user
+            }
+        )
+    }catch(error){
+        res.status(400).send(
+            {
+                status: "error",
+                message: error.message
+            }
+        )
+    }
 })
 
 export default router;
