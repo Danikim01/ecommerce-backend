@@ -48,7 +48,8 @@ router.post("/login",passport.authenticate("login", {failureRedirect: "/api/sess
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         email: req.user.email,
-        age: req.user.age
+        age: req.user.age,
+        role: req.user.role
     }
     return res.redirect("/home");
 })
@@ -60,8 +61,8 @@ router.get("/failLogin", (req, res) => {
 
 
 
-router.get("/current",(req,res) => {
-    req.session.user ? res.status(200).send(req.session.user) : res.status(401).send({error: "No user logged in"});
-})
+// router.get("/current",(req,res) => {
+//     req.session.user ? res.status(200).send(req.session.user) : res.status(401).send({error: "No user logged in"});
+// })
 
 export default router;

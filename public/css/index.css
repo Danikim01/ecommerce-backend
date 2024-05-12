@@ -213,3 +213,20 @@ h1{
     border-bottom: 2px solid white;
 }
 
+.current-user-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.current-user-info{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    width: 30%;
+}

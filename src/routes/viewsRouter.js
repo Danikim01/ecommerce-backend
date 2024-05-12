@@ -167,6 +167,17 @@ router.get("/restore",(req,res)=> {
     )
 })
 
+router.get("/api/sessions/current",(req,res) => {
+    res.render(
+        "current",
+        {
+            title: "Current",
+            style: "index.css",
+            curr_user: req.session.user
+        }
+    )
+})
+
 router.get("/logout", (req, res) => {
     req.session.destroy(error => {
         if (error) {
