@@ -10,7 +10,7 @@ let cm = new CartManagerDB();
 
 let router = Router()
 
-router.get("/home", passport.authenticate("jwt",{session:false}),(req, res) => {
+router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
     res.render(
         'home',
         {

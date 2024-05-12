@@ -59,7 +59,7 @@ router.get("/failLogin", (req, res) => {
     res.redirect("/login");
 })
 
-router.get("/current", passport.authenticate("jwt",{session:false}),(req, res) => {
+router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
     res.send(
         {
             payload: req.user
