@@ -47,8 +47,12 @@ const initializatePassport = () => {
             usernameField: 'email'
         },
         async (req, username, password, done) => {
+            console.log("Registering user...");
             const { first_name, last_name, email, age} = req.body;
 
+            if (!first_name || !last_name || !email || !age ){
+                throw new Error("Campo incompleto, por favor complete todos los campos");
+            }
             try {
                 let user = await userModel.findOne({ email: username});
                 if (user) {
@@ -58,7 +62,6 @@ const initializatePassport = () => {
 
                 const newUser = { first_name, last_name, email, age, password: createHash(password)}
                 const result = await userModel.create(newUser);
-
                 return done(null, result);
             } catch (error) {
                 return done(null,false);
