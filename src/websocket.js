@@ -1,5 +1,5 @@
-import productManagerDB from "./dao/productManagerDB.js";
-import messageManagerDB from "./dao/messageManagerDB.js";
+import productManagerDB from "./services/productManagerDB.js";
+import messageManagerDB from "./services/messageManagerDB.js";
 const ProductManagerDB = new productManagerDB();
 const MessageManagerDB = new messageManagerDB();
 

@@ -45,15 +45,7 @@ const connection = async () => {
 
 connection();
 
-//Session Middleware
-// app.use(session(
-//     {
-//         store: mongoStore.create({mongoUrl: uri,ttl: 200}),
-//         secret: 'secretPhrase',
-//         resave: true,
-//         saveUninitialized: true
-//     }
-// ))
+
 
 initializatePassport();
 app.use(passport.initialize());

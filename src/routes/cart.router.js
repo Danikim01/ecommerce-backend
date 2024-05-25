@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import CartManagerDB from '../dao/cartManagerDB.js';
-let cm = new CartManagerDB();
-import mongoose from 'mongoose';
+//import CartManagerDB from '../services/cartManagerDB.js';
+import cartController from '../controller/cartController';
 
+let cm = new cartController();
 let router = Router()
 
 router.get("/:cid", async (req,res) => {
@@ -50,7 +50,7 @@ router.delete("/:cid/product/:pid",async (req,res) => {
 router.put("/:cid",async(req,res) => {
     try{
         let products = req.body
-        let result = await cm.actualizarCarrito(req.params.cid,products)
+        let result = await cm.updateCart(req.params.cid,products)
         res.status(200).send({message: "Carrito actualizado correctamente"})
     }catch(err){
         res.status(400).send({error: "Error al actualizar el carrito"})

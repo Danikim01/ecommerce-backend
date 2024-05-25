@@ -2,11 +2,11 @@ import {Router} from 'express';
 import userModel from '../dao/models/userModel.js';
 import {createHash, isValidPassword} from '../utils/functionsUtil.js';
 import passport from 'passport';
-import { userManagerDB } from '../dao/userManagerDb.js';
+
+import userController from '../controller/userController.js';
 
 const router = Router();
-const sessionService = new userManagerDB();
-
+const sessionService = new userController();
 
 router.post("/restore", passport.authenticate("restore", {failureRedirect: "/api/sessions/failRestore"}), (req, res) => {
     req.session.failRestore = false;
@@ -34,7 +34,7 @@ router.get("/githubcallback", passport.authenticate('github', {failureRedirect: 
 
 router.post("/register", async (req, res) => {
     try{
-        await sessionService.register(req.body);
+        await sessionService.create(req.body);
         res.redirect("/login");
     }catch(error){
         res.redirect("/register");

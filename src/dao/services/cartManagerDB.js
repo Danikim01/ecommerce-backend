@@ -1,5 +1,5 @@
-import cartModel from './models/cartModel.js'
-import mongoose from 'mongoose';
+import cartModel from '../dao/models/cartModel.js'
+
 
 export default class cartManagerDB {
     async getProductsFromCart(cart_id){

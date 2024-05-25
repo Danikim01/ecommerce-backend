@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import userModel from "./models/userModel.js";
+import userModel from "../dao/models/userModel.js";
 import { isValidPassword } from "../utils/functionsUtil.js";
 
-class userManagerDB {
+export default class userManagerDB {
 
     async getAllUsers(){
         try{
@@ -54,4 +54,3 @@ class userManagerDB {
     }
 }
 
-export {userManagerDB}
