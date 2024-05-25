@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import userModel from "../dao/models/userModel.js";
-import { isValidPassword } from "../utils/functionsUtil.js";
+import userModel from "../models/userModel.js";
+import { isValidPassword } from "../../utils/functionsUtil.js";
 
 export default class userManagerDB {
 

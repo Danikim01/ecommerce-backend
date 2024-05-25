@@ -1,5 +1,5 @@
 import { get } from "mongoose";
-import productManagerDB from "../dao/services/productManagerDB";
+import productManagerDB from "../dao/services/productManagerDB.js";
 
 
 export default class productController {

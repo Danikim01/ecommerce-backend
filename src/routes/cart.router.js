@@ -1,6 +1,6 @@
 import { Router } from 'express';
 //import CartManagerDB from '../services/cartManagerDB.js';
-import cartController from '../controller/cartController';
+import cartController from '../controller/cartController.js';
 
 let cm = new cartController();
 let router = Router()

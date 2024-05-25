@@ -1,12 +1,14 @@
 import passport from "passport";
 
-import ProductManagerDB from "../services/productManagerDB.js";
-import CartManagerDB from "../services/cartManagerDB.js";
+import productController from "../controller/productController.js";
+import cartController from "../controller/cartController.js";
+
 import productModel from "../dao/models/productModel.js";
 import { Router } from 'express';
 import {auth} from "../middlewares/auth.js";
-let pm = new ProductManagerDB();
-let cm = new CartManagerDB();
+
+let pm = new productController();
+let cm = new cartController();
 
 let router = Router()
 
@@ -39,7 +41,7 @@ router.get("/realtimeproducts", async (req, res) => {
             {
                 title: "Productos a tiempo real",
                 style: "index.css",
-                products: await pm.getAllProducts()
+                products: await pm.getAll()
             }
         )
     }catch(err){

@@ -13,9 +13,9 @@ import usersRouter from "./routes/users.router.js";
 import passport from "passport";
 import initializatePassport from './config/passportConfig.js';
 import cookieParser from "cookie-parser";
+import config from "./config/config.js";
 
 const app = express();
-
 
 //Incializamos el motor de plantillas
 app.engine("handlebars", handlebars.engine());
@@ -31,7 +31,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 
-const uri = "mongodb+srv://danikim:D46334737@cluster0.4erp6rc.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
+const uri = config.mongoUri;
 
 const connection = async () => {
     try{
@@ -56,7 +56,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 
-const PORT = 8080;
+const PORT = config.port;
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor activo en http://localhost:${PORT}`);
 });
