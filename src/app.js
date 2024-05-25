@@ -31,7 +31,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 
-const uri = config.mongoUri;
+const uri = config.mongoUri
 
 const connection = async () => {
     try{
@@ -56,7 +56,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
 
-const PORT = config.port;
+const PORT = config.port
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor activo en http://localhost:${PORT}`);
 });
