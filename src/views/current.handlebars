@@ -1,0 +1,18 @@
+<div class="current-user-box">
+    {{#if curr_user}}
+    <div class="current-user-info">
+        <h1>Current User:</h1>
+        <p>Name: {{curr_user.first_name}} {{curr_user.last_name}}</p>
+        <p>Email: {{curr_user.email}}</p>
+        <p>Role: {{curr_user.role}}</p>
+        <p>Age: {{curr_user.age}}</p>
+    </div>
+    {{else}}
+        <div class="current-user-info">
+            <h1>Current User:</h1>
+            <p>No user logged in</p>
+        </div>
+    {{/if}}
+
+</div>
+
