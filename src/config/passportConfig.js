@@ -1,11 +1,11 @@
 import passport from 'passport';
 import local from 'passport-local';
 import GitHubStrategy from 'passport-github2';
+import jwt, { ExtractJwt } from 'passport-jwt';
 
 import userModel from '../dao/models/userModel.js';
 import {createHash, isValidPassword} from '../utils/functionsUtil.js';
-
-const localStratergy = local.Strategy;
+const JWTStratergy = jwt.Strategy;
 const initializatePassport = () => {
 
     const CLIENT_ID = "Iv1.7db51b4a30ae7971"
@@ -40,88 +40,32 @@ const initializatePassport = () => {
         }
     }));
 
-
-    passport.use('register', new localStratergy(
-        {
-            passReqToCallback: true,
-            usernameField: 'email'
-        },
-        async (req, username, password, done) => {
-            console.log("Registering user...");
-            const { first_name, last_name, email, age} = req.body;
-
-            if (!first_name || !last_name || !email || !age ){
-                throw new Error("Campo incompleto, por favor complete todos los campos");
-            }
-            try {
-                let user = await userModel.findOne({ email: username});
-                if (user) {
-                    console.log("User already exist!");
-                    return done(null, false);
+    passport.use(
+        'jwt',
+        new JWTStratergy(
+            {
+                jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+                secretOrKey: 'coderSecret'
+            },
+            async (jwt_payload, done) => {
+                try {
+                    return done(null, jwt_payload);
+                } catch (err) {
+                    return done(err);
                 }
-
-                const newUser = { first_name, last_name, email, age, password: createHash(password)}
-                const result = await userModel.create(newUser);
-                return done(null, result);
-            } catch (error) {
-                return done(null,false);
             }
-        }
-    ))
+        )
+    )
 
-    passport.use('login', new localStratergy(
-        {
-            usernameField: 'email'
-        },
-        async (username, password, done) => {
-            try {
-                const user = await userModel.findOne({ email: username });
-                if (!user) {
-                    console.log("User not found!");
-                    return done(null, false);
-                }
-                
-                if (!isValidPassword(user, password)) {
-                    return done(null, false);
-                }
+}
 
-                return done(null, user);
-            } catch(error) {
-                console.log(error.message);
-                return done(null,false);
-            }
-        }
-    ));
+const cookieExtractor = (req) => {
+    let token = null;
+    if (req && req.cookies) {
+        token = req.cookies.auth ?? null;
+    }
 
-    passport.use('restore', new localStratergy(
-        {
-            usernameField: 'email'
-        },
-        async (username, password, done) => {
-            try {
-                const user = await userModel.findOne({ email: username });
-                if (!user) {
-                    console.log("User not found!");
-                    return done(null, false);
-                }
-                const newPassword = createHash(password);
-                user.password = newPassword;
-                await userModel.updateOne({email: username}, user);
-                return done(null, user);
-            } catch(error) {
-                console.log(error.message);
-                return done(null,false);
-            }
-        }
-    ));
-
-
-    passport.serializeUser((user, done) => done(null, user._id));
-
-    passport.deserializeUser(async (id, done) => {
-        const user = await userModel.findById(id);
-        done(null, user);
-    })
+    return token;
 }
 
 export default initializatePassport;

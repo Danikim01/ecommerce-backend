@@ -2,8 +2,11 @@ import {Router} from 'express';
 import userModel from '../dao/models/userModel.js';
 import {createHash, isValidPassword} from '../utils/functionsUtil.js';
 import passport from 'passport';
+import { userManagerDB } from '../dao/userManagerDb.js';
 
 const router = Router();
+const sessionService = new userManagerDB();
+
 
 router.post("/restore", passport.authenticate("restore", {failureRedirect: "/api/sessions/failRestore"}), (req, res) => {
     req.session.failRestore = false;
@@ -14,6 +17,7 @@ router.get("/failRestore", (req, res) => {
     req.session.failRestore = true;
     res.redirect("/restore");
 })
+
 
 router.get("/github", passport.authenticate('github', {scope: ['user:email']}), (req, res) => {
     res.send({
@@ -28,41 +32,58 @@ router.get("/githubcallback", passport.authenticate('github', {failureRedirect: 
 });
 
 
-router.post("/register", passport.authenticate("register", { failureRedirect: "/api/sessions/failRegister" }), (req, res) => {
-    req.session.failRegister = false;
-    res.redirect("/login");
+router.post("/register", async (req, res) => {
+    try{
+        await sessionService.register(req.body);
+        res.redirect("/login");
+    }catch(error){
+        res.redirect("/register");
+    }
 })
 
 router.get("/failRegister", (req, res) => {
-    req.session.failRegister = true;
     res.redirect("/register");
 })
 
-router.post("/login",passport.authenticate("login", {failureRedirect: "/api/sessions/failLogin"}), (req, res) => {
-    req.session.failLogin = false;
-    if (!req.user){
-        req.session.failLogin = true;
-        return res.redirect("/login");
+router.post("/login",async (req, res) => {
+    try{
+        const token = await sessionService.login(req.body.email, req.body.password);
+        res.cookie("auth",token,{maxAge: 60*60*1000});
+        res.redirect("/home");
+    }catch(error){
+        res.redirect("/login");
     }
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age,
-        role: req.user.role
-    }
-    return res.redirect("/home");
 })
 
 router.get("/failLogin", (req, res) => {
-    req.session.failLogin = true;
     res.redirect("/login");
 })
 
+router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
+    res.send(
+        {
+            payload: req.user
+        }
+    )
+})
 
-
-// router.get("/current",(req,res) => {
-//     req.session.user ? res.status(200).send(req.session.user) : res.status(401).send({error: "No user logged in"});
-// })
+router.get("/:uid",async (req, res) => {
+    try{
+        const user = await sessionService.getUser(req.params.uid);
+        res.send(
+            {
+                status: "success",
+                payload: user
+            }
+        )
+    }catch(error){
+        res.status(400).send(
+            {
+                status: "error",
+                message: error.message
+            }
+        )
+    }
+})
 
 export default router;

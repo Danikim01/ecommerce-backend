@@ -1,7 +1,8 @@
+import passport from "passport";
+
 import ProductManagerDB from "../dao/productManagerDB.js";
 import CartManagerDB from "../dao/cartManagerDB.js";
 import productModel from "../dao/models/productModel.js";
-import axios from "axios";
 import { Router } from 'express';
 import {auth} from "../middlewares/auth.js";
 let pm = new ProductManagerDB();
@@ -9,14 +10,14 @@ let cm = new CartManagerDB();
 
 let router = Router()
 
-router.get("/home", auth,(req, res) => {
+router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
     res.render(
         'home',
         {
             title: 'Home',
             style: 'index.css',
-            user: req.session.user,
-            isAdmin: req.session.admin
+            user: req.user,
+            isAdmin: req.user.role === "admin" ? true : false
         }
     )
 })
@@ -77,7 +78,7 @@ router.get("/carts/:cid", async (req, res) => {
 });
 
 
-router.get("/views/products", auth, async (req, res) => {
+router.get("/views/products", passport.authenticate("jwt",{session:false}), async (req, res) => {
     try{
         let limit = parseInt(req.query.limit) || 10;
         let page = parseInt(req.query.page) || 1;
@@ -140,7 +141,6 @@ router.get("/login", (req, res) => {
         {
             title: 'Login',
             style: 'index.css',
-            failLogin: req.session.failLogin ?? false
         }
     )
 });
@@ -151,7 +151,6 @@ router.get("/register", (req, res) => {
         {
             title: 'Register',
             style: 'index.css',
-            failRegister: req.session.failRegister ?? false
         }
     )
 });
@@ -162,7 +161,6 @@ router.get("/restore",(req,res)=> {
         {
             title: 'Restore',
             style: 'index.css',
-            failRestore: req.session.failRestore ?? false
         }
     )
 })
@@ -179,16 +177,8 @@ router.get("/api/sessions/current",(req,res) => {
 })
 
 router.get("/logout", (req, res) => {
-    req.session.destroy(error => {
-        if (error) {
-            return res.send({
-                status: "Logout ERROR",
-                body: error
-            });
-        }else{
-            return res.redirect("/login");
-        }
-    })
+    res.clearCookie('auth');
+    res.redirect('/login');
 })
 
 export default router;

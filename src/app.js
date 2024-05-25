@@ -12,6 +12,7 @@ import mongoStore from "connect-mongo";
 import usersRouter from "./routes/users.router.js";
 import passport from "passport";
 import initializatePassport from './config/passportConfig.js';
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(express.static(`${__dirname}/../public`));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
 
 
 const uri = "mongodb+srv://danikim:D46334737@cluster0.4erp6rc.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
@@ -44,18 +46,18 @@ const connection = async () => {
 connection();
 
 //Session Middleware
-app.use(session(
-    {
-        store: mongoStore.create({mongoUrl: uri,ttl: 200}),
-        secret: 'secretPhrase',
-        resave: true,
-        saveUninitialized: true
-    }
-))
+// app.use(session(
+//     {
+//         store: mongoStore.create({mongoUrl: uri,ttl: 200}),
+//         secret: 'secretPhrase',
+//         resave: true,
+//         saveUninitialized: true
+//     }
+// ))
 
 initializatePassport();
 app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.session());
 
 app.use('/api/sessions', usersRouter);
 app.use("/api/products", productsRouter);
