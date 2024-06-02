@@ -1,29 +1,24 @@
-import { get } from "mongoose";
-import productManagerDB from "../dao/services/productManagerDB.js";
-
+import { productsService } from "../repositories/index.js";
 
 export default class productController {
-    constructor() {
-        this.dao = new productManagerDB();
-    }
 
-    getAll(){
-        return this.dao.getAllProducts();
+    getAllProducts(){
+        return productsService.getAllProducts();
     }
 
     getProductByID(pid){
-        return this.dao.getProductByID(pid);
+        return productsService.getProductByID(pid);
     }
 
-    create(product){
-        return this.dao.createProduct(product);
+    createProduct(product){
+        return productsService.createProduct(product);
     }
 
-    update(pid, product){
-        return this.dao.updateProduct(pid, product);
+    deleteProduct(pid, product){
+        return productsService.deleteProduct(pid, product);
     }
 
-    delete(pid){
-        return this.dao.deleteProduct(pid);
+    deleteProduct(pid){
+        return productsService.deleteProduct(pid);
     }
 }

@@ -24,7 +24,7 @@ export default class productManagerDB {
         }
 
         try {
-            const result = await productModel.create({title, description, code, price, stock, category, thumbnails: thumbnails ?? []});
+            const result = await productModel.create({title, description, code, price, stock, category, thumbnails});
             return result;
         } catch (error) {
             console.error(error.message);

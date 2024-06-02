@@ -1,6 +1,6 @@
 //import ProductManagerDB from "../services/productManagerDB.js";
 import ProductController from "../controller/productController.js";
-import productModel from "../dao/models/productModel.js";
+import productModel from "../dao/mongo/models/productModel.js";
 import __dirname from "../path.js";
 import { Router } from 'express';
 import { uploader } from "../utils.js";

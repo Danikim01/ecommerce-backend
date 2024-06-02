@@ -3,7 +3,7 @@ import passport from "passport";
 import productController from "../controller/productController.js";
 import cartController from "../controller/cartController.js";
 
-import productModel from "../dao/models/productModel.js";
+import productModel from "../dao/mongo/models/productModel.js";
 import { Router } from 'express';
 import {auth} from "../middlewares/auth.js";
 

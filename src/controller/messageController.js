@@ -1,16 +1,13 @@
-import messageModelDB from "../dao/services/messageManagerDB.js";
+import { messageService } from "../repositories/index.js";
 
 export default class messageController {
-    constructor() {
-        this.dao = new messageModelDB();
-    }
 
     async getAll(){
-        return await this.dao.getAllMessages();
+        return await messageService.getAllMessages();
     }
 
     async create(message){
-        return await this.dao.createMessage(message);
+        return await messageService.createMessage(message);
     }
 
 }

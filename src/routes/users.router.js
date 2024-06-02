@@ -1,35 +1,10 @@
 import {Router} from 'express';
-import userModel from '../dao/models/userModel.js';
-import {createHash, isValidPassword} from '../utils/functionsUtil.js';
 import passport from 'passport';
 
 import userController from '../controller/userController.js';
 
 const router = Router();
 const sessionService = new userController();
-
-router.post("/restore", passport.authenticate("restore", {failureRedirect: "/api/sessions/failRestore"}), (req, res) => {
-    req.session.failRestore = false;
-    res.redirect("/login");
-})
-
-router.get("/failRestore", (req, res) => {
-    req.session.failRestore = true;
-    res.redirect("/restore");
-})
-
-
-router.get("/github", passport.authenticate('github', {scope: ['user:email']}), (req, res) => {
-    res.send({
-        status: 'success',
-        message: 'Success'
-    });
-});
-
-router.get("/githubcallback", passport.authenticate('github', {failureRedirect: '/login'}), (req, res) => {
-    req.session.user = req.user;
-    return res.redirect('/home');
-});
 
 
 router.post("/register", async (req, res) => {
@@ -39,10 +14,6 @@ router.post("/register", async (req, res) => {
     }catch(error){
         res.redirect("/register");
     }
-})
-
-router.get("/failRegister", (req, res) => {
-    res.redirect("/register");
 })
 
 router.post("/login",async (req, res) => {
@@ -55,9 +26,6 @@ router.post("/login",async (req, res) => {
     }
 })
 
-router.get("/failLogin", (req, res) => {
-    res.redirect("/login");
-})
 
 router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
     res.send(

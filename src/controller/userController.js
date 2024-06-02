@@ -1,24 +1,20 @@
-import userManagerDB from "../dao/services/userManagerDB.js";
+import { usersService } from "../repositories/index.js"; 
 
 export default class userController {
-    constructor() {
-        this.dao = new userManagerDB();
+    async getAllUsers(){
+        return await usersService.getAllUsers();
     }
 
-    async getAll(){
-        return await this.dao.getAllUsers();
-    }
-
-    async create(user){
-        return await this.dao.register(user);
+    async createUser(user){
+        return await usersService.createUser(user);
     }
 
     async login(email, password){
-        return await this.dao.login(email, password);
+        return await usersService.login(email, password);
     }
 
     async getUser(uid){
-        return await this.dao.getUser(uid);
+        return await usersService.getUser(uid);
     }
 
 }

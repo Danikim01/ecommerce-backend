@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {createHash} from "../../utils/functionsUtil.js";
+import {createHash} from "../../../utils/functionsUtil.js";
 
 const userCollection = "users";
 
@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema({
     },
     age: {
         type: Number,
-        min: 18,
         require: true
     },
     password: {

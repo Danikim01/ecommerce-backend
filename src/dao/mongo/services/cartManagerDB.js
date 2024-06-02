@@ -44,7 +44,7 @@ export default class cartManagerDB {
         }
     }
 
-    async actualizarCarrito(cid,products){
+    async updateCart(cid,products){
         try{
             const cart = await cartModel.findOne({_id: cid});
             cart.products = products;
