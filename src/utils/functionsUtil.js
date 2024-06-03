@@ -46,3 +46,7 @@ export const isValidPassword = (user, password) => {
     console.log("comparing: ", password, user.password)
     return bcrypt.compareSync(password, user.password);
 }
+
+export const generateRandomStringCode = () => {
+    return Math.random().toString(36).substring(7);
+}

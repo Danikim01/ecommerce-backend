@@ -46,7 +46,6 @@ export default io => {
         
         socket.on("addProductToCart", async message => {
             try{
-                console.log("Llega el mensaje al socket: ", message);
                 await cm.addProductToUsersCart(message.uid,message.pid);
             }catch(error){
                 socket.emit("statusError", error.message);
