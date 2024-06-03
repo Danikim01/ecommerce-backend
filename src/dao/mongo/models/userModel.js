@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import cartModel from "./cartModel.js";
 import {createHash} from "../../../utils/functionsUtil.js";
 
 const userCollection = "users";
@@ -48,7 +49,11 @@ const userSchema = mongoose.Schema({
     },
 });
 
-//hash the password
+//populate the cart
+userSchema.pre("findOne", function() {
+    this.populate("cart.cart");
+});
+
 userSchema.pre("save", function () {
     this.password = createHash(this.password);
 });

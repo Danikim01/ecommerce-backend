@@ -1,8 +1,10 @@
 import productController from "./controller/productController.js";
 import messageController from "./controller/messageController.js";
+import cartController from "./controller/cartController.js";
 
 const pm = new productController();
 const mm = new messageController();
+const cm = new cartController();
 
 export default io => {
     io.on("connection", async socket => {
@@ -42,6 +44,14 @@ export default io => {
             io.emit("sendingAllMessages", messages);
         });
         
+        socket.on("addProductToCart", async message => {
+            try{
+                console.log("Llega el mensaje al socket: ", message);
+                await cm.addProductToUsersCart(message.uid,message.pid);
+            }catch(error){
+                socket.emit("statusError", error.message);
+            }
+        })
 
     });
 }

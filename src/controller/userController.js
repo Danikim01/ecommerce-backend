@@ -6,6 +6,7 @@ export default class userController {
     }
 
     async createUser(user){
+        console.log("creating user")
         return await usersService.createUser(user);
     }
 

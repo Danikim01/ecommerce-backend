@@ -2,14 +2,15 @@ import {Router} from 'express';
 import passport from 'passport';
 
 import userController from '../controller/userController.js';
+import check_admin from '../middlewares/admin.js';
 
 const router = Router();
 const sessionService = new userController();
 
 
-router.post("/register", async (req, res) => {
+router.post("/register",check_admin,async (req, res) => {
     try{
-        await sessionService.create(req.body);
+        await sessionService.createUser(req.body);
         res.redirect("/login");
     }catch(error){
         res.redirect("/register");

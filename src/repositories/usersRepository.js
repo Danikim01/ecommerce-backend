@@ -10,7 +10,9 @@ export default class UserRepository {
     }
 
     async createUser(user){
+        console.log("creating user in user repository")
         const userDTO = new UserDTO(user);
+        console.log(userDTO);
         return await this.dao.register(userDTO);
     }
 

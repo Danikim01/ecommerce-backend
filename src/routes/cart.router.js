@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import passport from 'passport';
 //import CartManagerDB from '../services/cartManagerDB.js';
 import cartController from '../controller/cartController.js';
-
+import auth from "../middlewares/auth.js";
 let cm = new cartController();
 let router = Router()
 
@@ -33,6 +34,18 @@ router.post("/:cid/product/:pid",async (req,res) => {
         res.status(200).send({message: "Producto agregado al carrito correctamente"})
     }catch(err){
         res.status(400).send({error: "Error al agregar el producto al carrito"})
+    }
+})
+
+//Solo el usuario puede agregar productos al carrito
+router.post("/:uid/product/:pid",passport.authenticate("jwt", { session: false }), 
+auth(['user']) ,async (req,res) => {
+    try{
+        let result = await cm.addProductToUsersCart(req.params.uid,req.params.pid)
+        if (result instanceof Error) return res.status(400).send({error: result.message})
+        res.status(200).send({message: "Producto agregado al carrito correctamente"})
+    }catch(err){
+        res.status(400).send({error: "Error al agregar el producto al carrito del usuario"})
     }
 })
 

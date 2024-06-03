@@ -5,7 +5,7 @@ import cartController from "../controller/cartController.js";
 
 import productModel from "../dao/mongo/models/productModel.js";
 import { Router } from 'express';
-import {auth} from "../middlewares/auth.js";
+import auth from "../middlewares/auth.js";
 
 let pm = new productController();
 let cm = new cartController();
@@ -24,7 +24,10 @@ router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"
     )
 })
 
-router.get("/chat", (req, res) => {
+
+//Solo el usuario puede enviar mensajes al chat
+router.get("/chat", passport.authenticate("jwt", { session: false }), 
+auth(['user']),(req, res) => {
     res.render(
         'chat',
         {
@@ -34,14 +37,17 @@ router.get("/chat", (req, res) => {
     )
 })
 
-router.get("/realtimeproducts", async (req, res) => { 
+
+// Solo el administrador puede crear actualizar y eliminar productos
+router.get("/realtimeproducts", passport.authenticate("jwt", { session: false }), 
+auth(['admin']), async (req, res) => { 
     try{
         res.render(
             "realTimeProducts",
             {
                 title: "Productos a tiempo real",
                 style: "index.css",
-                products: await pm.getAll()
+                products: await pm.getAllProducts()
             }
         )
     }catch(err){
@@ -121,12 +127,13 @@ router.get("/views/products", passport.authenticate("jwt",{session:false}), asyn
     }
 })
 
-router.get("/views/products/:cid",async (req,res) => {
+router.get("/views/products/:cid", passport.authenticate("jwt",{session:false}),async (req,res) => {
     try{
         let productDetails = await pm.getProductByID(req.params.cid)
-        if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})
         console.log(productDetails)
+        if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})
         productDetails.style = "index.css"
+        productDetails.userId = req.user._id
         res.render(
             "product",
             productDetails

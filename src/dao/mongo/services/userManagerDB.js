@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
+import cartModel from "../models/cartModel.js";
 import {isValidPassword} from "../../../utils/functionsUtil.js";
 
 export default class userManagerDB {
@@ -23,13 +24,12 @@ export default class userManagerDB {
     }
 
     async register(user){
-        const {first_name, last_name, email, age, password} = user;
-        console.log(user)
-        if (!first_name || !last_name || !email || !age || !password){
+        const {first_name, last_name, email, age, password,role} = user;
+        if (!first_name || !last_name || !email || !age || !password || !role){
             throw new Error("Campo incompleto, por favor complete todos los campos");
         }
         try{
-            await userModel.create({first_name, last_name, email, age, password});
+            const new_user = await userModel.create({first_name, last_name, email, age, password});
         }catch(error){
             console.error(error.message);
             throw new Error("Error al registrar el usuario");
@@ -45,7 +45,7 @@ export default class userManagerDB {
             const user = await userModel.findOne({email: email}).lean();
             if (!user) throw new Error(errormessage);
             if (!isValidPassword(user, password)) throw new Error(errormessage);
-            delete user.password
+            //delete user.password
             return jwt.sign(user,"coderSecret",{expiresIn: "1h"});
         }catch(error){
             console.error(error.message);

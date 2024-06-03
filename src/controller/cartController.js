@@ -14,6 +14,10 @@ export default class cartController {
         return cartsService.addProductToCart(cid,pid);
     }
 
+    addProductToUsersCart(uid,pid){
+        return cartsService.addProductToUsersCart(uid,pid);
+    }
+
     deleteProductFromCart(cid,pid){
         return cartsService.deleteProductFromCart(cid,pid);
     }
