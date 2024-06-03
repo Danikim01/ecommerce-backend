@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import cartModel from "./cartModel.js";
 import {createHash} from "../../../utils/functionsUtil.js";
 
 const userCollection = "users";

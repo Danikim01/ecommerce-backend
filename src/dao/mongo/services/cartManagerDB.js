@@ -5,7 +5,9 @@ import productModel from '../models/productModel.js';
 export default class cartManagerDB {
     async getProductsFromCart(cart_id){
         try{
+            console.log("[cartManagerDB] cart_id: ", cart_id)
             const cart = await cartModel.findOne({_id: cart_id});
+            console.log("[cartManagerDB] cart: ", cart)
             return cart.products;
         }catch(error){
             console.error(error.message);

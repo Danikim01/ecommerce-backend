@@ -13,13 +13,16 @@ let cm = new cartController();
 let router = Router()
 
 router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
+    const cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
+    //console.log(cart_id)
     res.render(
         'home',
         {
             title: 'Home',
             style: 'index.css',
             user: req.user,
-            isAdmin: req.user.role === "admin" ? true : false
+            isAdmin: req.user.role === "admin" ? true : false,
+            cart_id: cart_id
         }
     )
 })
@@ -127,9 +130,9 @@ router.get("/views/products", passport.authenticate("jwt",{session:false}), asyn
     }
 })
 
-router.get("/views/products/:cid", passport.authenticate("jwt",{session:false}),async (req,res) => {
+router.get("/views/products/:pid", passport.authenticate("jwt",{session:false}),async (req,res) => {
     try{
-        let productDetails = await pm.getProductByID(req.params.cid)
+        let productDetails = await pm.getProductByID(req.params.pid)
         console.log(productDetails)
         if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})
         productDetails.style = "index.css"
