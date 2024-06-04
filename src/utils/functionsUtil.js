@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-
+import moment from 'moment';
 import jwt from "jsonwebtoken";
 
 const PRIVATE_KEY = "CoderKeySecretShhh"
@@ -49,4 +49,8 @@ export const isValidPassword = (user, password) => {
 
 export const generateRandomStringCode = () => {
     return Math.random().toString(36).substring(7);
+}
+
+export const generateTimeStamp = () => {
+    return moment().format('YYYY-MM-DD HH:mm:ss');
 }

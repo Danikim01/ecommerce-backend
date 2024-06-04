@@ -59,10 +59,11 @@ auth(['admin']), async (req, res) => {
 
 })
 
-router.get("/carts/:cid", async (req, res) => {
+router.get("/carts/:cid", passport.authenticate("jwt",{session:false}),async (req, res) => {
     try {
         let products = await cm.getProductsFromCart(req.params.cid);
         let isValid = products.length > 0;
+        const user_cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
         let transformedProducts = products.map(item => {
             return {
                 _id: item.product._id,
@@ -81,6 +82,7 @@ router.get("/carts/:cid", async (req, res) => {
             title: "Carrito",
             style: "index.css",
             isValid: isValid,
+            user_cart_id: user_cart_id,
             payload: transformedProducts 
         });
     } catch (err) {

@@ -1,13 +1,10 @@
 import cartModel from '../models/cartModel.js';
 import userModel from '../models/userModel.js';
-import productModel from '../models/productModel.js';
 
 export default class cartManagerDB {
     async getProductsFromCart(cart_id){
         try{
-            console.log("[cartManagerDB] cart_id: ", cart_id)
             const cart = await cartModel.findOne({_id: cart_id});
-            console.log("[cartManagerDB] cart: ", cart)
             return cart.products;
         }catch(error){
             console.error(error.message);
@@ -40,7 +37,6 @@ export default class cartManagerDB {
             const user = await userModel.findOne({ _id: user_id })
             if (user.cart.length == 0) {
                 let new_cart = await cartModel.create({ products: [] })
-                console.log(new_cart)
                 user.cart.push({cart: new_cart._id})
                 await userModel.updateOne({ _id: user_id }, user)
                 const cart = user.cart[0].cart

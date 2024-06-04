@@ -1,9 +1,39 @@
 import { Router } from 'express';
 import passport from 'passport';
 import cartController from '../controller/cartController.js';
+import TicketController from '../controller/ticketController.js';
 import auth from "../middlewares/auth.js";
 let cm = new cartController();
+let tc = new TicketController();
 let router = Router()
+
+
+router.post("/",async (req,res) => {
+    try{
+        let result = await cm.addCart()
+        if (result instanceof Error) return res.status(400).send({error: result.message})
+        res.status(200).send({message: "Carrito agregado correctamente"})
+    }catch(err){
+        res.status(400).send({error: "Error al agregar el carrito"})
+    }
+})
+
+
+router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),async (req,res) => {
+    try{
+        const user_cart = await cm.getProductsFromCart(req.params.cid)
+        const purchaser = req.user.email
+        let ticket = await tc.createTicket(purchaser,user_cart)
+        // let userTickets = await tc.getUserTickets(purchaser)
+        // console.log(userTickets)
+        console.log(ticket)
+        res.send({message: "Compra realizada correctamente",ticket: ticket})
+    }catch(err){
+        res.status(400).send({error: "Error al realizar la compra"})
+    
+    }
+})
+
 
 router.get("/:cid", async (req,res) => {
     try{
@@ -16,15 +46,6 @@ router.get("/:cid", async (req,res) => {
     }
 })
 
-router.post("/",async (req,res) => {
-    try{
-        let result = await cm.addCart()
-        if (result instanceof Error) return res.status(400).send({error: result.message})
-        res.status(200).send({message: "Carrito agregado correctamente"})
-    }catch(err){
-        res.status(400).send({error: "Error al agregar el carrito"})
-    }
-})
 
 router.post("/:cid/product/:pid",async (req,res) => {
     try{

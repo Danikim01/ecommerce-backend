@@ -12,7 +12,9 @@
                 </div>
             </div>
         {{/each}}
-        <a href="" class="button-home">Comprar</a>
+        {{#if user_cart_id}}
+            <a href="/api/carts/{{user_cart_id}}/purchase" class="button-home">Comprar</a>
+        {{/if}}
     {{else}}
        <h2>Carrito Vacio</h2>
     {{/if}}
