@@ -94,6 +94,7 @@ export default class cartManagerDB {
         }
     }
 
+
     async deleteProducts(cid){
         try{
             const cart = await cartModel.findOne({_id: cid});

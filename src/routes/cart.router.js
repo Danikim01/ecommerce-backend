@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
 import cartController from '../controller/cartController.js';
+import productController from '../controller/productController.js';
 import TicketController from '../controller/ticketController.js';
 import auth from "../middlewares/auth.js";
 let cm = new cartController();
 let tc = new TicketController();
+let pm = new productController();
 let router = Router()
 
 
@@ -21,13 +23,24 @@ router.post("/",async (req,res) => {
 
 router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),async (req,res) => {
     try{
-        const user_cart = await cm.getProductsFromCart(req.params.cid)
+        const user_cart =  await cm.getProductsFromCart(req.params.cid)
         const purchaser = req.user.email
         let ticket = await tc.createTicket(purchaser,user_cart)
-        // let userTickets = await tc.getUserTickets(purchaser)
-        // console.log(userTickets)
-        console.log(ticket)
-        res.send({message: "Compra realizada correctamente",ticket: ticket})
+        
+        //Update the users cart, meaning the users cart will be empty if all products were bought
+        //Update for each product bough the stock
+        for (let product of user_cart){
+            if (product.product.stock >= product.quantity){
+                await pm.buyProduct(product.product._id,product.quantity)
+                //also the users cart needs to be updated
+                await cm.deleteProductFromCart(req.params.cid,product.product._id)
+            }
+        }
+
+        if (ticket.length < user_cart.length){
+            return res.status(400).send({error: "Error al realizar la compra, productos invalidos",productos: ticket})
+        }
+        return res.send({message: "Compra realizada correctamente",ticket: ticket})
     }catch(err){
         res.status(400).send({error: "Error al realizar la compra"})
     

@@ -18,7 +18,11 @@ export default class productController {
         return productsService.deleteProduct(pid, product);
     }
 
-    deleteProduct(pid){
-        return productsService.deleteProduct(pid);
+    buyProduct(pid, quantity){
+        return productsService.buyProduct(pid, quantity);
+    }
+
+    updateProduct(pid, product){
+        return productsService.updateProduct(pid, product);
     }
 }

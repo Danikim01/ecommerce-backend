@@ -43,6 +43,22 @@ export default class productManagerDB {
         }
     }
 
+    async buyProduct(pid, quantity) {
+        try {
+            const product = await productModel.findOne({_id: pid});
+            if (!product) throw new Error(`El producto ${pid} no existe!`);
+            if (product.stock < quantity) throw new Error(`No hay suficiente stock para el producto ${pid}`);
+            product.stock -= quantity;
+            if (product.stock === 0){
+                return await this.deleteProduct(pid);
+            }
+            await productModel.updateOne({_id: pid}, product);
+        } catch(error) {
+            console.error(error.message);
+            throw new Error(`Error al comprar el producto ${pid}`);
+        }
+    }
+
     async deleteProduct(pid) {
         try {
             const result = await productModel.deleteOne({_id: pid});

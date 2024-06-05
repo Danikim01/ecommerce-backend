@@ -13,6 +13,10 @@ export default class ProductRepository{
         return await this.dao.getProductByID(id);
     }
 
+    async buyProduct(id, quantity){
+        await this.dao.buyProduct(id, quantity);
+    }
+
     async createProduct(product){
         const productDTO = new ProductDTO(product);
         return await this.dao.createProduct(productDTO);
