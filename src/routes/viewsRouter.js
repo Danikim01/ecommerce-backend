@@ -179,16 +179,16 @@ router.get("/restore",(req,res)=> {
     )
 })
 
-router.get("/api/sessions/current",(req,res) => {
-    res.render(
-        "current",
-        {
-            title: "Current",
-            style: "index.css",
-            curr_user: req.session.user
-        }
-    )
-})
+// router.get("/api/sessions/current", passport.authenticate("jwt",{session:false}),(req,res) => {
+//     res.render(
+//         "current",
+//         {
+//             title: "Current",
+//             style: "index.css",
+//             curr_user: req.user
+//         }
+//     )
+// })
 
 router.get("/logout", (req, res) => {
     res.clearCookie('auth');

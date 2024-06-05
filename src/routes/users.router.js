@@ -29,9 +29,12 @@ router.post("/login",async (req, res) => {
 
 
 router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
-    res.send(
+    res.render(
+        "current",
         {
-            payload: req.user
+            title: "Current",
+            style: "index.css",
+            curr_user: req.user
         }
     )
 })
