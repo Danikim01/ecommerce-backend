@@ -1,6 +1,7 @@
 import express from "express";
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/cart.router.js"
+import mocksRouter from "./routes/mocks.router.js"
 import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import __dirname from "./path.js";
@@ -43,8 +44,6 @@ const connection = async () => {
 
 connection();
 
-
-
 initializatePassport();
 app.use(passport.initialize());
 
@@ -52,6 +51,7 @@ app.use(passport.initialize());
 app.use('/api/sessions', usersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/mockingproducts", mocksRouter);
 app.use("/", viewsRouter);
 
 const PORT = config.port
