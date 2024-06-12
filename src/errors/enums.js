@@ -9,4 +9,5 @@ export const ErrorCodes = {
     GET_USER_ERROR: 8,
     ADD_PRODUCT_ERROR: 9,
     GET_PRODUCT_ERROR: 10,
+    CREATE_PRODUCT_ERROR: 11,
 }

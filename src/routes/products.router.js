@@ -4,6 +4,11 @@ import productModel from "../dao/mongo/models/productModel.js";
 import __dirname from "../path.js";
 import { Router } from 'express';
 import { uploader } from "../utils.js";
+
+import { generateProductErrorInfo } from "../errors/info.js";
+import CustomError from "../errors/CustomError.js";
+import { ErrorCodes } from "../errors/enums.js";
+
 let pm = new ProductController();
 
 let router = Router()
@@ -67,7 +72,17 @@ router.post("/", uploader.array("thumbnail"), async (req,res) => {
             let paths_array = req.files.map(file => file.path)
             product.thumbnail = paths_array
         }
-        if (!product.title || !product.price || !product.code || !product.stock || !product.description || !product.category) return res.status(400).send({error: "Campos de producto incompletos"})
+        if (!product.title || !product.price || !product.code || !product.stock || !product.description || !product.category){
+            CustomError.createError(
+                {
+                    name: "ProductError",
+                    cause: generateProductErrorInfo(product),
+                    meessage: "Campos de producto incompletos",
+                    code: ErrorCodes.ADD_PRODUCT_ERROR
+                }
+            ) 
+            return res.status(400).send({error: "Campos de producto incompletos"})
+        }
         console.log(product)
         await pm.create(product)
         return res.status(200).send({message: "Producto agregado correctamente"})
