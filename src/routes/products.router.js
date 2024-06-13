@@ -84,7 +84,7 @@ router.post("/", uploader.array("thumbnail"), async (req,res) => {
             return res.status(400).send({error: "Campos de producto incompletos"})
         }
         console.log(product)
-        await pm.create(product)
+        await pm.createProduct(product)
         return res.status(200).send({message: "Producto agregado correctamente"})
     }catch(err){
         res.status(400).send({error: "Error al agregar el producto"})
@@ -94,7 +94,7 @@ router.post("/", uploader.array("thumbnail"), async (req,res) => {
 router.put("/:pid", async (req,res) => {
     try{
         let fields = req.body
-        let result = await pm.update(req.params.pid,fields)
+        let result = await pm.updateProduct(req.params.pid,fields)
         if (result instanceof Error) return res.status(400).send({error: result.message})
         res.status(200).send({message: "Producto actualizado correctamente"})
     }catch(err){
@@ -104,7 +104,7 @@ router.put("/:pid", async (req,res) => {
 
 router.delete("/:pid", async (req,res) => {
     try{
-        let result = await pm.delete(req.params.pid)
+        let result = await pm.deleteProduct(req.params.pid)
         if (result instanceof Error) return res.status(400).send({error: result.message})
         res.status(200).send({message: "Producto eliminado correctamente"})
     }catch(err){

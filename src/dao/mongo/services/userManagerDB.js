@@ -29,7 +29,7 @@ export default class userManagerDB {
             throw new Error("Campo incompleto, por favor complete todos los campos");
         }
         try{
-            const new_user = await userModel.create({first_name, last_name, email, age, password});
+            const new_user = await userModel.create({first_name, last_name, email, age, password, role});
         }catch(error){
             console.error(error.message);
             throw new Error("Error al registrar el usuario");

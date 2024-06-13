@@ -12,7 +12,7 @@ export default io => {
 
         socket.on("sendProduct", async product => {
             try{
-                await pm.create(product);
+                await pm.createProduct(product);
                 const products = await ProductManagerDB.getAllProducts();
                 console.log("Sending products desde del servidor", products);
                 socket.emit("sendingAllProducts", products);
@@ -23,8 +23,8 @@ export default io => {
 
         socket.on("deleteProduct", async (data) => {
             try {
-                const result = await pm.delete(data.pid);
-                const products = await pm.getAll();
+                const result = await pm.deleteProduct(data.pid);
+                const products = await pm.getAllProducts();
                 socket.emit("sendingAllProducts", products);
             } catch (error) {
                 socket.emit("statusError", error.message);
