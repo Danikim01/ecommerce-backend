@@ -13,6 +13,9 @@ import passport from "passport";
 import initializatePassport from './config/passportConfig.js';
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
+import addLogger from "./utils/logger.js";
+
+import loggerTestRouter from "./routes/logger.router.js";
 
 const app = express();
 
@@ -28,6 +31,7 @@ app.use(express.static(`${__dirname}/../public`));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(addLogger);
 
 
 const uri = config.mongoUri
@@ -52,6 +56,7 @@ app.use('/api/sessions', usersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/mockingproducts", mocksRouter);
+app.use("/loggerTest",loggerTestRouter);
 app.use("/", viewsRouter);
 
 const PORT = config.port
