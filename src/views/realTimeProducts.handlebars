@@ -18,22 +18,25 @@
         <input type="text" id="code" name="code" placeholder="code">
         <label for="stock">Stock</label>
         <input type="number" id="stock" name="stock" placeholder="Stock del producto">
-        <button onclick="send();" id="submit-button">Agregar</button>
+        <button onclick="send('{{email}}');" id="submit-button">Agregar</button>
     </div>
 </div>
 
-<div id="productos">
+<div id="productos" data-email='{{email}}'>
     {{#each products}}
+    
         <div class="product-card">
             <h3>{{this.title}}</h3>
             <hr>
             <p>Categoria: {{this.category}}</p>
             <p>Descripción: {{this.description}}</p>
             <p>Precio: $ {{this.price}}</p>
-            <button id="button-delete" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
+            <p>Dueño: {{this.owner}}</p>
+            <button id="button-delete" data-email='{{email}}' onclick="deleteProduct('{{this._id}}','{{email}}')">Eliminar</button>
         </div>
     {{/each}}
 </div>
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>

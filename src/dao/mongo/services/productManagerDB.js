@@ -21,13 +21,14 @@ export default class productManagerDB {
     }
 
     async createProduct(product) {
-        const {title, description, code, price, stock, category, thumbnails} = product;
+        console.log("[Product Manager] Creating product: ", product);
+        const {title, description, code, price, stock, category, owner,thumbnails} = product;
         if (!title || !description || !code || !price || !stock || !category) {
             throw new Error('Campo incompleto, por favor complete todos los campos');
         }
 
         try {
-            const result = await productModel.create({title, description, code, price, stock, category, thumbnails});
+            const result = await productModel.create({title, description, code, price, stock, category, owner,thumbnails});
             return result;
         } catch (error) {
             console.error(error.message);

@@ -16,7 +16,6 @@ let um = new userController();
 let router = Router()
 
 router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),async (req, res) => {
-    //const cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
     const user = await um.getUser(req.user._id);
     let cart_id = "empty-cart"
     if (user && user.cart.length !== 0) {
@@ -50,14 +49,16 @@ auth(['user']),(req, res) => {
 
 // Solo el administrador puede crear actualizar y eliminar productos
 router.get("/realtimeproducts", passport.authenticate("jwt", { session: false }), 
-auth(['admin']), async (req, res) => { 
+auth(['admin','premium']), async (req, res) => { 
     try{
+        console.log("[views] email: ",req.user.email)
         res.render(
             "realTimeProducts",
             {
                 title: "Productos a tiempo real",
                 style: "index.css",
-                products: await pm.getAllProducts()
+                products: await pm.getAllProducts(),
+                email: req.user.email,
             }
         )
     }catch(err){

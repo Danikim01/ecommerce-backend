@@ -99,5 +99,26 @@ export default class userManagerDB {
         await userModel.updateOne({email: email}, user);
         return user;
     }
+
+    async changeRole(uid){
+        const user = await userModel.findOne({_id: uid}).lean();
+        if (!user){
+            CustomError.createError(
+                {
+                    name: "UserNotFoundError",
+                    cause: generateUserNotFoundErrorInfo(),
+                    message: "The user does not exist",
+                    code: ErrorCodes.USER_NOT_FOUND_ERROR,
+                }
+            )
+        }
+        if (user.role === "user"){
+            user.role = "premium";
+        }else if (user.role === "premium"){
+            user.role = "user";
+        }
+
+        await userModel.updateOne({_id: uid}, user);
+    }
 }
 

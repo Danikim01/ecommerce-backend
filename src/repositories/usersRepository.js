@@ -24,6 +24,10 @@ export default class UserRepository {
         return await this.dao.register(userDTO);
     }
 
+    async changeRole(uid){
+        return await this.dao.changeRole(uid);
+    }
+
     async login(email, password){
         return await this.dao.login(email, password);
     }

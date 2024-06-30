@@ -4,7 +4,6 @@ import nodemailer from 'nodemailer';
 import config from "../config/config.js"
 import jwt from "jsonwebtoken";
 
-
 import userController from '../controller/userController.js';
 import check_admin from '../middlewares/admin.js';
 import tokenExpirationMiddleware from '../middlewares/recovery.js';
@@ -59,7 +58,7 @@ router.post("/forgot",async(req,res)=> {
                 html: ` <div>
                             <h1>Click this Link to recover you email!</h1>
                             <a href="http://localhost:8080/restore?token=${token}">Click here</a>
-                            <p>This Link will expire in 5 minutes</p>
+                            <p>This Link will expire in 1 hour</p>
                         </div>`
             });
             res.send({status: 'Email sent with success, please check your email!',payload: result, token_generated: token});
@@ -97,6 +96,7 @@ router.get("/current", passport.authenticate("jwt",{session:false,failureRedirec
         }
     )
 })
+
 
 router.get("/:uid",async (req, res) => {
     try{
