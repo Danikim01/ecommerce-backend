@@ -24,7 +24,6 @@
 
 <div id="productos" data-email='{{email}}'>
     {{#each products}}
-    
         <div class="product-card">
             <h3>{{this.title}}</h3>
             <hr>
@@ -32,7 +31,7 @@
             <p>Descripción: {{this.description}}</p>
             <p>Precio: $ {{this.price}}</p>
             <p>Dueño: {{this.owner}}</p>
-            <button id="button-delete" data-email='{{email}}' onclick="deleteProduct('{{this._id}}','{{email}}')">Eliminar</button>
+            <button id="button-delete" data-email='{{email}}' onclick="deleteProduct('{{this._id}}')">Eliminar</button>
         </div>
     {{/each}}
 </div>

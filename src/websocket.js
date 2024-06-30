@@ -35,6 +35,7 @@ export default io => {
                 }
         
                 if (userEmail != "admin@gmail.com" && userEmail !== product.owner) {
+                    console.log("Comparando: ", userEmail, "con: ", product.owner)
                     socket.emit("statusError", "No tiene permisos para eliminar este producto");
                     return;
                 }

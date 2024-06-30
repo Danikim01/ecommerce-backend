@@ -47,7 +47,7 @@ function crearProductos(productos, userEmail){
             <p>Descripción: ${product.description}</p>
             <p>Precio: $ ${product.price}</p>
             <p>Dueño: ${product.owner}</p>
-            <button id="button-delete" data-email='${userEmail}' onclick="deleteProduct('${product._id}','${userEmail}')">Eliminar</button>
+            <button id="button-delete" data-email='${userEmail}' onclick="deleteProduct('${product._id}')">Eliminar</button>
         </div>`;
     });
     return html;
@@ -59,7 +59,9 @@ socket.on("sendingAllProducts", (products) => {
     contenedorProductos.innerHTML = crearProductos(products, userEmail);
 });
 
-function deleteProduct(pid, userEmail) {
+function deleteProduct(pid) {
+    const contenedorProductos = document.getElementById('productos');
+    const userEmail = contenedorProductos.getAttribute('data-email');
     socket.emit('deleteProduct', { pid, userEmail });
 }
 
