@@ -1,7 +1,12 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
-import cartModel from "../models/cartModel.js";
+
 import {isValidPassword} from "../../../utils/functionsUtil.js";
+import { createHash } from "../../../utils/functionsUtil.js";
+
+import { generateProductErrorInfo, generateDuplicatePasswordErrorInfo, generateUserNotFoundErrorInfo } from "../../../errors/info.js";
+import CustomError from "../../../errors/CustomError.js";
+import { ErrorCodes } from "../../../errors/enums.js";
 
 export default class userManagerDB {
 
@@ -16,7 +21,21 @@ export default class userManagerDB {
 
     async getUser(uid){
         try{
-            return await userModel.findOne({_id: uid}).lean();
+            console.log("get_user:",uid)
+            const user = await userModel.findOne({_id: uid}).lean();
+            //if (!user) throw new Error("Usuario no encontrado");
+            return user
+        }catch(error){
+            console.error(error.message);
+            throw new Error("Error al obtener el usuario");
+        }
+    }
+
+    async getUserByEmail(email){
+        try{
+            const user = await userModel.findOne({email: email}).lean();
+            if (user) return true
+            return false
         }catch(error){
             console.error(error.message);
             throw new Error("Error al obtener el usuario");
@@ -51,6 +70,34 @@ export default class userManagerDB {
             console.error(error.message);
             throw new Error(errormessage);
         }
+    }
+
+    async restorePassword(email, new_password){
+        const user = await userModel.findOne({email: email}).lean();
+        if (!user){
+            CustomError.createError(
+                {
+                    name: "UserNotFoundError",
+                    cause: generateUserNotFoundErrorInfo(),
+                    message: "The user does not exist",
+                    code: ErrorCodes.USER_NOT_FOUND_ERROR,
+                }
+            )
+        }
+        if (isValidPassword(user, new_password)){
+            CustomError.createError(
+                {
+                    name: "DuplicatePasswordError",
+                    cause: generateDuplicatePasswordErrorInfo(),
+                    message: "The new password is the same as the old password. Please choose another one.",
+                    code: ErrorCodes.DUPLICATE_PASSWORD_ERROR,
+                }
+            ) 
+        }
+        const newPassword = createHash(new_password);
+        user.password = newPassword;
+        await userModel.updateOne({email: email}, user);
+        return user;
     }
 }
 

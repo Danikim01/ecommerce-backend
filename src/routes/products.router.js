@@ -83,7 +83,6 @@ router.post("/", uploader.array("thumbnail"), async (req,res) => {
             ) 
             return res.status(400).send({error: "Campos de producto incompletos"})
         }
-        console.log(product)
         await pm.createProduct(product)
         return res.status(200).send({message: "Producto agregado correctamente"})
     }catch(err){

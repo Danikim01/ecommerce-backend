@@ -9,3 +9,11 @@ export const generateProductErrorInfo = (product) => {
     * thumbnail : needs to be a String, received ${product.thumbnail}
     * code: needs to be a String, received ${product.code}`;
 }
+
+export const generateDuplicatePasswordErrorInfo = () => {
+    return `The new password cannot be the same as the previous one`;
+}
+
+export const generateUserNotFoundErrorInfo = () => {
+    return `The user does not exist`;
+}

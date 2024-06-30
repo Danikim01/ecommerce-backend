@@ -34,8 +34,11 @@ export default class cartManagerDB {
 
     async addProductToUsersCart(user_id, product_id) {
         try {
+            //console.log(user_id, product_id)
             const user = await userModel.findOne({ _id: user_id })
+            //console.log("[Cart controller] User: ", user)
             if (user.cart.length == 0) {
+                //console.log("[Cart controller] Creating new cart for user")
                 let new_cart = await cartModel.create({ products: [] })
                 user.cart.push({cart: new_cart._id})
                 await userModel.updateOne({ _id: user_id }, user)
@@ -52,6 +55,8 @@ export default class cartManagerDB {
                     await this.addProductToCart(cart._id, product_id)
                 }
             }
+
+            //console.log("[Cart controller] user: ",user.lean());
 
         } catch (error) {
             console.error(error.message);

@@ -2,19 +2,26 @@ import passport from "passport";
 
 import productController from "../controller/productController.js";
 import cartController from "../controller/cartController.js";
+import userController from "../controller/userController.js";
 
 import productModel from "../dao/mongo/models/productModel.js";
 import { Router } from 'express';
 import auth from "../middlewares/auth.js";
+import tokenExpirationMiddleware from "../middlewares/recovery.js"
 
 let pm = new productController();
 let cm = new cartController();
+let um = new userController();
 
 let router = Router()
 
-router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
-    const cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
-    //console.log(cart_id)
+router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),async (req, res) => {
+    //const cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
+    const user = await um.getUser(req.user._id);
+    let cart_id = "empty-cart"
+    if (user && user.cart.length !== 0) {
+        cart_id = user.cart[0].cart._id;
+    }
     res.render(
         'home',
         {
@@ -22,7 +29,7 @@ router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"
             style: 'index.css',
             user: req.user,
             isAdmin: req.user.role === "admin" ? true : false,
-            cart_id: cart_id
+            cart_id: cart_id,
         }
     )
 })
@@ -61,6 +68,14 @@ auth(['admin']), async (req, res) => {
 
 router.get("/carts/:cid", passport.authenticate("jwt",{session:false}),async (req, res) => {
     try {
+        if (req.params.cid == "empty-cart") {
+            res.render("cart", {
+                title: "Carrito",
+                style: "index.css",
+                isValid: false,
+            });
+            return
+        }
         let products = await cm.getProductsFromCart(req.params.cid);
         let isValid = products.length > 0;
         const user_cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
@@ -169,12 +184,25 @@ router.get("/register", (req, res) => {
     )
 });
 
-router.get("/restore",(req,res)=> {
+
+router.get("/forgot", (req, res) => {
+    res.render(
+        'forgot',
+        {
+            title: 'Restore password',
+            style: 'index.css',
+        }
+    )
+})
+
+router.get("/restore",tokenExpirationMiddleware,(req,res)=> {
+    let token = req.query.token
     res.render(
         'restore',
         {
             title: 'Restore',
             style: 'index.css',
+            token: token
         }
     )
 })

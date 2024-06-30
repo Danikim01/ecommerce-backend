@@ -17,4 +17,12 @@ export default class userController {
         return await usersService.getUser(uid);
     }
 
+    async getUserByEmail(email){
+        return await usersService.getUserByEmail(email);
+    }
+
+    async restorePassword(email, new_password){
+        return await usersService.restorePassword(email, new_password);
+    }
+
 }
