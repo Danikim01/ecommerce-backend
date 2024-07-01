@@ -51,7 +51,6 @@ auth(['user']),(req, res) => {
 router.get("/realtimeproducts", passport.authenticate("jwt", { session: false }), 
 auth(['admin','premium']), async (req, res) => { 
     try{
-        console.log("[views] email: ",req.user.email)
         res.render(
             "realTimeProducts",
             {
@@ -151,7 +150,6 @@ router.get("/views/products", passport.authenticate("jwt",{session:false}), asyn
 router.get("/views/products/:pid", passport.authenticate("jwt",{session:false}),async (req,res) => {
     try{
         let productDetails = await pm.getProductByID(req.params.pid)
-        console.log(productDetails)
         if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})
         productDetails.style = "index.css"
         productDetails.userId = req.user._id

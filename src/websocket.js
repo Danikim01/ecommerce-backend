@@ -37,7 +37,6 @@ export default io => {
                 }
         
                 if (userEmail != "admin@gmail.com" && userEmail !== product.owner) {
-                    console.log("Comparando: ", userEmail, "con: ", product.owner)
                     socket.emit("statusError", "No tiene permisos para eliminar este producto");
                     return;
                 }
@@ -70,9 +69,6 @@ export default io => {
                 const user_id = message.uid;
                 const product_id = message.pid;
 
-                //Además, modificar la lógica de carrito para que un usuario premium 
-                //NO pueda agregar a su carrito un producto que le pertenece
-
                 const product = await pm.getProductByID(product_id);
                 if(!product){
                     socket.emit("statusError", "Producto no encontrado");
@@ -85,11 +81,7 @@ export default io => {
                     return;
                 }
 
-                console.log("[Adding product to cart] user: ",user)
-                console.log("[Adding product to cart] product: ",product)
-
                 if(user.role === "premium" && product.owner === user.email){
-                    console.log("No puedes agregar a tu carrito un producto que te pertenece")
                     socket.emit("statusError", "No puedes agregar a tu carrito un producto que te pertenece");
                     return;
                 }

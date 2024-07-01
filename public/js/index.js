@@ -34,11 +34,8 @@ const contenedorProductos = document.querySelector("#productos");
 
 
 function crearProductos(productos, userEmail){
-    console.log("Productos: ", productos);
-    console.log("User email: ", userEmail);
     let html = "";
     productos.forEach(product => {
-        console.log("Product: ", product);
         html += 
         `<div class="product-card">
             <h3>${product.title}</h3>

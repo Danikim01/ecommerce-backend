@@ -21,7 +21,6 @@ export default class productManagerDB {
     }
 
     async createProduct(product) {
-        console.log("[Product Manager] Creating product: ", product);
         const {title, description, code, price, stock, category, owner,thumbnails} = product;
         if (!title || !description || !code || !price || !stock || !category) {
             throw new Error('Campo incompleto, por favor complete todos los campos');
