@@ -6,6 +6,10 @@ function addProductToCart(pid,uid) {
         pid,
         uid
     }
-    alert("Mando el mensaje por el socket")
     socket.emit('addProductToCart', message);
 }
+
+socket.on("statusError", (error) => {
+    console.error(error);
+    alert(error)
+});

@@ -1,11 +1,13 @@
 import productController from "./controller/productController.js";
 import messageController from "./controller/messageController.js";
 import cartController from "./controller/cartController.js";
-import passport from "passport";
+import userController from "./controller/userController.js";
+
 
 const pm = new productController();
 const mm = new messageController();
 const cm = new cartController();
+const um = new userController();
 
 export default io => {
     io.on("connection", async socket => {
@@ -65,7 +67,35 @@ export default io => {
         
         socket.on("addProductToCart", async message => {
             try{
+                const user_id = message.uid;
+                const product_id = message.pid;
+
+                //Además, modificar la lógica de carrito para que un usuario premium 
+                //NO pueda agregar a su carrito un producto que le pertenece
+
+                const product = await pm.getProductByID(product_id);
+                if(!product){
+                    socket.emit("statusError", "Producto no encontrado");
+                    return;
+                }
+
+                const user = await um.getUser(user_id);
+                if(!user){
+                    socket.emit("statusError", "Usuario no encontrado");
+                    return;
+                }
+
+                console.log("[Adding product to cart] user: ",user)
+                console.log("[Adding product to cart] product: ",product)
+
+                if(user.role === "premium" && product.owner === user.email){
+                    console.log("No puedes agregar a tu carrito un producto que te pertenece")
+                    socket.emit("statusError", "No puedes agregar a tu carrito un producto que te pertenece");
+                    return;
+                }
+
                 await cm.addProductToUsersCart(message.uid,message.pid);
+                socket.emit("statusError", "Producto agregado al carrito");
             }catch(error){
                 socket.emit("statusError", error.message);
             }
