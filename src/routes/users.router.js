@@ -86,7 +86,6 @@ router.post("/restore", tokenExpirationMiddleware, async (req, res) => {
 
 
 router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
-    //console.log("[current user]: ",req.user);
     req.logger.info("[Current user]: ",req.user);
     res.render(
         "current",

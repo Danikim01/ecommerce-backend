@@ -4,7 +4,6 @@ export default class TicketManagerDB {
     async createTicket(ticketDTO){
         try{
             const ticket = await ticketModel.create({purchaser:ticketDTO.purchaser,amount:ticketDTO.amount})
-            console.log(ticket)
             return ticket
         }catch(error){
             console.error(error)

@@ -21,9 +21,7 @@ export default class userManagerDB {
 
     async getUser(uid){
         try{
-            console.log("get_user:",uid)
             const user = await userModel.findOne({_id: uid}).lean();
-            //if (!user) throw new Error("Usuario no encontrado");
             return user
         }catch(error){
             console.error(error.message);

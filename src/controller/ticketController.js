@@ -17,7 +17,6 @@ export default class TicketController {
             }
         }
         if(invalidProducts == true){
-            console.log("Invalid Products")
             return InvalidProducts
         }else{
             return ticketService.createTicket(purchaser,amount);

@@ -107,7 +107,6 @@ router.delete("/:pid", async (req,res) => {
         if (result instanceof Error) return res.status(400).send({error: result.message})
         res.status(200).send({message: "Producto eliminado correctamente"})
     }catch(err){
-        console.log(err)
         res.status(400).send({error: "Error al eliminar el producto desde el product router"})
     }
 })
