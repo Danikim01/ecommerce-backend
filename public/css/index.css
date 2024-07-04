@@ -230,3 +230,12 @@ h1{
     border-radius: 10px;
     width: 30%;
 }
+
+.welcome-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 80vh;
+}

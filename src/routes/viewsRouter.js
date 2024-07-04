@@ -15,6 +15,17 @@ let um = new userController();
 
 let router = Router()
 
+
+router.get("/", (req, res) => {
+    res.render(
+        "homePage",
+        {
+            title: "Home page",
+            style: "index.css"
+        }
+    )
+})
+
 router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),async (req, res) => {
     const user = await um.getUser(req.user._id);
     let cart_id = "empty-cart"
@@ -36,7 +47,7 @@ router.get("/home", passport.authenticate("jwt",{session:false,failureRedirect:"
 
 //Solo el usuario puede enviar mensajes al chat
 router.get("/chat", passport.authenticate("jwt", { session: false }), 
-auth(['user']),(req, res) => {
+auth(['user','admin','premium']),(req, res) => {
     res.render(
         'chat',
         {
