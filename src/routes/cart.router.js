@@ -25,7 +25,8 @@ router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),asy
     try{
         const user_cart =  await cm.getProductsFromCart(req.params.cid)
         const purchaser = req.user.email
-        let ticket = await tc.createTicket(purchaser,user_cart)
+        let invalid_products = []
+        let ticket = await tc.createTicket(purchaser,user_cart,invalid_products)
         
         //Update the users cart, meaning the users cart will be empty if all products were bought
         //Update for each product bough the stock
@@ -37,9 +38,10 @@ router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),asy
             }
         }
 
-        if (ticket.length < user_cart.length){
+        if (invalid_products.length > 0){
             return res.status(400).send({error: "Error al realizar la compra, productos invalidos",productos: ticket})
         }
+
         return res.send({message: "Compra realizada correctamente",ticket: ticket})
     }catch(err){
         res.status(400).send({error: "Error al realizar la compra"})
@@ -72,7 +74,7 @@ router.post("/:cid/product/:pid",async (req,res) => {
 
 //Solo el usuario puede agregar productos al carrito
 router.post("/:uid/product/:pid",passport.authenticate("jwt", { session: false }), 
-auth(['user']) ,async (req,res) => {
+auth(['user','premium','admin']) ,async (req,res) => {
     try{
         let result = await cm.addProductToUsersCart(req.params.uid,req.params.pid)
         if (result instanceof Error) return res.status(400).send({error: result.message})

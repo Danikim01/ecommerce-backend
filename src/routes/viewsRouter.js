@@ -88,8 +88,12 @@ router.get("/carts/:cid", passport.authenticate("jwt",{session:false}),async (re
             return
         }
         let products = await cm.getProductsFromCart(req.params.cid);
+        console.log(products);
         let isValid = products.length > 0;
-        const user_cart_id = req.user.cart[0] ? req.user.cart[0].cart._id : null;
+        const user = await um.getUser(req.user._id);
+        const user_cart_id = user.cart[0] ? user.cart[0].cart._id : null;
+        console.log(req.user);
+        console.log(user_cart_id);
         let transformedProducts = products.map(item => {
             return {
                 _id: item.product._id,
@@ -112,7 +116,7 @@ router.get("/carts/:cid", passport.authenticate("jwt",{session:false}),async (re
             payload: transformedProducts 
         });
     } catch (err) {
-        res.status(400).send({ error: "Error al obtener el carrito" });
+        res.status(400).send({ error: "[views router] Error al obtener el carrito" });
     }
 });
 
