@@ -26,12 +26,14 @@ router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),asy
         const user_cart =  await cm.getProductsFromCart(req.params.cid)
         const purchaser = req.user.email
         let invalid_products = []
+        let valid_products = []
         let ticket = await tc.createTicket(purchaser,user_cart,invalid_products)
         
         //Update the users cart, meaning the users cart will be empty if all products were bought
         //Update for each product bough the stock
         for (let product of user_cart){
             if (product.product.stock >= product.quantity){
+                valid_products.push(product.product.title)
                 await pm.buyProduct(product.product._id,product.quantity)
                 //also the users cart needs to be updated
                 await cm.deleteProductFromCart(req.params.cid,product.product._id)
@@ -39,10 +41,15 @@ router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),asy
         }
 
         if (invalid_products.length > 0){
-            return res.status(400).send({error: "Error al realizar la compra, productos invalidos",productos: ticket})
+            return res.status(400).send({
+                message:"Productos invalidos detectados",
+                productos_invalidos: invalid_products,
+                productos_comprados: valid_products,
+                ticket: ticket,
+            })
         }
 
-        return res.send({message: "Compra realizada correctamente",ticket: ticket})
+        return res.send({message: "Compra realizada correctamente",productos_comprados: valid_products,ticket: ticket})
     }catch(err){
         res.status(400).send({error: "Error al realizar la compra"})
     
