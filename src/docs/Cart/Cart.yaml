@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: Carts API Documentation
+  description: API documentation for cart endpoints
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: Carts
+    description: Endpoints related to carts
+
+paths:
+  /carts:
+    post:
+      tags:
+        - Carts
+      summary: Add a new cart
+      responses:
+        200:
+          description: Cart added successfully
+        400:
+          description: Error adding cart
+
+  /carts/{cid}/purchase:
+    get:
+      tags:
+        - Carts
+      summary: Purchase cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Purchase completed successfully
+        400:
+          description: Error completing purchase
+
+  /carts/{cid}:
+    get:
+      tags:
+        - Carts
+      summary: Get cart by ID
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: A cart object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        400:
+          description: Error getting cart
+
+    put:
+      tags:
+        - Carts
+      summary: Update cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        200:
+          description: Cart updated successfully
+        400:
+          description: Error updating cart
+
+    delete:
+      tags:
+        - Carts
+      summary: Delete all products from cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: All products deleted from cart successfully
+        400:
+          description: Error deleting products from cart
+
+  /carts/{cid}/product/{pid}:
+    post:
+      tags:
+        - Carts
+      summary: Add product to cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Product added to cart successfully
+        400:
+          description: Error adding product to cart
+
+    delete:
+      tags:
+        - Carts
+      summary: Delete product from cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Product deleted from cart successfully
+        400:
+          description: Error deleting product from cart
+
+  /carts/{cid}/products/{pid}:
+    put:
+      tags:
+        - Carts
+      summary: Update product quantity in cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+      responses:
+        200:
+          description: Product quantity updated successfully
+        400:
+          description: Error updating product quantity
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Product'
+              quantity:
+                type: integer
+                default: 1
+
+    Product:
+      type: object
+      required:
+        - title
+        - description
+        - code
+        - price
+        - stock
+        - category
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        price:
+          type: number
+        status:
+          type: boolean
+          default: true
+        stock:
+          type: number
+        category:
+          type: string
+        thumbnails:
+          type: array
+          items:
+            type: string
+        owner:
+          type: string
+          default: "admin"

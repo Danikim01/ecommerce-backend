@@ -15,6 +15,8 @@ import initializatePassport from './config/passportConfig.js';
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
 import addLogger from "./utils/logger.js";
+import swaggerUiExpress from 'swagger-ui-express';
+import specs from "./utils/swagger.js";
 
 import loggerTestRouter from "./routes/logger.router.js";
 
@@ -56,6 +58,7 @@ app.use('/api/sessions', usersRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use('/api/users', userRolesRouter);
+app.use('/api/docs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
 app.use("/mockingproducts", mocksRouter);
 app.use("/loggerTest",loggerTestRouter);
 app.use("/", viewsRouter);
