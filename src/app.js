@@ -5,7 +5,6 @@ import mocksRouter from "./routes/mocks.router.js"
 import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import __dirname from "./path.js";
-import mongoose from "mongoose";
 import websocket from "./websocket.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import usersRouter from "./routes/users.router.js";
@@ -19,6 +18,7 @@ import swaggerUiExpress from 'swagger-ui-express';
 import specs from "./utils/swagger.js";
 
 import loggerTestRouter from "./routes/logger.router.js";
+import connection from "./utils/db.connection.js";
 
 const app = express();
 
@@ -36,17 +36,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(addLogger);
 
-
-const uri = config.mongoUri
-
-const connection = async () => {
-    try{
-        await mongoose.connect(uri)
-        console.log("Conexion exitosa a la base de datos")
-    }catch(error){
-        console.log("Error al conectar a la base de datos: ", error);
-    }
-}
 
 connection();
 

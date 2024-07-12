@@ -14,8 +14,8 @@ export default class productController {
         return productsService.createProduct(product);
     }
 
-    deleteProduct(pid, product){
-        return productsService.deleteProduct(pid, product);
+    deleteProduct(pid){
+        return productsService.deleteProduct(pid);
     }
 
     buyProduct(pid, quantity){

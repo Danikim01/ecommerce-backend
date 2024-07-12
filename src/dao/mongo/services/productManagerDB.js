@@ -55,7 +55,7 @@ export default class productManagerDB {
             if (product.stock === 0){
                 return await this.deleteProduct(pid);
             }
-            await productModel.updateOne({_id: pid}, product);
+            return await productModel.updateOne({_id: pid}, product);
         } catch(error) {
             console.error(error.message);
             throw new Error(`Error al comprar el producto ${pid}`);
