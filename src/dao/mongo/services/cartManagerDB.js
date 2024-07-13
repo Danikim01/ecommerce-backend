@@ -14,7 +14,7 @@ export default class cartManagerDB {
 
     async addCart(){
         try{
-            await cartModel.create({products: []});
+            return await cartModel.create({products: []});
         }catch(error){
             console.error(error.message);
             throw new Error("Error al agregar el carrito");
@@ -25,7 +25,7 @@ export default class cartManagerDB {
         try{
             const cart = await cartModel.findOne({ _id: cart_id});
             cart.products.push({product: product_id});
-            await cartModel.updateOne({_id: cart_id}, cart);
+            return await cartModel.updateOne({_id: cart_id}, cart);
         }catch(error){
             console.error(error.message);
             throw new Error("Error al agregar el producto al carrito");
@@ -105,7 +105,16 @@ export default class cartManagerDB {
         try{
             const cart = await cartModel.findOne({_id: cid});
             cart.products = [];
-            await cartModel.updateOne({_id: cid}, cart);
+            return await cartModel.updateOne({_id: cid}, cart);
+        }catch(err){
+            console.error(err.message);
+            throw new Error("Error al eliminar el carrito");
+        }
+    }
+
+    async deleteCart(cid){
+        try{
+            return await cartModel.deleteOne({_id: cid});
         }catch(err){
             console.error(err.message);
             throw new Error("Error al eliminar el carrito");

@@ -33,5 +33,9 @@ export default class cartController {
     deleteProducts(cid){
         return cartsService.deleteProducts(cid);
     }
+
+    deleteCart(cid){
+        return cartsService.deleteCart(cid);
+    }
 }
 
