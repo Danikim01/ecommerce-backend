@@ -1,12 +1,11 @@
 import messageController from "./controller/messageController.js";
 import cartController from "./controller/cartController.js";
-import userController from "./controller/userController.js";
 
-import { productsService } from "./repositories/index.js";
+
+import { productsService,usersService,cartsService } from "./repositories/index.js";
 
 const mm = new messageController();
-const cm = new cartController();
-const um = new userController();
+
 
 export default io => {
     io.on("connection", async socket => {
@@ -69,7 +68,7 @@ export default io => {
                     return;
                 }
 
-                const user = await um.getUser(user_id);
+                const user = await usersService.getUser(user_id);
                 if(!user){
                     socket.emit("statusError", "Usuario no encontrado");
                     return;
@@ -80,7 +79,7 @@ export default io => {
                     return;
                 }
 
-                await cm.addProductToUsersCart(message.uid,message.pid);
+                await cartsService.addProductToUsersCart(message.uid,message.pid);
                 socket.emit("statusError", "Producto agregado al carrito");
             }catch(error){
                 socket.emit("statusError", error.message);

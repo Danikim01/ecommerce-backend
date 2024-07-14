@@ -1,12 +1,8 @@
 import productController from "./productController.js";
-import cartController from "./cartController.js";
-import userController from "./userController.js";
+import { usersService,productsService,cartsService } from "../repositories/index.js";
 
-import { productsService } from "../repositories/index.js";
 
 let pm = new productController();
-let cm = new cartController();
-let um = new userController();
 
 const renderHomePage = (req, res) => {
     res.render(
@@ -19,7 +15,7 @@ const renderHomePage = (req, res) => {
 }
 
 const renderHome = async (req, res) => {
-    const user = await um.getUser(req.user._id);
+    const user = await usersService.getUser(req.user._id);
     let cart_id = "empty-cart"
     if (user && user.cart.length !== 0) {
         cart_id = user.cart[0].cart._id;
@@ -72,9 +68,9 @@ const renderUserCart = async (req, res) => {
             });
             return
         }
-        let products = await cm.getProductsFromCart(req.params.cid);
+        let products = await cartsService.getProductsFromCart(req.params.cid);
         let isValid = products.length > 0;
-        const user = await um.getUser(req.user._id);
+        const user = await usersService.getUser(req.user._id);
         const user_cart_id = user.cart[0] ? user.cart[0].cart._id : null;
         let transformedProducts = products.map(item => {
             return {
@@ -122,7 +118,7 @@ const renderProducts = async (req, res) => {
 
 const renderProductDetails = async (req,res) => {
     try{
-        let productDetails = await pm.getProductByID(req.params.pid)
+        let productDetails = await productsService.getProductByID(req.params.pid)
         if (productDetails instanceof Error) return res.status(400).send({error: productDetails.message})
         productDetails.style = "index.css"
         productDetails.userId = req.user._id
@@ -180,6 +176,16 @@ const renderLogout = (req, res) => {
     res.redirect('/login');
 }   
 
+const renderCurrent = (req, res) => {
+    res.render(
+        "current",
+        {
+            title: "Current",
+            style: "index.css",
+            curr_user: req.user
+        }
+    )
+}
 export default {
     renderHomePage,
     renderHome,
@@ -192,5 +198,6 @@ export default {
     renderRegister,
     renderForgot,
     renderRestore,
-    renderLogout
+    renderLogout,
+    renderCurrent
 }
