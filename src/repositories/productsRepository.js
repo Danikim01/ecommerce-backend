@@ -30,4 +30,8 @@ export default class ProductRepository{
     async deleteProduct(id){
         return await this.dao.deleteProduct(id);
     }
+
+    async paginateProducts(filter, options){
+        return await this.dao.paginateProducts(filter, options);
+    }
 }

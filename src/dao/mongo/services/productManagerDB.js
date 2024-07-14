@@ -72,4 +72,22 @@ export default class productManagerDB {
             throw new Error(`Error al eliminar el producto desde product manager ${pid}`);
         }
     }
+
+    async paginateProducts(filter, options){
+        try {
+            let paginateResult = await productModel.paginate(filter, options);
+
+            let baseURL = "http://localhost:8080/views/products";
+
+            paginateResult.prevLink = paginateResult.hasPrevPage ? `${baseURL}?page=${paginateResult.prevPage}` : null;
+            paginateResult.nextLink = paginateResult.hasNextPage ? `${baseURL}?page=${paginateResult.nextPage}` : null;
+            paginateResult.isValid = !(options.page <= 0 || options.page > paginateResult.totalPages);
+            paginateResult.style = "index.css"
+
+            return paginateResult;
+        } catch (error) {
+            console.error(error.message);
+            throw new Error("Error al buscar los productos paginados");
+        }
+    }
 }

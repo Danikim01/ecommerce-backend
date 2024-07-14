@@ -25,4 +25,20 @@ export default class productController {
     updateProduct(pid, product){
         return productsService.updateProduct(pid, product);
     }
+
+    paginateProducts(page,query,sort,products_per_page){
+        let filter = {};
+        if (query) {
+            if (!isNaN(query)) {
+                filter.$or = [{ price: parseInt(query) }, { stock: parseInt(query) }];
+            } else {
+                filter.$or = [{ title: query }, { code: query }, { category: query }];
+            }
+        }
+        let options = { page, limit:products_per_page, lean: true };
+        if (sort !== undefined) {
+            options.sort = { price: sort };
+        }
+        return productsService.paginateProducts(filter, options);
+    }
 }
