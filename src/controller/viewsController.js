@@ -1,7 +1,6 @@
 import productController from "./productController.js";
 import cartController from "./cartController.js";
 import userController from "./userController.js";
-import productModel from "../dao/mongo/models/productModel.js";
 
 
 let pm = new productController();
