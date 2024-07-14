@@ -12,19 +12,20 @@ router.post("/login",uc.login)
 router.post("/forgot",uc.forgotPassword);
 router.post("/restore", tokenExpirationMiddleware,uc.restorePassword);
 
+router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
+    req.logger.info("[Current user]: ",req.user);
+    res.render(
+        "current",
+        {
+            title: "Current",
+            style: "index.css",
+            curr_user: req.user
+        }
+    )
+})
+
 router.get("/:uid",uc.getUser)
 
-// router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
-//     req.logger.info("[Current user]: ",req.user);
-//     res.render(
-//         "current",
-//         {
-//             title: "Current",
-//             style: "index.css",
-//             curr_user: req.user
-//         }
-//     )
-// })
 
 
 

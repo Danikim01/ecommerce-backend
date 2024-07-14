@@ -60,7 +60,7 @@ export default class cartManagerDB {
     }
     
 
-    async deleteProductFromCart(cid,pid){
+    async deleteProductFromCart(cid,pid,uid){
         try{
             const cart = await cartModel.findOne({_id: cid});
             //cart.products = cart.products.filter(product => product.product._id.toString() != pid);
@@ -70,7 +70,23 @@ export default class cartManagerDB {
                     break;
                 }
             }
-            await cartModel.updateOne({_id: cid}, cart); 
+            await cartModel.updateOne({_id: cid}, cart);
+
+            const user = await userModel.findOne({_id: uid});
+            //empty from the users cart the product
+            if (user.cart.length > 0){
+                const user_cart = user.cart[0].cart;
+                console.log("user cart: ",user_cart);
+                for (let i = 0; i < user_cart.products.length; i++) {
+                    console.log("product: ",user_cart.products[i].product._id.toString());
+                    if (user_cart.products[i].product._id.toString() == pid){
+                        user_cart.products.splice(i, 1);
+                        break;
+                    }
+                }
+                await userModel.updateOne({_id: uid}, user);
+            }
+
         }catch(err){
             console.error(err.message);
             throw new Error("Error al eliminar el producto del carrito");

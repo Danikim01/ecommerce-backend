@@ -176,16 +176,17 @@ const renderLogout = (req, res) => {
     res.redirect('/login');
 }   
 
-const renderCurrent = (req, res) => {
-    res.render(
-        "current",
-        {
-            title: "Current",
-            style: "index.css",
-            curr_user: req.user
-        }
-    )
-}
+// const renderCurrent = async (req, res) => {
+//     res.render(
+//         "current",
+//         {
+//             title: "Current",
+//             style: "index.css",
+//             curr_user: req.user
+//         }
+//     )
+// }
+
 export default {
     renderHomePage,
     renderHome,
@@ -199,5 +200,5 @@ export default {
     renderForgot,
     renderRestore,
     renderLogout,
-    renderCurrent
+    //renderCurrent
 }

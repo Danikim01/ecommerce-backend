@@ -33,4 +33,5 @@ export default class UserRepository {
     async getUser(uid){
         return await this.dao.getUser(uid);
     }
+
 }
