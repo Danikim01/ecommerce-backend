@@ -73,12 +73,9 @@ export default class productManagerDB {
         }
     }
 
-    async paginateProducts(filter, options){
+    async paginateProducts(filter, options,baseURL){
         try {
             let paginateResult = await productModel.paginate(filter, options);
-
-            let baseURL = "http://localhost:8080/views/products";
-
             paginateResult.prevLink = paginateResult.hasPrevPage ? `${baseURL}?page=${paginateResult.prevPage}` : null;
             paginateResult.nextLink = paginateResult.hasNextPage ? `${baseURL}?page=${paginateResult.nextPage}` : null;
             paginateResult.isValid = !(options.page <= 0 || options.page > paginateResult.totalPages);

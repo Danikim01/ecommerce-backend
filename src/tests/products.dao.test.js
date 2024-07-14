@@ -1,9 +1,7 @@
 import { expect } from 'chai';
 import connection from '../utils/db.connection.js';
+import { productsService } from '../repositories/index.js';
 
-import productController from '../controller/productController.js';
-
-let productDao = new productController();
 
 const chai_expect = expect;
 const testProduct = {
@@ -30,12 +28,12 @@ describe("Tests Product DAO", () => {
     afterEach(function () {});
 
     it("getAllProducts() debe retornar un array con los productos", async () => {
-        const result = await productDao.getAllProducts();
+        const result = await productsService.getAllProducts();
         chai_expect(result).to.be.an("array");
     });
 
     it("createProduct() debe retornar un objeto con el producto creado", async () => {
-        const result = await productDao.createProduct(testProduct);
+        const result = await productsService.createProduct(testProduct);
         testProduct._id = result._id;
         chai_expect(result).to.be.an("object");
         chai_expect(result._id).to.be.not.null;
@@ -43,7 +41,7 @@ describe("Tests Product DAO", () => {
     });
 
     it("getProductByID() debe retornar un objeto con el producto", async () => {
-        const result = await productDao.getProductByID(testProduct._id);
+        const result = await productsService.getProductByID(testProduct._id);
         chai_expect(result).to.be.an("object");
         chai_expect(result._id).to.be.not.null;
         chai_expect(result.title).to.be.equal(testProduct.title);
@@ -51,8 +49,8 @@ describe("Tests Product DAO", () => {
 
    
     it("updateProduct() debe retornar un objeto con el producto actualizado", async () => {
-        const result = await productDao.updateProduct(testProduct._id, { title: "Test Product Updated" });
-        const updatedProduct = await productDao.getProductByID(testProduct._id);
+        const result = await productsService.updateProduct(testProduct._id, { title: "Test Product Updated" });
+        const updatedProduct = await productsService.getProductByID(testProduct._id);
         chai_expect(updatedProduct).to.be.an("object");
         chai_expect(updatedProduct._id).to.be.not.null;
         chai_expect(updatedProduct.title).to.be.equal("Test Product Updated");
@@ -60,7 +58,7 @@ describe("Tests Product DAO", () => {
 
     
     it("deleteProduct() debe retornar un objeto con el producto eliminado", async () => {
-        const result = await productDao.deleteProduct(testProduct._id);
+        const result = await productsService.deleteProduct(testProduct._id);
         chai_expect(result).to.be.an("object");
     });
 })

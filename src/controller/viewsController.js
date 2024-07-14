@@ -2,6 +2,7 @@ import productController from "./productController.js";
 import cartController from "./cartController.js";
 import userController from "./userController.js";
 
+import { productsService } from "../repositories/index.js";
 
 let pm = new productController();
 let cm = new cartController();
@@ -52,7 +53,7 @@ const renderRealTimeProducts = async (req, res) => {
             {
                 title: "Productos a tiempo real",
                 style: "index.css",
-                products: await pm.getAllProducts(),
+                products: await productsService.getAllProducts(),
                 email: req.user.email,
             }
         )
@@ -108,7 +109,8 @@ const renderProducts = async (req, res) => {
         let query = req.query.query;
         let sort = req.query.sort === "asc" ? 1 : req.query.sort === "desc" ? -1 : undefined;
         let products_per_page = 3;
-        let paginateResult = await pm.paginateProducts(page,query,sort,products_per_page);
+        let baseURL = "http://localhost:8080/views/products";
+        let paginateResult = await pm.paginateProducts(page,query,sort,products_per_page,baseURL);
         res.render(
             "index",
             paginateResult

@@ -1,10 +1,9 @@
-import productController from "./controller/productController.js";
 import messageController from "./controller/messageController.js";
 import cartController from "./controller/cartController.js";
 import userController from "./controller/userController.js";
 
+import { productsService } from "./repositories/index.js";
 
-const pm = new productController();
 const mm = new messageController();
 const cm = new cartController();
 const um = new userController();
@@ -15,8 +14,8 @@ export default io => {
 
         socket.on("sendProduct", async product => {
             try{
-                await pm.createProduct(product);
-                const products = await pm.getAllProducts();
+                await productsService.createProduct(product);
+                const products = await productsService.getAllProducts();
                 socket.emit("sendingAllProducts", products);
             } catch (error) {
                 socket.emit("statusError", error.message);
@@ -27,7 +26,7 @@ export default io => {
         socket.on("deleteProduct", async (data) => {
             try {
                 const { pid, userEmail } = data;
-                const product = await pm.getProductByID(pid);
+                const product = await productsService.getProductByID(pid);
                 if (!product) {
                     socket.emit("statusError", "Producto no encontrado");
                     return;
@@ -38,8 +37,8 @@ export default io => {
                     return;
                 }
         
-                await pm.deleteProduct(pid);
-                const products = await pm.getAllProducts();
+                await productsService.deleteProduct(pid);
+                const products = await productsService.getAllProducts();
                 socket.emit("sendingAllProducts", products);
         
             } catch (error) {
@@ -64,7 +63,7 @@ export default io => {
                 const user_id = message.uid;
                 const product_id = message.pid;
 
-                const product = await pm.getProductByID(product_id);
+                const product = await productsService.getProductByID(product_id);
                 if(!product){
                     socket.emit("statusError", "Producto no encontrado");
                     return;

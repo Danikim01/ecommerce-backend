@@ -31,7 +31,7 @@ export default class ProductRepository{
         return await this.dao.deleteProduct(id);
     }
 
-    async paginateProducts(filter, options){
-        return await this.dao.paginateProducts(filter, options);
+    async paginateProducts(filter, options,baseURL){
+        return await this.dao.paginateProducts(filter, options,baseURL);
     }
 }
