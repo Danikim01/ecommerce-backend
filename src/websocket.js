@@ -86,5 +86,31 @@ export default io => {
             }
         })
 
+        socket.on("removeProduct", async message => {
+            try {
+                const cid = message.cid;
+                const pid = message.pid;
+        
+                const cart = await cartsService.getProductsFromCart(cid);
+                if (!cart) {
+                    socket.emit("statusError", "Carrito no encontrado");
+                    return;
+                }
+        
+                const product = await productsService.getProductByID(pid);
+                if (!product) {
+                    socket.emit("statusError", "Producto no encontrado");
+                    return;
+                }
+        
+                await cartsService.deleteProductFromCart(cid, pid);
+                socket.emit("productRemoved");
+        
+            } catch (error) {
+                socket.emit("statusError", error.message);
+            }
+        });
+        
+
     });
 }

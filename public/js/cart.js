@@ -9,6 +9,20 @@ function addProductToCart(pid,uid) {
     socket.emit('addProductToCart', message);
 }
 
+//upon removing product reload the page to refresh the new changes in the cart
+function removeProduct(cid,pid) {
+    const message = {
+        cid,
+        pid
+    }
+    //alert("cid: " + message.cid + "pid: " + message.pid)
+    socket.emit('removeProduct', message);
+}
+
+socket.on("productRemoved", () => {
+    location.reload();
+});
+
 socket.on("statusError", (error) => {
     console.error(error);
     alert(error)

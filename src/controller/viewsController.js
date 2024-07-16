@@ -83,7 +83,8 @@ const renderUserCart = async (req, res) => {
                 stock: item.product.stock,
                 category: item.product.category,
                 thumbnails: item.product.thumbnails,
-                quantity: item.quantity
+                quantity: item.quantity,
+                cart_id: user_cart_id,
             };
         });
         res.render("cart", {

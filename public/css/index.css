@@ -239,3 +239,9 @@ h1{
     gap: 20px;
     height: 80vh;
 }
+
+.botton-remove{
+    cursor: pointer;
+    font-size: 25px;
+    font-weight: bold;
+}
