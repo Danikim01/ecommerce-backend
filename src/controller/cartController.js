@@ -33,7 +33,7 @@ export default class cartController {
                     valid_products.push(product.product.title)
                     await productsService.buyProduct(product.product._id,product.quantity)
                     //also the users cart needs to be updated
-                    await cartsService.deleteProductFromCart(req.params.cid,product.product._id,req.user._id)
+                    await cartsService.deleteProductFromCart(req.params.cid,product.product._id)
                 }
             }
             if (invalid_products.length > 0){
