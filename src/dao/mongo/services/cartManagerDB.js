@@ -63,7 +63,6 @@ export default class cartManagerDB {
     async deleteProductFromCart(cid,pid){
         try{
             const cart = await cartModel.findOne({_id: cid});
-            //cart.products = cart.products.filter(product => product.product._id.toString() != pid);
             for (let i = 0; i < cart.products.length; i++) {
                 if (cart.products[i].product._id.toString() == pid){
                     cart.products.splice(i, 1);

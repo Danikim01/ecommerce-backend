@@ -31,9 +31,9 @@ export default class cartController {
             for (let product of user_cart){
                 if (product.product.stock >= product.quantity){
                     valid_products.push(product.product.title)
-                    await productsService.buyProduct(product.product._id,product.quantity)
                     //also the users cart needs to be updated
                     await cartsService.deleteProductFromCart(req.params.cid,product.product._id)
+                    await productsService.buyProduct(product.product._id,product.quantity)
                 }
             }
             if (invalid_products.length > 0){
