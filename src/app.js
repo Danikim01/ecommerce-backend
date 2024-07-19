@@ -60,3 +60,6 @@ const httpServer = app.listen(PORT, () => {
 const socketServer = new Server(httpServer);
 
 websocket(socketServer);
+
+
+export default app;

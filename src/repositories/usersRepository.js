@@ -34,4 +34,8 @@ export default class UserRepository {
         return await this.dao.getUser(uid);
     }
 
+    async deleteUserByEmail(email){
+        return await this.dao.deleteUserByEmail(email);
+    }
+
 }

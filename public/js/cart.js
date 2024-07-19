@@ -19,8 +19,16 @@ function removeProduct(cid,pid) {
     socket.emit('removeProduct', message);
 }
 
-socket.on("productRemoved", () => {
-    location.reload();
+// socket.on("productRemoved", () => {
+//     location.reload();
+// });
+
+
+
+socket.on("sendingCartProducts", (cartProducts) => {
+    const contenedorProductos = document.querySelector(".cart-product-card");
+    contenedorProductos.getId
+
 });
 
 socket.on("statusError", (error) => {

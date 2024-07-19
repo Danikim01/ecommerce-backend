@@ -118,5 +118,19 @@ export default class userManagerDB {
 
         await userModel.updateOne({_id: uid}, user);
     }
+
+    async deleteUserByEmail(email){
+        try{
+            const user = await userModel.findOne({email: email});
+            if (!user){
+                throw new Error("Usuario no encontrado");
+            }
+            //delete user from database
+            return await userModel.deleteOne({email: email});
+        }catch(error){
+            console.error(error.message);
+            throw new Error("Error al borrar el usuario");
+        }
+    }
 }
 
