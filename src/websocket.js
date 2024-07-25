@@ -104,9 +104,7 @@ export default io => {
                 }
         
                 await cartsService.deleteProductFromCart(cid, pid);
-                //socket.emit("productRemoved");
-                const cartProducts = await cartsService.getProductsFromCart(cid);
-                socket.emit("sendingCartProducts", cartProducts);
+                socket.emit("productRemoved");
             } catch (error) {
                 socket.emit("statusError", error.message);
             }
