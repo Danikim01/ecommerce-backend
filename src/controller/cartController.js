@@ -13,7 +13,7 @@ export default class cartController {
         try{
             let result = await cartsService.addCart()
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            res.status(200).send({message: "Carrito agregado correctamente"})
+            res.status(200).send({message: "Carrito agregado correctamente",payload: result})
         }catch(err){
             res.status(400).send({error: "Error al agregar el carrito"})
         }
@@ -66,7 +66,7 @@ export default class cartController {
         try{
             let result = await cartsService.addProductToCart(req.params.cid,req.params.pid)
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            return res.status(200).send({message: "Producto agregado al carrito correctamente"})
+            return res.status(200).send({message: "Producto agregado al carrito correctamente",payload:result})
         }catch(err){
             res.status(400).send({error: "Error al agregar el producto al carrito"})
         }
@@ -76,7 +76,7 @@ export default class cartController {
         try{
             let result = await cartsService.addProductToUsersCart(req.params.uid,req.params.pid)
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            res.status(200).send({message: "Producto agregado al carrito correctamente"})
+            res.status(200).send({message: "Producto agregado al carrito correctamente",payload:result})
         }catch(err){
             res.status(400).send({error: "Error al agregar el producto al carrito del usuario"})
         }
@@ -86,7 +86,7 @@ export default class cartController {
         try{
             let result = await cartsService.deleteProductFromCart(req.params.cid,req.params.pid)
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            res.status(200).send({message: "Producto eliminado del carrito correctamente"})
+            res.status(200).send({message: "Producto eliminado del carrito correctamente",payload:result})
         }catch(err){
             res.status(400).send({error: "Error al eliminar el producto del carrito"})
         }
@@ -97,7 +97,7 @@ export default class cartController {
             let products = req.body
             let result = await cartsService.updateCart(req.params.cid,products)
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            res.status(200).send({message: "Carrito actualizado correctamente"})
+            res.status(200).send({message: "Carrito actualizado correctamente",payload:result})
         }catch(err){
             res.status(400).send({error: "Error al actualizar el carrito"})
         }
@@ -108,7 +108,7 @@ export default class cartController {
             let new_quantity = req.body.quantity
             let result = await cartsService.updateProductQuantity(req.params.cid,req.params.pid,new_quantity)
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            res.status(200).send({message: "Cantidad del producto actualizado correctamente"})
+            res.status(200).send({message: "Cantidad del producto actualizado correctamente",payload:result})
         }catch(err){
             res.status(400).send({error: "Error al actualizar el carrito"})
         }
@@ -118,7 +118,7 @@ export default class cartController {
         try{
             let result = await cartsService.deleteProducts(req.params.cid)
             if (result instanceof Error) return res.status(400).send({error: result.message})
-            res.status(200).send({message: "Productos del carrito eliminado correctamente"})
+            res.status(200).send({message: "Productos del carrito eliminado correctamente",payload:result})
         }catch(err){
             res.status(400).send({error: "Error al eliminar productos el carrito"})
         }

@@ -33,3 +33,24 @@ describe("Tests Users", () => {
         expect(res).to.be.ok;
     })
 })
+
+
+// describe('Pruebas de redireccionamiento y renderizado', () => { 
+//     it('Debería redirigir correctamente', async () => { 
+//         const res = await request(app).get('/ruta-que-redirige'); 
+//         // Verifica que se haya redirigido 
+//         expect(res.status).to.equal(302);
+//         // Verifica el destino de la redirección 
+//         expect(res.header.location).to.equal('/ruta-de-destino'); 
+
+//     });
+
+//     it('Debería renderizar correctamente', async () => { 
+//         const res = await request(app).get('/ruta-que-renderiza'); 
+//         // Verifica que se haya render 
+//         expect(res.status).to.equal(200); 
+//         // Verifica contenido HTML (o lo que se renderice) 
+//         expect(res.text).to.include('<html>'); 
+//     });
+
+// })

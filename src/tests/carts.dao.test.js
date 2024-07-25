@@ -1,5 +1,7 @@
 import { expect } from 'chai';
 import connection from '../utils/db.connection.js';
+import request from 'supertest';
+import app from '../app.js';
 
 import { cartsService,productsService } from '../repositories/index.js';
 
@@ -18,8 +20,6 @@ const testCart = {
     products: [],
     owner: "user",
 }
-
-connection();
 
 describe("Tests Cart DAO", () => {
      // Se ejecuta ANTES de comenzar el paquete de tests
@@ -100,3 +100,33 @@ describe("Tests Cart DAO", () => {
     });
 
 });
+
+
+//test the same as above but with the router
+describe("Tests Cart router",()=>{
+    before(async function () {
+        const result = await productsService.createProduct(testProduct);
+        testProduct._id = result._id;
+    });
+    after(async function () {
+        const result = await productsService.deleteProduct(testProduct._id);
+    });
+
+    it("POST /api/carts/ debe retornar un objeto con el carrito creado", async () => {
+        const { _body , statusCode } = await request(app).post("/api/carts/");
+        testCart._id = _body.payload._id;
+        console.
+        chai_expect(statusCode).to.be.equal(200);
+        chai_expect(_body).to.be.an("object");
+        chai_expect(_body.payload.products).to.be.deep.equal([]);
+        chai_expect(_body.payload._id).to.be.not.null;
+    });
+
+    it("GET /api/carts/:cid/products debe retornar un array con los productos del carrito", async () => {
+        console.log(`/api/carts/${testCart._id}/products`)
+        const { _body , statusCode } = await request(app).get(`/api/carts/${testCart._id}/products`);
+        chai_expect(statusCode).to.be.equal(200);
+        chai_expect(_body).to.be.an("array");
+        //chai_expect(_body.products).to.be.
+    });
+})

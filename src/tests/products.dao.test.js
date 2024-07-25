@@ -14,7 +14,6 @@ const testProduct = {
     category: "Test",
     owner: "user",
 }
-connection();
 
 describe("Tests Product DAO", () => {
     // Se ejecuta ANTES de comenzar el paquete de tests
