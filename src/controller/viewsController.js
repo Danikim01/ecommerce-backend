@@ -173,7 +173,9 @@ const renderRestore = (req, res) => {
 }
 
 const renderLogout = (req, res) => {
+    const user_id = req.user._id;
     res.clearCookie('auth');
+    usersService.logout(user_id);
     res.redirect('/login');
 }   
 

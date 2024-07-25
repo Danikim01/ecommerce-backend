@@ -63,6 +63,10 @@ export default class userManagerDB {
             if (!user) throw new Error(errormessage);
             if (!isValidPassword(user, password)) throw new Error(errormessage);
             //delete user.password
+            //update last_connection field from user with the current timestamp
+            const current_date = new Date();
+            user.last_connection = current_date.toLocaleString();
+            const res = await userModel.updateOne({email: email}, user);
             return jwt.sign(user,"coderSecret",{expiresIn: "1h"});
         }catch(error){
             console.error(error.message);
@@ -130,6 +134,23 @@ export default class userManagerDB {
         }catch(error){
             console.error(error.message);
             throw new Error("Error al borrar el usuario");
+        }
+    }
+
+    async logout(uid){
+        try{
+            const user = await userModel.findOne({_id: uid});
+            if (!user){
+                throw new Error("Usuario no encontrado");
+            }
+            //update last_connection field from user with the current timestamp
+            const current_date = new Date();
+            user.last_connection = current_date.toLocaleString();
+            const res = await userModel.updateOne({_id: uid}, user);
+            return res;
+        }catch(error){
+            console.error(error.message);
+            throw new Error("Error al cerrar la sesion");
         }
     }
 }

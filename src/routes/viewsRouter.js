@@ -19,7 +19,7 @@ router.get("/login", viewsController.renderLogin);
 router.get("/register", viewsController.renderRegister);
 router.get("/forgot", viewsController.renderForgot);
 router.get("/restore",tokenExpirationMiddleware,viewsController.renderRestore);
-router.get("/logout", viewsController.renderLogout);
+router.get("/logout",  passport.authenticate("jwt",{session:false}),viewsController.renderLogout);
 //router.get("/api/sessions/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderCurrent);
 
 export default router;

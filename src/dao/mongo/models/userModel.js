@@ -52,10 +52,13 @@ const userSchema = mongoose.Schema({
                 name: String, 
                 reference: String 
             }
-        ]
+        ],
+        default: [],
+        require:false
     },
     last_connection: {
-        type: Date,
+        type: String,
+        require: false
     }
 });
 

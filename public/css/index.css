@@ -245,3 +245,16 @@ h1{
     font-size: 25px;
     font-weight: bold;
 }
+
+.users-form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #7469B6;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 #7469B6;
+    width: 40%;
+}

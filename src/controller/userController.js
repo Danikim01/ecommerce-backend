@@ -92,4 +92,15 @@ export default class userController {
         }
     }
 
+    async uploadDocuments (req,res) {
+        try{
+            const files = req.files;
+            console.log(files);
+            res.status(200).send({status:"ok",files:files});
+        }catch(err){
+            console.error(err);
+            res.status(400).send({status:"error",message:err.message});
+        }
+    }
+
 }

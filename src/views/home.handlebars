@@ -13,12 +13,15 @@
         {{#if user.email}}
             <p><b>Email:</b> {{user.email}}</p>
         {{/if}}
-        {{#if user.age}}
-            <p><b>Edad:</b> {{user.age}}</p>
-        {{/if}}
         {{#if user.role}}
             <p><b>Rol:</b> {{user.role}}</p>
         {{/if}}
+        <form class="users-form" action="/api/sessions/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
+            <label for='file'>Select your image:</label>
+            <input type='file' multiple='multiple' accept='image/*' name='documents' id='file' />
+            <span class='hint'>Supported files: jpg, jpeg, png.</span>
+            <button type='submit'>Upload</button>
+        </form>
     </div>
     <a href="/views/products" class="button-home">Ver Productos</a>
     <a href="/carts/{{cart_id}}" class="button-home">Ver Carrito</a>
