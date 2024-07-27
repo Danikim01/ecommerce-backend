@@ -92,14 +92,25 @@ export default class userController {
         }
     }
 
-    async uploadDocuments (req,res) {
-        try{
-            const files = req.files;
-            console.log(files);
-            res.status(200).send({status:"ok",files:files});
-        }catch(err){
+    async uploadDocuments(req, res) {
+        try {
+            const files = req.files;    
+ 
+            if (!files.profile && !files.product && !files.documents) {
+                return res.status(400).send({ status: "error", message: "Debe subir al menos un archivo en uno de los campos: profile, product, documents." });
+            }
+    
+            // Combinar todos los archivos subidos en un solo arreglo
+            const allFiles = [];
+            if (files.profile) allFiles.push(...files.profile);
+            if (files.product) allFiles.push(...files.product);
+            if (files.documents) allFiles.push(...files.documents);
+    
+            const result = await usersService.uploadDocuments(req.params.uid, allFiles);
+            res.send({ status: "success", files: allFiles });
+        } catch (err) {
             console.error(err);
-            res.status(400).send({status:"error",message:err.message});
+            res.status(400).send({ status: "error", message: err.message });
         }
     }
 

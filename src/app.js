@@ -8,7 +8,7 @@ import __dirname from "./path.js";
 import websocket from "./websocket.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import usersRouter from "./routes/users.router.js";
-import userRolesRouter from "./routes/roles.router.js";
+import sessionsRouter from "./routes/session.router.js";
 import passport from "passport";
 import initializatePassport from './config/passportConfig.js';
 import cookieParser from "cookie-parser";
@@ -22,10 +22,12 @@ import connection from "./utils/db.connection.js";
 
 const app = express();
 
+import path from "path";
+
 //Incializamos el motor de plantillas
 app.engine("handlebars", handlebars.engine());
 //Establecemos la ruta de vistas
-app.set("views",`${__dirname}/views`);
+app.set("views", path.join(__dirname, 'views'));
 //Establecemos el motor de renderizado
 app.set("view engine", "handlebars");
 
@@ -43,10 +45,10 @@ initializatePassport();
 app.use(passport.initialize());
 
 
-app.use('/api/sessions', usersRouter);
+app.use('/api/sessions', sessionsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use('/api/users', userRolesRouter);
+app.use('/api/users', usersRouter);
 app.use('/api/docs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
 app.use("/mockingproducts", mocksRouter);
 app.use("/loggerTest",loggerTestRouter);

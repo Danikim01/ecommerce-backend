@@ -15,6 +15,8 @@ const testProduct = {
     owner: "user",
 }
 
+connection();
+
 describe("Tests Product DAO", () => {
     // Se ejecuta ANTES de comenzar el paquete de tests
     before(function () {

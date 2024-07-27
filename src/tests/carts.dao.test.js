@@ -21,6 +21,8 @@ const testCart = {
     owner: "user",
 }
 
+connection();
+
 describe("Tests Cart DAO", () => {
      // Se ejecuta ANTES de comenzar el paquete de tests
     before(async function () {

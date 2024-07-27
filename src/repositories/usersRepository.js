@@ -42,4 +42,8 @@ export default class UserRepository {
         return await this.dao.deleteUserByEmail(email);
     }
 
+    async uploadDocuments(uid, files){
+        return await this.dao.uploadDocuments(uid, files);
+    }
+
 }

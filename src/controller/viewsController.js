@@ -179,6 +179,18 @@ const renderLogout = (req, res) => {
     res.redirect('/login');
 }   
 
+
+const renderFiles = (req,res) => {
+    res.render(
+        "files",
+        {
+            title: "Upload Files",
+            style: "index.css",
+            user: req.user,
+        }
+    )
+}
+
 // const renderCurrent = async (req, res) => {
 //     res.render(
 //         "current",
@@ -189,6 +201,8 @@ const renderLogout = (req, res) => {
 //         }
 //     )
 // }
+
+
 
 export default {
     renderHomePage,
@@ -203,5 +217,6 @@ export default {
     renderForgot,
     renderRestore,
     renderLogout,
+    renderFiles,
     //renderCurrent
 }

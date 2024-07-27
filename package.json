@@ -36,12 +36,13 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "socket.io": "^4.7.5",
+    "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.13.0"
   },
   "devDependencies": {
     "chai": "^5.1.1",
-    "mocha": "^10.6.0"
+    "mocha": "^10.7.0"
   }
 }

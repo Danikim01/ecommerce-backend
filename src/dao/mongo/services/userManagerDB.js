@@ -153,5 +153,29 @@ export default class userManagerDB {
             throw new Error("Error al cerrar la sesion");
         }
     }
+
+    async uploadDocuments(uid, files){
+        try{
+            const user = await userModel.findOne({_id: uid});
+            if (!user){
+                throw new Error("Usuario no encontrado");
+            }
+            const documents = user.documents;
+            //append the new files to the documents array
+            console.log("files in mongodb: ",files)
+            for (const file of files){
+                if (documents.some(doc => doc.name === file.originalname)){
+                    continue;
+                }
+                documents.push({name: file.originalname, reference: file.path});
+            }
+            user.documents = documents;
+            const update = await userModel.updateOne({_id:uid}, user);
+            return update
+        }catch(err){
+            console.error(err);
+            throw new Error("Error al subir los documentos");
+        }
+    }
 }
 

@@ -1,0 +1,15 @@
+<div class="box">
+    <form class="users-form" action="/api/users/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
+        <label for='profile-file'>Eliga imagen de perfil:</label>
+        <input type='file' multiple="multiple" accept='image/*' name='profile' id='profile-file' />
+
+        <label for='product-file'>Eliga imagen de producto</label>
+        <input type='file' multiple="multiple" accept='image/*' name='product' id='product-file' />
+
+        <label for='document-file'>Eliga imagen de producto</label>
+        <input type='file' multiple="multiple" accept='image/*' name='documents' id='document-file' />
+
+        <button type='submit'>Subir</button>
+        <a href="/home" class="button-home">Volver a Inicio</a>
+    </form>
+</div>
