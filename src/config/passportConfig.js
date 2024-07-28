@@ -29,7 +29,6 @@ const cookieExtractor = (req) => {
     if (req && req.cookies) {
         token = req.cookies.auth ?? null;
     }
-
     return token;
 }
 

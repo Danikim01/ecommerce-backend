@@ -16,7 +16,7 @@ import config from "./config/config.js";
 import addLogger from "./utils/logger.js";
 import swaggerUiExpress from 'swagger-ui-express';
 import specs from "./utils/swagger.js";
-
+import cors from "cors";
 import loggerTestRouter from "./routes/logger.router.js";
 import connection from "./utils/db.connection.js";
 
@@ -53,6 +53,12 @@ app.use('/api/docs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
 app.use("/mockingproducts", mocksRouter);
 app.use("/loggerTest",loggerTestRouter);
 app.use("/", viewsRouter);
+
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+    methods: ['GET', 'POST', 'PUT'],
+    credentials: true
+}));
 
 const PORT = config.port
 const httpServer = app.listen(PORT, () => {

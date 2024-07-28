@@ -22,5 +22,5 @@ router.get("/restore",tokenExpirationMiddleware,viewsController.renderRestore);
 router.get("/logout",  passport.authenticate("jwt",{session:false}),viewsController.renderLogout);
 //router.get("/api/sessions/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderCurrent);
 router.get("/files", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderFiles);
-
+router.get("/alerts", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderAlerts);
 export default router;

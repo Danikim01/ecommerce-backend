@@ -1,8 +1,10 @@
 import productController from "./productController.js";
+import userController from "./userController.js";
 import { usersService,productsService,cartsService } from "../repositories/index.js";
-
+import axios from "axios";
 
 let pm = new productController();
+let um = new userController();
 
 const renderHomePage = (req, res) => {
     res.render(
@@ -191,6 +193,36 @@ const renderFiles = (req,res) => {
     )
 }
 
+
+const renderAlerts = async (req,res) => {
+    try{
+        const response = await axios.get(`http://localhost:8080/api/users/premium/${req.user._id}`,
+            {
+                headers:{
+                    Cookie: `auth=${req.cookies.auth}`
+                }
+            }
+        );
+        res.render(
+            "alerts",
+            {
+                title: "Alerts",
+                style: "index.css",
+                messages: [{message: "Rol cambiado con éxito"}]
+            }
+        )
+    }catch(err){
+        res.render(
+            "alerts",
+            {
+                title: "Alerts",
+                style: "index.css",
+                messages: [{message: err.response.data.status}]
+            }
+        )
+    }
+}
+
 // const renderCurrent = async (req, res) => {
 //     res.render(
 //         "current",
@@ -218,5 +250,6 @@ export default {
     renderRestore,
     renderLogout,
     renderFiles,
+    renderAlerts,
     //renderCurrent
 }
