@@ -17,3 +17,7 @@ export const generateDuplicatePasswordErrorInfo = () => {
 export const generateUserNotFoundErrorInfo = () => {
     return `The user does not exist`;
 }
+
+export const generateNotEnoughDocumentsErrorInfo = () => {
+    return `The user does not have enough documents`;
+}

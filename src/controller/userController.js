@@ -1,6 +1,7 @@
 import { usersService } from "../repositories/index.js"; 
 import jwt from 'jsonwebtoken';
 import transport from "../utils/transport.js";
+import __dirname from "../path.js";
 
 export default class userController {
     async getAllUsers(){
@@ -72,8 +73,26 @@ export default class userController {
         }
     }
 
-    async changeRole(uid){
-        return await usersService.changeRole(uid);
+    async changeRole(req, res) {
+        try{
+            const user = await usersService.getUser(req.params.uid);
+            if (user.role == "admin"){
+                return res.status(400).send({status: "No se puede cambiar el rol de un administrador"});
+            }
+            await usersService.changeRole(req.params.uid);
+            //res.send({status: "Rol cambiado con éxito"});
+            res.render(
+                "alerts",
+                {
+                    title: "Alert",
+                    messages: [{message: "Role changed successfully"}],
+                    style: "index.css"
+                }
+            )
+        }catch(err){
+            console.error(err)
+            res.status(400).send({error: err.message})
+        }
     }
 
     async getUserByEmail(email){

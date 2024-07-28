@@ -16,16 +16,14 @@
         {{#if user.role}}
             <p><b>Rol:</b> {{user.role}}</p>
         {{/if}}
-        {{!-- <form class="users-form" action="/api/sessions/{{user._id}}/documents" method="POST" enctype="multipart/form-data">
-            <label for='file'>Select your image:</label>
-            <input type='file' multiple='multiple' accept='image/*' name='documents' id='file' />
-            <span class='hint'>Supported files: jpg, jpeg, png.</span>
-            <button type='submit'>Upload</button>
-        </form> --}}
-        <a href="/files" class="button-home">Subir Archivos</a>
+       
     </div>
-    <a href="/views/products" class="button-home">Ver Productos</a>
-    <a href="/carts/{{cart_id}}" class="button-home">Ver Carrito</a>
+    <div class="user-options" style="display: flex;width:100%;gap:20px;justify-content:center">
+        <a href="/files" class="button-home">Subir Archivos</a>
+        <a href="/views/products" class="button-home">Ver Productos</a>
+        <a href="/carts/{{cart_id}}" class="button-home">Ver Carrito</a>
+        <a href="/api/users/premium/{{user._id}}" class="button-home">Cambiar Rol</a>
+    </div>
 </div>
 
 	

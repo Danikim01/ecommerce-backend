@@ -4,7 +4,7 @@ import userModel from "../models/userModel.js";
 import {isValidPassword} from "../../../utils/functionsUtil.js";
 import { createHash } from "../../../utils/functionsUtil.js";
 
-import { generateProductErrorInfo, generateDuplicatePasswordErrorInfo, generateUserNotFoundErrorInfo } from "../../../errors/info.js";
+import { generateNotEnoughDocumentsErrorInfo, generateDuplicatePasswordErrorInfo, generateUserNotFoundErrorInfo } from "../../../errors/info.js";
 import CustomError from "../../../errors/CustomError.js";
 import { ErrorCodes } from "../../../errors/enums.js";
 
@@ -115,11 +115,22 @@ export default class userManagerDB {
             )
         }
         if (user.role === "user"){
-            user.role = "premium";
+            //check if the user documents file has at leas 3 elements
+            if (user.documents.length < 3){
+                CustomError.createError(
+                    {
+                        name: "NotEnoughDocumentsError",
+                        cause: generateNotEnoughDocumentsErrorInfo(),
+                        message: "The user does not have enough documents",
+                        code: ErrorCodes.NOT_ENOUGH_DOCUMENTS_ERROR,
+                    }
+                )
+            }else{
+                user.role = "premium";
+            }
         }else if (user.role === "premium"){
             user.role = "user";
         }
-
         await userModel.updateOne({_id: uid}, user);
     }
 
@@ -162,11 +173,10 @@ export default class userManagerDB {
             }
             const documents = user.documents;
             //append the new files to the documents array
-            console.log("files in mongodb: ",files)
             for (const file of files){
-                if (documents.some(doc => doc.name === file.originalname)){
-                    continue;
-                }
+                // if (documents.some(doc => doc.name === file.originalname)){
+                //     continue;
+                // }
                 documents.push({name: file.originalname, reference: file.path});
             }
             user.documents = documents;
