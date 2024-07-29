@@ -2,6 +2,8 @@ import productController from "./productController.js";
 import userController from "./userController.js";
 import { usersService,productsService,cartsService } from "../repositories/index.js";
 import axios from "axios";
+import FormData from "form-data";
+import fs from "fs";
 
 let pm = new productController();
 let um = new userController();
@@ -208,7 +210,7 @@ const renderAlerts = async (req,res) => {
             {
                 title: "Alerts",
                 style: "index.css",
-                messages: [{message: "Rol cambiado con éxito"}]
+                messages: [{message: response.data.status}]
             }
         )
     }catch(err){
@@ -218,6 +220,47 @@ const renderAlerts = async (req,res) => {
                 title: "Alerts",
                 style: "index.css",
                 messages: [{message: err.response.data.status}]
+            }
+        )
+    }
+}
+
+const renderDocs = async (req,res) => {
+    try{
+        const files = req.files;
+
+        const form_data = new FormData();
+        
+        for (const field in files){
+            files[field].forEach(file => {
+                form_data.append(field, fs.createReadStream(file.path), file.originalname);
+            });
+        }
+
+        const response = await axios.post(`http://localhost:8080/api/users/${req.user._id}/documents`, form_data, {
+            headers: {
+              ...form_data.getHeaders(),
+              Cookie: `auth=${req.cookies.auth}`
+            }
+        })
+
+        res.render(
+            "documents",
+            {
+                title: "Documents",
+                style: "index.css",
+                files: response.data.files
+            }
+        )
+
+    }catch(err){
+        console.error(err)
+        res.render(
+            "alerts",
+            {
+                title: "Alerts",
+                style: "index.css",
+                messages: [{message: err.message}]
             }
         )
     }
@@ -251,5 +294,6 @@ export default {
     renderLogout,
     renderFiles,
     renderAlerts,
+    renderDocs,
     //renderCurrent
 }

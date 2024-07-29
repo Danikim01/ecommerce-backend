@@ -3,7 +3,7 @@ import viewsController from "../controller/viewsController.js";
 import { Router } from 'express';
 import auth from "../middlewares/auth.js";
 import tokenExpirationMiddleware from "../middlewares/recovery.js"
-
+import { uploader } from "../utils.js";
 
 let router = Router()
 
@@ -23,4 +23,9 @@ router.get("/logout",  passport.authenticate("jwt",{session:false}),viewsControl
 //router.get("/api/sessions/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderCurrent);
 router.get("/files", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderFiles);
 router.get("/alerts", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderAlerts);
+
+
+
+router.post("/docs", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),uploader.fields([{ name: 'profile' }, { name: 'product' }, { name: 'documents' }]),viewsController.renderDocs);
+
 export default router;

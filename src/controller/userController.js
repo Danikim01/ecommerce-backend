@@ -115,7 +115,6 @@ export default class userController {
             if (files.profile) allFiles.push(...files.profile);
             if (files.product) allFiles.push(...files.product);
             if (files.documents) allFiles.push(...files.documents);
-    
             const result = await usersService.uploadDocuments(req.params.uid, allFiles);
             res.send({ status: "success", files: allFiles });
         } catch (err) {
