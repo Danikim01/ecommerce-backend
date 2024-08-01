@@ -4,12 +4,30 @@ import transport from "../utils/transport.js";
 
 
 export default class userController {
-    async getAllUsers(){
-        return await usersService.getAllUsers();
+    async getAllUsers(req,res){
+        try{
+            const users = await usersService.getAllUsers();
+            res.send({status: "success", payload: users});
+        }catch(error){
+            console.error(error.message);
+            res.status(400).send({status: "error", message: error.message});
+        }
+    }
+
+    async deleteInactiveUsers(req,res){
+        try{
+            const time_in_seconds = req.query.time_in_seconds;
+            const inactive_users = await usersService.deleteInactiveUsers(time_in_seconds);
+            res.status(200).send({status: "success",inactive_users: inactive_users});
+        }catch(error){
+            console.error(error.message);
+            res.status(400).send({status: "error", message: error.message});
+        }
     }
 
     async createUser(req, res) {
         try{
+            req.logger.info("[Register Detected]:",req.body.email);
             await usersService.createUser(req.body);
             res.redirect("/login");
         }catch(error){
@@ -19,6 +37,7 @@ export default class userController {
 
     async login (req, res) {
         try{
+            req.logger.info("[Login Detected]:",req.body.email);
             const token = await usersService.login(req.body.email, req.body.password);
             res.cookie("auth",token,{maxAge: 60*60*1000});
             res.redirect("/home");

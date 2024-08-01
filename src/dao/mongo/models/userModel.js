@@ -59,6 +59,10 @@ const userSchema = mongoose.Schema({
     last_connection: {
         type: String,
         require: false
+    },
+    status: {
+        type: String,
+        require: false,
     }
 });
 
@@ -69,6 +73,7 @@ userSchema.pre("findOne", function() {
 
 userSchema.pre("save", function () {
     this.password = createHash(this.password);
+    this.status = "active";
 });
 
 

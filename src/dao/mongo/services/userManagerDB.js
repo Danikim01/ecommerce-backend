@@ -65,7 +65,8 @@ export default class userManagerDB {
             //delete user.password
             //update last_connection field from user with the current timestamp
             const current_date = new Date();
-            user.last_connection = current_date.toLocaleString();
+            user.last_connection = current_date.toISOString();
+            user.status = "active";
             const res = await userModel.updateOne({email: email}, user);
             return jwt.sign(user,"coderSecret",{expiresIn: "1h"});
         }catch(error){
@@ -156,7 +157,7 @@ export default class userManagerDB {
             }
             //update last_connection field from user with the current timestamp
             const current_date = new Date();
-            user.last_connection = current_date.toLocaleString();
+            user.last_connection = current_date.toISOString();
             const res = await userModel.updateOne({_id: uid}, user);
             return res;
         }catch(error){
@@ -185,6 +186,39 @@ export default class userManagerDB {
         }catch(err){
             console.error(err);
             throw new Error("Error al subir los documentos");
+        }
+    }
+
+    async deleteInactiveUsers(time_in_seconds) {
+        try {
+            const allUsers = await userModel.find().lean();
+            const currentDate = new Date();
+            const timeInMillis = time_in_seconds * 1000;
+            let inactive_users = [];
+            for (const user of allUsers) {
+                const lastConnection = new Date(user.last_connection);
+
+                if (isNaN(lastConnection.getTime())) {
+                    console.warn(`Fecha de última conexión no válida para el usuario con ID ${user._id}`);
+                    continue; // Saltar este usuario si la fecha no es válida
+                }
+
+                const differenceInMillis = currentDate - lastConnection;
+
+                if (differenceInMillis > timeInMillis) {
+                    if (user.status !== "inactive") { // Solo actualizar si el estado cambia
+                        const res = await userModel.updateOne({ _id: user._id }, { status: "inactive" });
+                        if (res.modifiedCount === 0) {
+                            console.warn(`No se pudo actualizar el usuario con ID ${user._id}`);
+                        }
+                        inactive_users.push({ _id: user._id, email: user.email });
+                    }
+                }
+            }
+            return inactive_users;
+        } catch (error) {
+            console.error("Error al borrar los usuarios inactivos:", error.message);
+            throw new Error("Error al borrar los usuarios inactivos");
         }
     }
 }

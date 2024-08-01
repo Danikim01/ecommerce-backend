@@ -6,7 +6,17 @@ export default class UserRepository {
     }
 
     async getAllUsers(){
-        return await this.dao.getAllUsers();
+        let users = await this.dao.getAllUsers();
+        const relevantUsers = users.map(user => {
+            const userDTO = new UserDTO(user);
+            return userDTO.getRelevantInfo();
+        });
+        return relevantUsers;
+    }
+
+    async deleteInactiveUsers(time_in_seconds){
+        let users = await this.dao.deleteInactiveUsers(time_in_seconds);
+        return users;
     }
 
     async getUserByEmail(email){

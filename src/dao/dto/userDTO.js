@@ -7,4 +7,12 @@ export default class UserDTO{
         this.password = user.password ?? ' ';
         this.role = user.role ?? ' ';
     }
+
+    getRelevantInfo(){
+        return {
+            full_name: this.first_name + ' ' + this.last_name,
+            email: this.email,
+            role: this.role
+        }
+    }
 }

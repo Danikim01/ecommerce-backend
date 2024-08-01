@@ -10,6 +10,10 @@ const router = Router();
 
 //router.get("/premium/:uid",um.changeRole);
 
+router.get("/",um.getAllUsers)
+
+router.delete("/",um.deleteInactiveUsers)
+
 router.get("/:uid",um.getUser)
 
 
