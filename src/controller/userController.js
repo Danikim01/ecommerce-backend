@@ -27,7 +27,7 @@ export default class userController {
 
     async createUser(req, res) {
         try{
-            req.logger.info("[Register Detected]:",req.body.email);
+            req.logger.info(`[Register Detected]: ${req.body.email}`);
             await usersService.createUser(req.body);
             res.redirect("/login");
         }catch(error){
@@ -37,12 +37,12 @@ export default class userController {
 
     async login (req, res) {
         try{
-            req.logger.info("[Login Detected]:",req.body.email);
+            req.logger.info(`[Login Detected]: ${req.body.email}`);
             const token = await usersService.login(req.body.email, req.body.password);
             res.cookie("auth",token,{maxAge: 60*60*1000});
             res.redirect("/home");
         }catch(error){
-            res.redirect("/login");
+            res.redirect('/login');
         }
     }
 

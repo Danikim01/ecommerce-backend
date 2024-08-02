@@ -109,6 +109,20 @@ export default io => {
                 socket.emit("statusError", error.message);
             }
         });
+
+        socket.on("deleteUser", async (data) => {
+            try{
+                const uid = data.uid;
+
+                await usersService.deleteUser({_id:uid});
+                const users = await usersService.getAllUsers();
+                const filtered_users = users.filter(user => user.role !== "admin");
+                console.log("Sending all users: ", filtered_users);
+                io.emit("sendingAllUsers", filtered_users);
+            }catch(error){
+                socket.emit("statusError", error.message);
+            }
+        })
         
 
     });

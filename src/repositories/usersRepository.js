@@ -15,8 +15,13 @@ export default class UserRepository {
     }
 
     async deleteInactiveUsers(time_in_seconds){
-        let users = await this.dao.deleteInactiveUsers(time_in_seconds);
-        return users;
+        try{
+            let users = await this.dao.deleteInactiveUsers(time_in_seconds);
+            return users;
+        }catch(err){
+            console.error(err);
+            return err;
+        }
     }
 
     async getUserByEmail(email){
@@ -48,8 +53,8 @@ export default class UserRepository {
         return await this.dao.logout(uid);
     }
 
-    async deleteUserByEmail(email){
-        return await this.dao.deleteUserByEmail(email);
+    async deleteUser(criteria){
+        return await this.dao.deleteUser(criteria);
     }
 
     async uploadDocuments(uid, files){

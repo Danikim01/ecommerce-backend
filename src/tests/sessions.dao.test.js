@@ -10,7 +10,7 @@ describe("Tests Users", () => {
     after(async () => {
         //logout the user and delete de user from de database
         await request(app).get("/logout");
-        await usersService.deleteUserByEmail(testUser.email);
+        await usersService.deleteUser({email: testUser.email});
     })
 
     it("POST /api/sessions/register deberia registrar un usuario",async () => {

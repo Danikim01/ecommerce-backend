@@ -61,6 +61,7 @@ export default class userManagerDB {
         try{
             const user = await userModel.findOne({email: email}).lean();
             if (!user) throw new Error(errormessage);
+            if (user.status === "inactive") throw new Error("Usuario inactivo, por favor contacte al administrador");
             if (!isValidPassword(user, password)) throw new Error(errormessage);
             //delete user.password
             //update last_connection field from user with the current timestamp
@@ -135,15 +136,15 @@ export default class userManagerDB {
         await userModel.updateOne({_id: uid}, user);
     }
 
-    async deleteUserByEmail(email){
-        try{
-            const user = await userModel.findOne({email: email});
-            if (!user){
+    async deleteUser(criteria) {
+        try {
+            const user = await userModel.findOne(criteria);
+            if (!user) {
                 throw new Error("Usuario no encontrado");
             }
-            //delete user from database
-            return await userModel.deleteOne({email: email});
-        }catch(error){
+            // Delete user from database
+            return await userModel.deleteOne(criteria);
+        } catch (error) {
             console.error(error.message);
             throw new Error("Error al borrar el usuario");
         }

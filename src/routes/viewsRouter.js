@@ -24,7 +24,7 @@ router.get("/logout",  passport.authenticate("jwt",{session:false}),viewsControl
 router.get("/files", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderFiles);
 router.get("/alerts", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderAlerts);
 
-
+router.get("/manage", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),viewsController.renderManage);
 
 router.post("/docs", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),uploader.fields([{ name: 'profile' }, { name: 'product' }, { name: 'documents' }]),viewsController.renderDocs);
 

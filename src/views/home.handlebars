@@ -13,16 +13,17 @@
         {{#if user.email}}
             <p><b>Email:</b> {{user.email}}</p>
         {{/if}}
-        {{#if user.role}}
             <p><b>Rol:</b> {{user.role}}</p>
-        {{/if}}
        
     </div>
     <div class="user-options" style="display: flex;width:100%;gap:20px;justify-content:center">
         <a href="/files" class="button-home">Subir Archivos</a>
         <a href="/views/products" class="button-home">Ver Productos</a>
         <a href="/carts/{{cart_id}}" class="button-home">Ver Carrito</a>
-        <a href="/alerts" class="button-home">Cambiar Rol</a>
+        {{!-- <a href="/alerts" class="button-home">Cambiar Rol</a> --}}
+        {{#if isAdmin}}
+            <a href="/manage" class="button-home">Gestionar Usuarios</a>
+        {{/if}}
     </div>
 </div>
 

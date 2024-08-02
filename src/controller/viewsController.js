@@ -31,6 +31,7 @@ const renderHome = async (req, res) => {
             style: 'index.css',
             user: req.user,
             isAdmin: req.user.role === "admin" ? true : false,
+            role: req.user.role,
             cart_id: cart_id,
         }
     )
@@ -266,6 +267,33 @@ const renderDocs = async (req,res) => {
     }
 }
 
+const renderManage = async (req,res) => {
+    try{
+        const users = await usersService.getAllUsers();
+        //filter from the users the admin users, that user should not figure in the users array
+        const filtered_users = users.filter(user => user.role !== "admin");
+        const isValid = filtered_users.length > 0;
+        res.render(
+            "manage",
+            {
+                title: "Manage",
+                style: "index.css",
+                isValid: isValid,
+                users: filtered_users
+            }
+        )
+    }catch(err){
+        res.render(
+            "alerts",
+            {
+                title: "Alerts",
+                style: "index.css",
+                messages: [{message: err.message}]
+            }
+        )
+    }
+}
+
 // const renderCurrent = async (req, res) => {
 //     res.render(
 //         "current",
@@ -295,5 +323,6 @@ export default {
     renderFiles,
     renderAlerts,
     renderDocs,
+    renderManage,
     //renderCurrent
 }
