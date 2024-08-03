@@ -63,7 +63,6 @@ function deleteProduct(pid) {
 }
 
 socket.on("statusError", (error) => {
-    console.error(error);
     alert(error)
 });
 

@@ -1,6 +1,6 @@
 import messageController from "./controller/messageController.js";
 import cartController from "./controller/cartController.js";
-
+import transport from "./utils/transport.js";
 
 import { productsService,usersService,cartsService } from "./repositories/index.js";
 
@@ -22,6 +22,24 @@ export default io => {
         });
 
 
+        const send_mail = async (product) => {
+            try{
+                const user = await usersService.getUserByEmail(product.owner);
+                if (user.role == "premium"){
+                    const result = await transport.sendMail({
+                        from: 'noreply <danikim01lol@gmail.com>',
+                        to: product.owner,
+                        subject: 'Product Removed Notification',
+                        html: ` <div>
+                                    <h1>Your Product: "${product.title}" has been removed!</h1>
+                                </div>`
+                    });
+                }
+            }catch(error){
+                socket.emit("statusError", error.message);
+            }
+        }
+
         socket.on("deleteProduct", async (data) => {
             try {
                 const { pid, userEmail } = data;
@@ -36,7 +54,8 @@ export default io => {
                     return;
                 }
         
-                await productsService.deleteProduct(pid);
+                //await productsService.deleteProduct(pid);
+                send_mail(product);
                 const products = await productsService.getAllProducts();
                 socket.emit("sendingAllProducts", products);
         
@@ -110,20 +129,32 @@ export default io => {
             }
         });
 
+
+        const send_filtered_users = async () => {
+            const users = await usersService.getAllUsers();
+            const filtered_users = users.filter(user => user.role !== "admin");
+            io.emit("sendingAllUsers", filtered_users);
+        }
+
         socket.on("deleteUser", async (data) => {
             try{
                 const uid = data.uid;
-
                 await usersService.deleteUser({_id:uid});
-                const users = await usersService.getAllUsers();
-                const filtered_users = users.filter(user => user.role !== "admin");
-                console.log("Sending all users: ", filtered_users);
-                io.emit("sendingAllUsers", filtered_users);
+                send_filtered_users();
             }catch(error){
                 socket.emit("statusError", error.message);
             }
         })
         
+        socket.on("changeRole", async (data) => {
+            try{
+                const uid = data.uid;
+                await usersService.changeRole(uid);
+                send_filtered_users();
+            }catch(error){
+                socket.emit("statusError", error.message);
+            }
+        })
 
     });
 }

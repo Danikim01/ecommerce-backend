@@ -2,40 +2,40 @@ import bcrypt from 'bcrypt';
 import moment from 'moment';
 import jwt from "jsonwebtoken";
 
-const PRIVATE_KEY = "CoderKeySecretShhh"
+// const PRIVATE_KEY = "CoderKeySecretShhh"
 
-export const generateToken = (user) => {
-    const token = jwt.sign(
-        { user },
-        PRIVATE_KEY,
-        { expiresIn: "1h" }
-    );
+// export const generateToken = (user) => {
+//     const token = jwt.sign(
+//         { user },
+//         PRIVATE_KEY,
+//         { expiresIn: "1h" }
+//     );
 
-    return token;
-}
+//     return token;
+// }
 
-export const authToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(403).send({
-            error: "Unauthorized"
-        });
-    }
+// export const authToken = (req, res, next) => {
+//     const authHeader = req.headers.authorization;
+//     if (!authHeader) {
+//         return res.status(403).send({
+//             error: "Unauthorized"
+//         });
+//     }
 
-    const token = authHeader.split(" ")[1]; //Remove string "Bearer"
-    jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
-        if (error) {
-            return res.status(403).send(
-                {
-                    error: "Not authenticated"
-                }
-            )
-        }
+//     const token = authHeader.split(" ")[1]; //Remove string "Bearer"
+//     jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
+//         if (error) {
+//             return res.status(403).send(
+//                 {
+//                     error: "Not authenticated"
+//                 }
+//             )
+//         }
 
-        req.user = credentials.user;
-        next();
-    });
-}
+//         req.user = credentials.user;
+//         next();
+//     });
+// }
 
 
 export const createHash = (password) => {

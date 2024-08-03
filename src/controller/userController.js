@@ -48,8 +48,9 @@ export default class userController {
 
     async forgotPassword(req,res) {
         try{
-            const flag = await usersService.getUserByEmail(req.body.email);
-            if (flag) {
+            const user = await usersService.getUserByEmail(req.body.email);
+            //if user exists
+            if (user) {
                 let token = jwt.sign({ token: "forgot_email_token" },"EmailSecretKey",{expiresIn: "1h"});
                 //res.cookie("forgot_email_cookie",token,{maxAge: 5*60*1000});
                 const result = await transport.sendMail({

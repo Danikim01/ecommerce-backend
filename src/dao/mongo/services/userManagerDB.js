@@ -32,8 +32,7 @@ export default class userManagerDB {
     async getUserByEmail(email){
         try{
             const user = await userModel.findOne({email: email}).lean();
-            if (user) return true
-            return false
+            return user;
         }catch(error){
             console.error(error.message);
             throw new Error("Error al obtener el usuario");
@@ -119,11 +118,12 @@ export default class userManagerDB {
         if (user.role === "user"){
             //check if the user documents file has at leas 3 elements
             if (user.documents.length < 3){
+                console.log("Not enough documents");
                 CustomError.createError(
                     {
                         name: "NotEnoughDocumentsError",
                         cause: generateNotEnoughDocumentsErrorInfo(),
-                        message: "The user does not have enough documents",
+                        message: `The user ${user.first_name} does not have enough documents`,
                         code: ErrorCodes.NOT_ENOUGH_DOCUMENTS_ERROR,
                     }
                 )
