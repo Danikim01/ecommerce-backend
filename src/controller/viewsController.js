@@ -74,7 +74,6 @@ const renderUserCart = async (req, res) => {
             return
         }
         let products = await cartsService.getProductsFromCart(req.params.cid);
-        console.log(products)
         let isValid = products.length > 0;
         const user = await usersService.getUser(req.user._id);
         const user_cart_id = user.cart[0] ? user.cart[0].cart._id : null;

@@ -12,7 +12,7 @@ El proyecto cuenta con un sistema de autenticacion y permisos bastante robusto e
 
 - Rol user: Este rol es el mas basico de todos. Se le proveen las funcionalidades mas basicas como comprar, ver los productos, subir archivos y consultar su carrito.
 - Rol premium: A partir de este rol se pueden crear productos accediento al endpoint ```/realtimeproducts```, sin embargo no se le permiten eliminar productos de otros usuarios, solo los suyos.  
-- Rol Admin: Este rol es el que tiene mas autoridad, se le provee la capacidad de crear, eliminar y manejar los productos de cualquier usuarios. Tambien tiene la capacidad de gestionar los usuarios alojados en la base de datos. Puede eliminar los usuarios y tambien cambiarles el rol. 
+- Rol Admin: Este rol es el que tiene mas autoridad, se le provee la capacidad de crear, eliminar y manejar los productos de cualquier usuario. Tambien tiene la capacidad de gestionar los usuarios alojados en la base de datos. Puede eliminar los usuarios y tambien cambiarles el rol. 
 
 # Detalles adicionales
 

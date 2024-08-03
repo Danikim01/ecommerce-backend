@@ -119,7 +119,6 @@ export default class userManagerDB {
         if (user.role === "user"){
             //check if the user documents file has at leas 3 elements
             if (user.documents.length < 3){
-                console.log("Not enough documents");
                 CustomError.createError(
                     {
                         name: "NotEnoughDocumentsError",

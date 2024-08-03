@@ -11,7 +11,6 @@ function changeRole(uid){
     const message = {
         uid
     }
-    console.log("Change role: ", message)
     socket.emit('changeRole', message);
 }
 
@@ -35,7 +34,6 @@ function crearUsuarios(users){
 }
 
 socket.on("sendingAllUsers", (users) => {
-    console.log("Users desde cliente: ",users)
     const contenedorUsuarios = document.getElementById('users-box')
     contenedorUsuarios.innerHTML = crearUsuarios(users);
 })
