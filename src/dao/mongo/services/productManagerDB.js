@@ -51,11 +51,11 @@ export default class productManagerDB {
             const product = await productModel.findOne({_id: pid});
             if (!product) throw new Error(`El producto ${pid} no existe!`);
             if (product.stock < quantity) throw new Error(`No hay suficiente stock para el producto ${pid}`);
-            if ((product.stock -= quantity) == 0){
+            product.stock -= quantity;
+            if (product.stock <= 0) {
                 const deleteResult = await this.deleteProduct(pid);
                 return deleteResult;
             }
-            product.stock -= quantity;
             return await productModel.updateOne({_id: pid}, product);
         } catch(error) {
             console.error(error.message);

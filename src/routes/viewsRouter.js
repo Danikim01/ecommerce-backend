@@ -28,4 +28,6 @@ router.get("/manage", passport.authenticate("jwt",{session:false,failureRedirect
 
 router.post("/docs", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),uploader.fields([{ name: 'profile' }, { name: 'product' }, { name: 'documents' }]),viewsController.renderDocs);
 
+
+
 export default router;

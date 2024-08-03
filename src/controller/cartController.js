@@ -19,38 +19,43 @@ export default class cartController {
         }
     }
 
-    async purchaseCart(req,res) {
-        try{
-            const user_cart =  await cartsService.getProductsFromCart(req.params.cid)
-            const purchaser = req.user.email
-            let invalid_products = []
-            let valid_products = []
-            let ticket = await ticketController.createTicket(purchaser,user_cart,invalid_products)
-            //Update the users cart, meaning the users cart will be empty if all products were bought
-            //Update for each product bough the stock
-            for (let product of user_cart){
-                if (product.product.stock >= product.quantity){
-                    valid_products.push(product.product.title)
-                    //also the users cart needs to be updated
-                    await cartsService.deleteProductFromCart(req.params.cid,product.product._id)
-                    await productsService.buyProduct(product.product._id,product.quantity)
+    async purchaseCart(req, res) {
+        try {
+            const user_cart = await cartsService.getProductsFromCart(req.params.cid);
+            const purchaser = req.user.email;
+            let invalid_products = [];
+            let valid_products = [];
+            let ticket = await ticketController.createTicket(purchaser, user_cart, invalid_products);
+    
+            for (let product of user_cart) {
+                if (product.product.stock >= product.quantity) {
+                    valid_products.push(product.product.title);
+                    await cartsService.deleteProductFromCart(req.params.cid, product.product._id);
+                    await productsService.buyProduct(product.product._id, product.quantity);
+                } else {
+                    if (!invalid_products.includes(product.product.title)) {
+                        invalid_products.push(product.product.title);
+                    }
                 }
             }
-            if (invalid_products.length > 0){
-                return res.status(400).send({
-                    message:"Productos invalidos detectados",
-                    productos_invalidos: invalid_products,
-                    productos_comprados: valid_products,
-                    ticket: ticket,
-                })
-            }
-            return res.send({message: "Compra realizada correctamente",productos_comprados: valid_products,ticket: ticket})
-        }catch(err){
-            res.status(400).send({error: "Error al realizar la compra"})
-        
+    
+            return res.render("ticket", {
+                title: "Ticket de compra",
+                style: "index.css",
+                ticket: {
+                    code: ticket.code,
+                    purchase_datetime: ticket.purchase_datetime,
+                    purchaser: ticket.purchaser,
+                    amount: ticket.amount,
+                },
+                productos_comprados: valid_products,
+                invalid_products: invalid_products.length > 0 ? invalid_products : null,
+            });
+        } catch (err) {
+            res.status(400).send({ error: "Error al realizar la compra" });
         }
     }
-
+    
     async getCart(req,res) {
         try{
             let cid = req.params.cid
