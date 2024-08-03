@@ -1,5 +1,6 @@
 import passport from 'passport';
 import jwt, { ExtractJwt } from 'passport-jwt';
+import config from './config.js';
 
 const JWTStratergy = jwt.Strategy;
 const initializatePassport = () => {
@@ -9,7 +10,7 @@ const initializatePassport = () => {
         new JWTStratergy(
             {
                 jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-                secretOrKey: 'coderSecret'
+                secretOrKey: config.passport_key
             },
             async (jwt_payload, done) => {
                 try {

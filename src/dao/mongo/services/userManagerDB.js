@@ -7,6 +7,7 @@ import { createHash } from "../../../utils/functionsUtil.js";
 import { generateNotEnoughDocumentsErrorInfo, generateDuplicatePasswordErrorInfo, generateUserNotFoundErrorInfo } from "../../../errors/info.js";
 import CustomError from "../../../errors/CustomError.js";
 import { ErrorCodes } from "../../../errors/enums.js";
+import config from "../../../config/config.js";
 
 export default class userManagerDB {
 
@@ -68,7 +69,7 @@ export default class userManagerDB {
             user.last_connection = current_date.toISOString();
             user.status = "active";
             const res = await userModel.updateOne({email: email}, user);
-            return jwt.sign(user,"coderSecret",{expiresIn: "1h"});
+            return jwt.sign(user,config.passport_key,{expiresIn: "1h"});
         }catch(error){
             console.error(error.message);
             throw new Error(errormessage);

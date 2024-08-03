@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-
+import config from '../config/config.js';
 
 const tokenExpirationMiddleware = (req, res, next) => {
     const token = req.query.token;
@@ -8,7 +8,7 @@ const tokenExpirationMiddleware = (req, res, next) => {
         return res.redirect("/forgot");
     }
 
-    jwt.verify(token, 'EmailSecretKey', (err, decoded) => {
+    jwt.verify(token, config.email_key, (err, decoded) => {
         if (err) {
             return res.redirect("/forgot");
             //return res.send("Token expired");

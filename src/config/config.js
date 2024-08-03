@@ -8,4 +8,6 @@ export default {
     node_env: process.env.NODE_ENV,
     email_sender: process.env.EMAIL_USER,
     email_pass: process.env.EMAIL_PASS,
+    passport_key: process.env.PASSPORT_KEY,
+    email_key: process.env.EMAIL_KEY,
 }
