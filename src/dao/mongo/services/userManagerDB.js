@@ -174,11 +174,8 @@ export default class userManagerDB {
                 throw new Error("Usuario no encontrado");
             }
             const documents = user.documents;
-            //append the new files to the documents array
+   
             for (const file of files){
-                // if (documents.some(doc => doc.name === file.originalname)){
-                //     continue;
-                // }
                 documents.push({name: file.originalname, reference: file.path});
             }
             user.documents = documents;
@@ -200,7 +197,7 @@ export default class userManagerDB {
                 const lastConnection = new Date(user.last_connection);
 
                 if (isNaN(lastConnection.getTime())) {
-                    console.warn(`Fecha de última conexión no válida para el usuario con ID ${user._id}`);
+                    req.logger.warning(`Fecha de última conexión no válida para el usuario con ID ${user._id}`);
                     continue; // Saltar este usuario si la fecha no es válida
                 }
 
@@ -210,7 +207,7 @@ export default class userManagerDB {
                     if (user.status !== "inactive") { // Solo actualizar si el estado cambia
                         const res = await userModel.updateOne({ _id: user._id }, { status: "inactive" });
                         if (res.modifiedCount === 0) {
-                            console.warn(`No se pudo actualizar el usuario con ID ${user._id}`);
+                            req.logger.warning(`No se pudo actualizar el usuario con ID ${user._id}`);
                         }
                         inactive_users.push({ _id: user._id, email: user.email });
                     }

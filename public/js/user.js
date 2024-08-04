@@ -36,6 +36,7 @@ function crearUsuarios(users){
 socket.on("sendingAllUsers", (users) => {
     const contenedorUsuarios = document.getElementById('users-box')
     contenedorUsuarios.innerHTML = crearUsuarios(users);
+    location.reload();  
 })
 
 

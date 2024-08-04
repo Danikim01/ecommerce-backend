@@ -1,5 +1,4 @@
 import messageController from "./controller/messageController.js";
-import cartController from "./controller/cartController.js";
 import transport from "./utils/transport.js";
 
 import { productsService,usersService,cartsService } from "./repositories/index.js";
@@ -17,7 +16,7 @@ export default io => {
                 const products = await productsService.getAllProducts();
                 socket.emit("sendingAllProducts", products);
             } catch (error) {
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         });
 
@@ -36,7 +35,7 @@ export default io => {
                     });
                 }
             }catch(error){
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         }
 
@@ -45,22 +44,22 @@ export default io => {
                 const { pid, userEmail } = data;
                 const product = await productsService.getProductByID(pid);
                 if (!product) {
-                    socket.emit("statusError", "Producto no encontrado");
+                    io.emit("statusError", "Producto no encontrado");
                     return;
                 }
         
                 if (userEmail != "admin@gmail.com" && userEmail !== product.owner) {
-                    socket.emit("statusError", "No tiene permisos para eliminar este producto");
+                    io.emit("statusError", "No tiene permisos para eliminar este producto");
                     return;
                 }
         
-                //await productsService.deleteProduct(pid);
+                await productsService.deleteProduct(pid);
                 send_mail(product);
                 const products = await productsService.getAllProducts();
                 socket.emit("sendingAllProducts", products);
         
             } catch (error) {
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         });
         
@@ -83,13 +82,13 @@ export default io => {
 
                 const product = await productsService.getProductByID(product_id);
                 if(!product){
-                    socket.emit("statusError", "Producto no encontrado");
+                    io.emit("statusError", "Producto no encontrado");
                     return;
                 }
 
                 const user = await usersService.getUser(user_id);
                 if(!user){
-                    socket.emit("statusError", "Usuario no encontrado");
+                    io.emit("statusError", "Usuario no encontrado");
                     return;
                 }
 
@@ -99,9 +98,9 @@ export default io => {
                 }
 
                 await cartsService.addProductToUsersCart(message.uid,message.pid);
-                socket.emit("statusError", "Producto agregado al carrito");
+                io.emit("statusError", "Producto agregado al carrito");
             }catch(error){
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         })
 
@@ -118,14 +117,14 @@ export default io => {
         
                 const product = await productsService.getProductByID(pid);
                 if (!product) {
-                    socket.emit("statusError", "Producto no encontrado");
+                    io.emit("statusError", "Producto no encontrado");
                     return;
                 }
         
                 await cartsService.deleteProductFromCart(cid, pid);
                 socket.emit("productRemoved");
             } catch (error) {
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         });
 
@@ -142,7 +141,7 @@ export default io => {
                 await usersService.deleteUser({_id:uid});
                 send_filtered_users();
             }catch(error){
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         })
         
@@ -152,7 +151,7 @@ export default io => {
                 await usersService.changeRole(uid);
                 send_filtered_users();
             }catch(error){
-                socket.emit("statusError", error.message);
+                io.emit("statusError", error.message);
             }
         })
 
