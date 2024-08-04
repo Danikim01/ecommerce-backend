@@ -1,26 +1,33 @@
 import express from "express";
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/cart.router.js"
+import mocksRouter from "./routes/mocks.router.js"
 import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import __dirname from "./path.js";
-import mongoose from "mongoose";
 import websocket from "./websocket.js";
 import viewsRouter from "./routes/viewsRouter.js";
-import session from "express-session";
-import mongoStore from "connect-mongo";
 import usersRouter from "./routes/users.router.js";
+import sessionsRouter from "./routes/session.router.js";
 import passport from "passport";
 import initializatePassport from './config/passportConfig.js';
 import cookieParser from "cookie-parser";
+import config from "./config/config.js";
+import addLogger from "./utils/logger.js";
+import swaggerUiExpress from 'swagger-ui-express';
+import specs from "./utils/swagger.js";
+import cors from "cors";
+import loggerTestRouter from "./routes/logger.router.js";
+import connection from "./utils/db.connection.js";
 
 const app = express();
 
+import path from "path";
 
 //Incializamos el motor de plantillas
 app.engine("handlebars", handlebars.engine());
 //Establecemos la ruta de vistas
-app.set("views",`${__dirname}/views`);
+app.set("views", path.join(__dirname, 'views'));
 //Establecemos el motor de renderizado
 app.set("view engine", "handlebars");
 
@@ -29,42 +36,31 @@ app.use(express.static(`${__dirname}/../public`));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(addLogger);
 
-
-const uri = "mongodb+srv://danikim:D46334737@cluster0.4erp6rc.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
-
-const connection = async () => {
-    try{
-        await mongoose.connect(uri)
-        console.log("Conexion exitosa a la base de datos")
-
-    }catch(error){
-        console.log("Error al conectar a la base de datos: ", error);
-    }
-}
 
 connection();
 
-//Session Middleware
-// app.use(session(
-//     {
-//         store: mongoStore.create({mongoUrl: uri,ttl: 200}),
-//         secret: 'secretPhrase',
-//         resave: true,
-//         saveUninitialized: true
-//     }
-// ))
-
 initializatePassport();
 app.use(passport.initialize());
-//app.use(passport.session());
 
-app.use('/api/sessions', usersRouter);
+
+app.use('/api/sessions', sessionsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/docs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
+app.use("/mockingproducts", mocksRouter);
+app.use("/loggerTest",loggerTestRouter);
 app.use("/", viewsRouter);
 
-const PORT = 8080;
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+    methods: ['GET', 'POST', 'PUT'],
+    credentials: true
+}));
+
+const PORT = config.port
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor activo en http://localhost:${PORT}`);
 });
@@ -72,3 +68,6 @@ const httpServer = app.listen(PORT, () => {
 const socketServer = new Server(httpServer);
 
 websocket(socketServer);
+
+
+export default app;

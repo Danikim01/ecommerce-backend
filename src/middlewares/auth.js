@@ -1,22 +1,19 @@
-import jwt from 'jsonwebtoken';
+import { usersService } from "../repositories/index.js";
 
-export const auth = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({
-            message: 'No authenticated'
-        });
-    }
-    const token = authHeader.split(' ')[1]; // Remove "Bearer"
-    console.log(token);
-    jwt.verify(token, 'coderSecret', (error, credentials) => {
-        if (error) {
-            return res.status(401).json({
-                message: 'Invalid token'
-            });
+
+const auth = (roles = []) => {
+    return async (req, res, next) => {
+        const user = await usersService.getUser(req.user._id);
+        req.user = user;
+        if (!req.user || (roles.length && !roles.includes(req.user.role))) {
+            // Usuario no autorizado
+            return res.status(403).send({ message: 'No autorizado' });
         }
-        req.user = credentials; // Assuming credentials contain user info
-        console.log(req.user);
+        // Usuario autorizado
         next();
-    });
-};
+    }
+}
+
+
+
+export default auth;

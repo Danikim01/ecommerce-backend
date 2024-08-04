@@ -1,0 +1,36 @@
+ <div class="box">
+        <h1>Ticket de Compra</h1>
+        <div>
+            <h2>Detalles del Ticket</h2>
+            <p><strong>Código:</strong> {{ticket.code}}</p>
+            <p><strong>Fecha de compra:</strong> {{ticket.purchase_datetime}}</p>
+            <p><strong>Comprador:</strong> {{ticket.purchaser}}</p>
+            <p><strong>Monto total:</strong> {{ticket.amount}}</p>
+        </div>
+
+        <div>
+            <h2>Productos Comprados</h2>
+            {{#if productos_comprados}}
+                <ul>
+                    {{#each productos_comprados}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p>No se compraron productos.</p>
+            {{/if}}
+        </div>
+
+        {{#if invalid_products}}
+            <div>
+                <h2>Productos Inválidos</h2>
+                <ul>
+                    {{#each invalid_products}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+
+        <a href="/home" class="button-home">Inicio</a>
+    </div>

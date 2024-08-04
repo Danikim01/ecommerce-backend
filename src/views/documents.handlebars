@@ -1,0 +1,12 @@
+<div class="box">
+    <h1>Archivos Subidos:</h1>
+    <div class="box">
+        {{#each files}}
+            <div class="box-file">
+                <h1>Campo: {{this.fieldname}}</h1>
+                <h2>Archivo: {{this.originalname}}</h2>
+            </div>
+        {{/each}}
+    </div>
+    <a href="/home" class="button-home">Volver</a>
+</div>

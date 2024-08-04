@@ -10,9 +10,19 @@
                 <div class="quantity">
                     <span>Cantidad: {{this.quantity}}</span>
                 </div>
+                <div class="botton-remove">
+                    <span id='{{this.cart_id}}' onclick="removeProduct('{{this.cart_id}}','{{this._id}}')">X</span>
+                </div>
             </div>
         {{/each}}
+        {{#if user_cart_id}}
+            <a href="/api/carts/{{user_cart_id}}/purchase" class="button-home">Comprar</a>
+        {{/if}}
     {{else}}
        <h2>Carrito Vacio</h2>
     {{/if}}
+    <a href="/home" class="button-home">Volver al inicio</a>
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cart.js"></script>

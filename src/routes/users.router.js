@@ -1,89 +1,38 @@
-import {Router} from 'express';
-import userModel from '../dao/models/userModel.js';
-import {createHash, isValidPassword} from '../utils/functionsUtil.js';
+import Router from 'express';
+import userController from '../controller/userController.js';
+import { uploader } from '../utils.js';
 import passport from 'passport';
-import { userManagerDB } from '../dao/userManagerDb.js';
+import __dirname from '../path.js';
+const um = new userController();
+
 
 const router = Router();
-const sessionService = new userManagerDB();
+
+//router.get("/premium/:uid",um.changeRole);
+
+router.get("/",um.getAllUsers)
+
+router.delete("/",um.deleteInactiveUsers)
+
+router.get("/:uid",um.getUser)
 
 
-router.post("/restore", passport.authenticate("restore", {failureRedirect: "/api/sessions/failRestore"}), (req, res) => {
-    req.session.failRestore = false;
-    res.redirect("/login");
-})
-
-router.get("/failRestore", (req, res) => {
-    req.session.failRestore = true;
-    res.redirect("/restore");
-})
-
-
-router.get("/github", passport.authenticate('github', {scope: ['user:email']}), (req, res) => {
-    res.send({
-        status: 'success',
-        message: 'Success'
-    });
-});
-
-router.get("/githubcallback", passport.authenticate('github', {failureRedirect: '/login'}), (req, res) => {
-    req.session.user = req.user;
-    return res.redirect('/home');
-});
-
-
-router.post("/register", async (req, res) => {
-    try{
-        await sessionService.register(req.body);
-        res.redirect("/login");
-    }catch(error){
-        res.redirect("/register");
+const authenticate_current_user = async (req, res, next) => {
+    const uid = req.params.uid;
+    const current_user = req.user;
+    if (current_user._id !== uid) {
+        return res.status(401).send("Unauthorized");
     }
-})
+    next();
+}
 
-router.get("/failRegister", (req, res) => {
-    res.redirect("/register");
-})
+//este uid tiene que coincidir con el uid del usuario logeado
+router.post("/:uid/documents",
+    passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),
+    authenticate_current_user,uploader.fields([{ name: 'profile' }, { name: 'product' }, { name: 'documents' }]),
+    um.uploadDocuments)
+    
+router.get("/premium/:uid",passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),um.changeRole);
 
-router.post("/login",async (req, res) => {
-    try{
-        const token = await sessionService.login(req.body.email, req.body.password);
-        res.cookie("auth",token,{maxAge: 60*60*1000});
-        res.redirect("/home");
-    }catch(error){
-        res.redirect("/login");
-    }
-})
-
-router.get("/failLogin", (req, res) => {
-    res.redirect("/login");
-})
-
-router.get("/current", passport.authenticate("jwt",{session:false,failureRedirect:"/login"}),(req, res) => {
-    res.send(
-        {
-            payload: req.user
-        }
-    )
-})
-
-router.get("/:uid",async (req, res) => {
-    try{
-        const user = await sessionService.getUser(req.params.uid);
-        res.send(
-            {
-                status: "success",
-                payload: user
-            }
-        )
-    }catch(error){
-        res.status(400).send(
-            {
-                status: "error",
-                message: error.message
-            }
-        )
-    }
-})
 
 export default router;

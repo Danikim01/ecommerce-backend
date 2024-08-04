@@ -6,6 +6,10 @@
         <p>Categoria: {{this.category}}</p>
         <p>Codigo: {{this.code}}</p>
         <p>Stock: {{this.stock}}</p>
-        <button id="carrito-botton" onclick="">Agregar al Carrito</button>
+        <button id="carrito-button" onclick="addProductToCart('{{this._id}}','{{this.userId}}')">Agregar al Carrito</button>
     </div>
 </div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cart.js"></script>

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {createHash} from "../../utils/functionsUtil.js";
+import {createHash} from "../../../utils/functionsUtil.js";
 
 const userCollection = "users";
 
@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema({
     },
     age: {
         type: Number,
-        min: 18,
         require: true
     },
     password: {
@@ -47,11 +46,34 @@ const userSchema = mongoose.Schema({
         require: true,
         default: "user"
     },
+    documents: { 
+        type: [
+            { 
+                name: String, 
+                reference: String 
+            }
+        ],
+        default: [],
+        require:false
+    },
+    last_connection: {
+        type: String,
+        require: false
+    },
+    status: {
+        type: String,
+        require: false,
+    }
 });
 
-//hash the password
+//populate the cart
+userSchema.pre("findOne", function() {
+    this.populate("cart.cart");
+});
+
 userSchema.pre("save", function () {
     this.password = createHash(this.password);
+    this.status = "active";
 });
 
 

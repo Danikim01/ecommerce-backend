@@ -9,13 +9,9 @@
 
         <button type="submit" class="button-home">Log in</button>
     </form>
-    <span><a href="/api/sessions/github"><button>Entrar con Github</button></a></span>
-    <span><a href="/register" target="_self"  class="button-home">Register</a></span>
-    <span><a href="/restore" target="_self" class="button-home">Restore</a></span>
+        <span><a href="/register" target="_self"  class="button-home">Register</a></span>
+        {{!-- <span><a href="/restore" target="_self" class="button-home">Restore</a></span> --}}
+        <span><a href="/forgot" target="_self"  class="button-home">Restore password</a></span>
+    </div>
 </div>
 
-{{#if failLogin}}
-    <script type="text/javascript">
-        alert('Login Failed!');
-    </script>
-{{/if}}

@@ -13,14 +13,18 @@
         {{#if user.email}}
             <p><b>Email:</b> {{user.email}}</p>
         {{/if}}
-        {{#if user.age}}
-            <p><b>Edad:</b> {{user.age}}</p>
-        {{/if}}
+            <p><b>Rol:</b> {{user.role}}</p>
+       
+    </div>
+    <div class="user-options" style="display: flex;width:100%;gap:20px;justify-content:center">
+        <a href="/files" class="button-home">Subir Archivos</a>
+        <a href="/views/products" class="button-home">Ver Productos</a>
+        <a href="/carts/{{cart_id}}" class="button-home">Ver Carrito</a>
+        {{!-- <a href="/alerts" class="button-home">Cambiar Rol</a> --}}
         {{#if isAdmin}}
-            <p><b>Rol:</b> Admin</p>
-        {{else}}
-            <p><b>Rol:</b>Usuario</p>
+            <a href="/manage" class="button-home">Gestionar Usuarios</a>
         {{/if}}
     </div>
-    <a href="/views/products" class="button-home">Ver Productos</a>
 </div>
+
+	

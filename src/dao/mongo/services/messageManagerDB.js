@@ -1,4 +1,4 @@
-import messageModel from "./models/messageModel.js"
+import messageModel from '../models/messageModel.js';
 
 export default class messageModelDB {
     async createMessage(data){

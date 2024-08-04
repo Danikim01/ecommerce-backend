@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  title: Products API Documentation
+  description: API documentation for product endpoints
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: Products
+    description: Endpoints related to products
+
+paths:
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      parameters:
+        - name: limit
+          in: query
+          description: Number of products to return
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+        - name: query
+          in: query
+          description: Search query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort order (asc or desc)
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  totalDocs:
+                    type: integer
+                  limit:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  page:
+                    type: integer
+                  pagingCounter:
+                    type: integer
+                  hasPrevPage:
+                    type: boolean
+                  hasNextPage:
+                    type: boolean
+                  prevPage:
+                    type: integer
+                    nullable: true
+                  nextPage:
+                    type: integer
+                    nullable: true
+        400:
+          description: Bad request
+
+    post:
+      tags:
+        - Products
+      summary: Add a new product
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        200:
+          description: Product added successfully
+        400:
+          description: Error adding product
+
+  /products/{pid}:
+    get:
+      tags:
+        - Products
+      summary: Get a product by ID
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: A product object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: Error getting product
+
+    put:
+      tags:
+        - Products
+      summary: Update a product
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        200:
+          description: Product updated successfully
+        400:
+          description: Error updating product
+
+    delete:
+      tags:
+        - Products
+      summary: Delete a product
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Product deleted successfully
+        400:
+          description: Error deleting product
+
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - title
+        - description
+        - code
+        - price
+        - stock
+        - category
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        price:
+          type: number
+        status:
+          type: boolean
+          default: true
+        stock:
+          type: number
+        category:
+          type: string
+        thumbnails:
+          type: array
+          items:
+            type: string
+        owner:
+          type: string
+          default: "admin"
