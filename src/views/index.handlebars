@@ -32,9 +32,9 @@
 </div>
 
 <script>
-    function viewDetails(id){
-        const url = `http://localhost:8080/views/products/${id}`;
-        window.open(url, '_blank');
+    function viewDetails(id) {
+        const url = `/views/products/${id}`;
+        window.location.href = url;
     }
 </script>
 
