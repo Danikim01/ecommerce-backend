@@ -5,8 +5,8 @@
   "description": "",
   "main": "primer_desafio.js",
   "scripts": {
-    "start": "nodemon src/app.js",
-    "dev": "node src/app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "mocha ./src/tests --exit"
   },
   "keywords": [],

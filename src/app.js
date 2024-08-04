@@ -60,7 +60,7 @@ app.use(cors({
     credentials: true
 }));
 
-const PORT = config.port
+const PORT = config.port || 8080;
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor activo en http://localhost:${PORT}`);
 });
