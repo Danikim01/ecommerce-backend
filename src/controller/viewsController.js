@@ -168,11 +168,13 @@ const renderForgot = (req, res) => {
 }
 
 const renderRestore = (req, res) => {
+    let token = req.query.token
     res.render(
         'restore',
         {
-            title: 'Restore password',
+            title: 'Restore',
             style: 'index.css',
+            token: token
         }
     )
 }
