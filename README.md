@@ -1,6 +1,6 @@
 # Descripcion
 
-Este proyecto es un ecommerce implementado usando Node js y diversos frameworks como 'express' para el desarrollo del servidor web
+Este proyecto es un ecommerce implementado mediante Node js 
 
 # Funcionalidades
 
@@ -22,7 +22,17 @@ El proyecto cuenta con un sistema de autenticacion y permisos bastante robusto e
 
 - El usuario no puede agregar a su carrito un producto que haya creado
 
+# Usuario Admin
+
+A fines de poder probar las funcionalidades del usuario administrador es necesario acceder usando las credenciales del admin:
+```
+user: admin@gmail.com
+contraseña: admin
+```
+
 # Setup
+Es requisito necesario tener instalado Node.
+
 Para instalar las dependencias necesarias:
 ```
 npm install
@@ -40,6 +50,9 @@ Para correr los test:
 npm test
 ```
 
+# Despliegue en Railway App
+
+Actualmente la aplicacion web esta desplegada en: https://ecommerce-backend-production-1e48.up.railway.app/
 
 # Arquitectura
 
