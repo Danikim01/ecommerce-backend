@@ -33,9 +33,10 @@ function crearUsuarios(users){
     return html;
 }
 
-socket.on("sendingAllUsers", (users) => {
+socket.on("sendingAllUsers", (message) => {
     const contenedorUsuarios = document.getElementById('users-box')
-    contenedorUsuarios.innerHTML = crearUsuarios(users);
+    contenedorUsuarios.innerHTML = crearUsuarios(message.payload);
+    alert(message.status_message)
     location.reload();  
 })
 

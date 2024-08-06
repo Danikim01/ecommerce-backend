@@ -129,17 +129,21 @@ export default io => {
         });
 
 
-        const send_filtered_users = async () => {
+        const send_filtered_users = async (status_message) => {
             const users = await usersService.getAllUsers();
             const filtered_users = users.filter(user => user.role !== "admin");
-            io.emit("sendingAllUsers", filtered_users);
+            const message = {
+                payload: filtered_users,
+                status_message
+            }
+            io.emit("sendingAllUsers", message);
         }
 
         socket.on("deleteUser", async (data) => {
             try{
                 const uid = data.uid;
                 await usersService.deleteUser({_id:uid});
-                send_filtered_users();
+                send_filtered_users("User deleted successfully");
             }catch(error){
                 io.emit("statusError", error.message);
             }
@@ -149,7 +153,7 @@ export default io => {
             try{
                 const uid = data.uid;
                 await usersService.changeRole(uid);
-                send_filtered_users();
+                send_filtered_users("User Role changed successfully");
             }catch(error){
                 io.emit("statusError", error.message);
             }
