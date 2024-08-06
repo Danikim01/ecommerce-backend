@@ -41,7 +41,7 @@ const productSchema = mongoose.Schema({
     owner:{
         type:String,
         require: true,
-        default:"admin",
+        default:"admin@gmail.com",
     },
 });
 

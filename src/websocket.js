@@ -92,7 +92,7 @@ export default io => {
                     return;
                 }
 
-                if(user.role === "premium" && product.owner === user.email){
+                if(product.owner === user.email){
                     socket.emit("statusError", "No puedes agregar a tu carrito un producto que te pertenece");
                     return;
                 }
