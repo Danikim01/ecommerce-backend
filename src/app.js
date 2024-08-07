@@ -62,7 +62,7 @@ app.use(cors({
 
 const PORT = config.port || 8080;
 const httpServer = app.listen(PORT, () => {
-    console.log(`Servidor activo en http://localhost:${PORT}`);
+    console.log(`Servidor activo en ${config.base_url}`);
 });
 
 const socketServer = new Server(httpServer);

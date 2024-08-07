@@ -4,6 +4,7 @@ import { usersService,productsService,cartsService } from "../repositories/index
 import axios from "axios";
 import FormData from "form-data";
 import fs from "fs";
+import config from "../config/config.js";
 
 let pm = new productController();
 let um = new userController();
@@ -111,7 +112,8 @@ const renderProducts = async (req, res) => {
         let query = req.query.query;
         let sort = req.query.sort === "asc" ? 1 : req.query.sort === "desc" ? -1 : undefined;
         let products_per_page = 3;
-        let baseURL = "http://localhost:8080/views/products";
+        let baseURL = `${config.base_url}/views/products`;
+        
         let paginateResult = await pm.paginateProducts(page,query,sort,products_per_page,baseURL);
         res.render(
             "index",
@@ -201,7 +203,7 @@ const renderFiles = (req,res) => {
 
 const renderAlerts = async (req,res) => {
     try{
-        const response = await axios.get(`http://localhost:8080/api/users/premium/${req.user._id}`,
+        const response = await axios.get(`${config.base_url}/api/users/premium/${req.user._id}`,
             {
                 headers:{
                     Cookie: `auth=${req.cookies.auth}`
@@ -240,7 +242,7 @@ const renderDocs = async (req,res) => {
             });
         }
 
-        const response = await axios.post(`http://localhost:8080/api/users/${req.user._id}/documents`, form_data, {
+        const response = await axios.post(`${config.base_url}/api/users/${req.user._id}/documents`, form_data, {
             headers: {
               ...form_data.getHeaders(),
               Cookie: `auth=${req.cookies.auth}`

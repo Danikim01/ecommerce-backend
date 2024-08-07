@@ -2,6 +2,7 @@ import { productsService } from "../repositories/index.js";
 import CustomError from "../errors/CustomError.js";
 import { ErrorCodes } from "../errors/enums.js";
 import { generateProductErrorInfo } from "../errors/info.js";
+import config from "../config/config.js";
 
 export default class productController {
 
@@ -73,8 +74,8 @@ export default class productController {
             let page = parseInt(req.query.page) || 1;
             let query = req.query.query;
             let sort = req.query.sort === "asc" ? 1 : req.query.sort === "desc" ? -1 : undefined;
-            let baseURL = "http://localhost:8080/api/products";
-    
+            let baseURL = `${config.base_url}/api/products`;
+
             let products_per_page = 3;
             let filter = {};
             if (query) {

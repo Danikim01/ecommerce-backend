@@ -59,7 +59,7 @@ export default class userController {
                     subject: 'Password recovery email',
                     html: ` <div>
                                 <h1>Click this Link to recover you email!</h1>
-                                <a href="http://localhost:8080/restore?token=${token}">Click here</a>
+                                <a href="${config.base_url}/restore?token=${token}">Click here</a>
                                 <p>This Link will expire in 1 hour</p>
                             </div>`
                 });
