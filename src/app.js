@@ -1,4 +1,5 @@
 import express from "express";
+import session from "express-session";
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/cart.router.js"
 import mocksRouter from "./routes/mocks.router.js"
@@ -23,6 +24,13 @@ import connection from "./utils/db.connection.js";
 const app = express();
 
 import path from "path";
+
+app.use(session({
+    secret: 'session_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Asegúrate de ajustar esto a true si usas HTTPS
+}));
 
 //Incializamos el motor de plantillas
 app.engine("handlebars", handlebars.engine());

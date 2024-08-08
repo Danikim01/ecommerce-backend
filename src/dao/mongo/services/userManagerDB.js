@@ -58,22 +58,26 @@ export default class userManagerDB {
         if (!email || !password){
             throw new Error(errormessage);
         }
-        try{
-            const user = await userModel.findOne({email: email}).lean();
-            if (!user) throw new Error(errormessage);
-            if (user.status === "inactive") throw new Error("Usuario inactivo, por favor contacte al administrador");
-            if (!isValidPassword(user, password)) throw new Error(errormessage);
-            //delete user.password
-            //update last_connection field from user with the current timestamp
-            const current_date = new Date();
-            user.last_connection = current_date.toISOString();
-            user.status = "active";
-            const res = await userModel.updateOne({email: email}, user);
-            return jwt.sign(user,config.passport_key,{expiresIn: "1h"});
-        }catch(error){
-            console.error(error.message);
-            throw new Error(errormessage);
+        const user = await userModel.findOne({email: email}).lean();
+        if (!user) {
+            CustomError.createError(
+                {
+                    name: "UserNotFoundError",
+                    cause: generateUserNotFoundErrorInfo(),
+                    message: "The user does not exist",
+                    code: ErrorCodes.USER_NOT_FOUND_ERROR,
+                }
+            )
         }
+        if (!isValidPassword(user, password)) throw new Error(errormessage);
+        if (user.status === "inactive") throw new Error("Usuario inactivo, por favor contacte al administrador");
+        //delete user.password
+        //update last_connection field from user with the current timestamp
+        const current_date = new Date();
+        user.last_connection = current_date.toISOString();
+        user.status = "active";
+        const res = await userModel.updateOne({email: email}, user);
+        return jwt.sign(user,config.passport_key,{expiresIn: "1h"});
     }
 
     async restorePassword(email, new_password){

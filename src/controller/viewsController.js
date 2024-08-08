@@ -25,6 +25,7 @@ const renderHome = async (req, res) => {
     if (user && user.cart.length !== 0) {
         cart_id = user.cart[0].cart._id;
     }
+    const user_priority = user.role === "premium" || user.role === "admin";  
     res.render(
         'home',
         {
@@ -34,6 +35,7 @@ const renderHome = async (req, res) => {
             isAdmin: req.user.role === "admin" ? true : false,
             role: req.user.role,
             cart_id: cart_id,
+            user_priority
         }
     )
 }
@@ -115,9 +117,16 @@ const renderProducts = async (req, res) => {
         let baseURL = `${config.base_url}/views/products`;
         
         let paginateResult = await pm.paginateProducts(page,query,sort,products_per_page,baseURL);
+        
+        const user = await usersService.getUser(req.user._id);
+        let cart_id = "empty-cart"
+        if (user && user.cart.length !== 0) {
+            cart_id = user.cart[0].cart._id;
+        }
+        paginateResult.cart_id = cart_id;
         res.render(
             "index",
-            paginateResult
+            paginateResult,
         )
     }catch(err){
         res.status(400).send({error: "Error al obtener los productos"})
@@ -140,11 +149,14 @@ const renderProductDetails = async (req,res) => {
 }
 
 const renderLogin = (req, res) => {
+    const error = req.session.error;
+    delete req.session.error;
     res.render(
         'login',
         {
             title: 'Login',
             style: 'index.css',
+            error
         }
     )
 }

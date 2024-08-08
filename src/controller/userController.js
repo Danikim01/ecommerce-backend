@@ -42,6 +42,7 @@ export default class userController {
             res.cookie("auth",token,{maxAge: 60*60*1000});
             res.redirect("/home");
         }catch(error){
+            req.session.error = error.message;
             res.redirect('/login');
         }
     }

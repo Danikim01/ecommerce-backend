@@ -17,6 +17,9 @@
        
     </div>
     <div class="user-options" style="display: flex;width:100%;gap:20px;justify-content:center">
+        {{#if user_priority}}
+            <a href="/realtimeproducts" class="button-home">Crear Productos</a>
+        {{/if}}
         <a href="/files" class="button-home">Subir Archivos</a>
         <a href="/views/products" class="button-home">Ver Productos</a>
         <a href="/carts/{{cart_id}}" class="button-home">Ver Carrito</a>

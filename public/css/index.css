@@ -293,3 +293,12 @@ h1{
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
     width: 100%;
 }
+
+.alert-danger{
+    background-color: #FFC0CB;
+    color: #FF0000;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
