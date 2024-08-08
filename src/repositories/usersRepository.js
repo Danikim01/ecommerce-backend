@@ -61,4 +61,7 @@ export default class UserRepository {
         return await this.dao.uploadDocuments(uid, files);
     }
 
+    async updateField(uid, field){
+        return await this.dao.updateField(uid, field);
+    }
 }

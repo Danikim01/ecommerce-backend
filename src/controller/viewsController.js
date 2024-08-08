@@ -299,20 +299,6 @@ const renderManage = async (req,res) => {
 }
 
 
-
-// const renderCurrent = async (req, res) => {
-//     res.render(
-//         "current",
-//         {
-//             title: "Current",
-//             style: "index.css",
-//             curr_user: req.user
-//         }
-//     )
-// }
-
-
-
 export default {
     renderHomePage,
     renderHome,
@@ -330,5 +316,4 @@ export default {
     renderAlerts,
     renderDocs,
     renderManage,
-    //renderCurrent
 }

@@ -197,7 +197,6 @@ export default class userManagerDB {
                 const lastConnection = new Date(user.last_connection);
 
                 if (isNaN(lastConnection.getTime())) {
-                    req.logger.warning(`Fecha de última conexión no válida para el usuario con ID ${user._id}`);
                     continue; // Saltar este usuario si la fecha no es válida
                 }
 
@@ -206,9 +205,6 @@ export default class userManagerDB {
                 if (differenceInMillis > timeInMillis) {
                     if (user.status !== "inactive") { // Solo actualizar si el estado cambia
                         const res = await userModel.updateOne({ _id: user._id }, { status: "inactive" });
-                        if (res.modifiedCount === 0) {
-                            req.logger.warning(`No se pudo actualizar el usuario con ID ${user._id}`);
-                        }
                         inactive_users.push({ _id: user._id, email: user.email });
                     }
                 }
@@ -217,6 +213,23 @@ export default class userManagerDB {
         } catch (error) {
             console.error("Error al borrar los usuarios inactivos:", error.message);
             throw new Error("Error al borrar los usuarios inactivos");
+        }
+    }
+
+    async updateField(uid, field){
+        try{
+            const user = await userModel.findOne({_id: uid});
+            if (!user){
+                throw new Error("Usuario no encontrado");
+            }
+            for (const key in field){
+                user[key] = field[key];
+            }
+            const update = await userModel.updateOne({_id:uid}, user);
+            return update
+        }catch(err){
+            console.error(err);
+            throw new Error("Error al actualizar el campo del usuario");
         }
     }
 }

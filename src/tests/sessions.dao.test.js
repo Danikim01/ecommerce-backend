@@ -5,7 +5,7 @@ import { usersService } from '../repositories/index.js';
 
 const testUser = { first_name: 'Juan', last_name: 'Perez', email: 'jperez@gmail.com', age: 18, password: 'abc445' };
 let cookie;
-describe("Tests Users", () => {
+describe("Tests Sessions", () => {
 
     after(async () => {
         //logout the user and delete de user from de database
@@ -13,14 +13,18 @@ describe("Tests Users", () => {
         await usersService.deleteUser({email: testUser.email});
     })
 
-    it("POST /api/sessions/register deberia registrar un usuario",async () => {
+    it("POST /api/sessions/register deberia registrar un usuario y redirigir a /login",async () => {
         const res = await request(app).post("/api/sessions/register").send(testUser)
+        expect(res.status).to.be.equals(302);
+        expect(res.header.location).to.be.equals('/login');
         const users = await usersService.getAllUsers();
         expect(users).to.be.an('array');
     })
 
-    it("POST /api/sessions/login deberia loguear un usuario",async () => {
+    it("POST /api/sessions/login deberia loguear un usuario y redirigir a /home",async () => {
         const result = await request(app).post("/api/sessions/login").send({email: testUser.email, password: testUser.password})
+        expect(result.status).to.be.equals(302);
+        expect(result.header.location).to.be.equals('/home');
         const cookieData = result.headers['set-cookie'][0];
         cookie = { name: cookieData.split('=')[0], value: cookieData.split('=')[1] };
         expect(cookieData).to.be.ok;
@@ -28,9 +32,11 @@ describe("Tests Users", () => {
         expect(cookie.value).to.be.ok;
     })
 
-    it("GET /api/sessions/current deberia devolver el usuario logueado",async () => {
+    it("GET /api/sessions/current deberia devolver el usuario logueado y renderizar correctamente",async () => {
         const res = await request(app).get('/api/sessions/current').set('Cookie', [`${cookie.name}=${cookie.value}`]);
         expect(res).to.be.ok;
+        expect(res.status).to.be.equals(200);
+        expect(res.text).to.include("jperez@gmail.com");
     })
 })
 
