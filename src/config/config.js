@@ -11,4 +11,5 @@ export default {
     passport_key: process.env.PASSPORT_KEY,
     email_key: process.env.EMAIL_KEY,
     base_url: process.env.BASE_URL,
+    user_timeout: process.env.USERS_TIMEOUT
 }

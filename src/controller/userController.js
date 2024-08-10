@@ -16,7 +16,7 @@ export default class userController {
 
     async deleteInactiveUsers(req,res){
         try{
-            const time_in_seconds = req.query.time_in_seconds;
+            const time_in_seconds = config.user_timeout
             const inactive_users = await usersService.deleteInactiveUsers(time_in_seconds);
             res.status(200).send({status: "success",inactive_users: inactive_users});
         }catch(error){
