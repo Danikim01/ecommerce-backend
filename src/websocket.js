@@ -1,6 +1,5 @@
 import messageController from "./controller/messageController.js";
 import transport from "./utils/transport.js";
-
 import { productsService,usersService,cartsService } from "./repositories/index.js";
 
 const mm = new messageController();
@@ -9,17 +8,6 @@ const mm = new messageController();
 export default io => {
     io.on("connection", async socket => {
         console.log("Nuevo cliente conectado -----> ", socket.id);
-
-        socket.on("sendProduct", async product => {
-            try{
-                await productsService.createProduct(product);
-                const products = await productsService.getAllProducts();
-                socket.emit("sendingAllProducts", products);
-            } catch (error) {
-                io.emit("statusError", error.message);
-            }
-        });
-
 
         const send_mail = async (product) => {
             try{

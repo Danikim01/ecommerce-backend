@@ -11,7 +11,7 @@ describe("Test Users",()=>{
     before(async () => {
         // Paso el día en segundos a milisegundos 
         const currentDate = new Date().getTime();
-        const dia = config.user_timeout * 1000;  // Multiplica por 1000 para convertir a milisegundos
+        const dia = config.user_timeout  * 1000;  // Multiplica por 1000 para convertir a milisegundos
         let sub = currentDate - dia;
         sub = new Date(sub).toISOString();
         const testUser = {
@@ -44,12 +44,13 @@ describe("Test Users",()=>{
     it("DELETE /api/users debería marcar a los usuarios inactivos como inactivos", async () => {        
         const res = await request(app)
             .delete(`/api/users`);
-    
+
         expect(res.status).to.be.equals(200);
         expect(res.body.status).to.be.equals('success');
         expect(res.body.inactive_users).to.be.an('array');
         expect(res.body.inactive_users[0]).to.have.property('_id');
-        expect(res.body.inactive_users[0].email).to.be.equals('jperez@gmail.com');
+        //testea que por lo menos uno de los usuarios inactivos sea el usuario dummy
+        expect(res.body.inactive_users.some(user => user._id === userId.toString())).to.be.true;
     });
 
 })

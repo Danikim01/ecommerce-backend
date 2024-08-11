@@ -38,6 +38,10 @@ const productSchema = mongoose.Schema({
         require: false,
         default: []
     },
+    image:{
+        type: String,
+        require: false,
+    },
     owner:{
         type:String,
         require: true,

@@ -9,27 +9,6 @@ const category = document.querySelector("#category")
 const code = document.querySelector("#code")
 const button = document.querySelector("#submit-button")
 
-
-
-function send(owner_email){
-    const product = {
-        title: title.value,
-        description: description.value,
-        price: price.value,
-        category: category.value,
-        code: code.value,
-        stock: stock.value,
-        owner: owner_email
-    }
-    title.value = "";
-    description.value = "";
-    price.value = "";
-    stock.value = "";
-    category.value = "";
-    code.value = "";
-    socket.emit("sendProduct", product);
-}
-
 const contenedorProductos = document.querySelector("#productos");
 
 

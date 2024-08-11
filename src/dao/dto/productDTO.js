@@ -6,6 +6,7 @@ export default class ProductDTO{
         this.stock = product.stock ?? 0;
         this.category = product.category ?? ' ';
         this.code = product.code ?? ' ';
+        this.image = product.image ?? ' ';
         this.owner = product.owner ?? ' ';
         this.thumbnails = product.thumbnails ?? [];
     }

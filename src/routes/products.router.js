@@ -10,7 +10,7 @@ let router = Router()
 
 router.get("/", pm.getProducts);
 router.get("/:pid",pm.getProduct)
-router.post("/", uploader.array("thumbnail"),pm.uploadProducts)
+router.post("/", uploader.single("product"),pm.uploadProducts)
 router.put("/:pid",pm.update)
 router.delete("/:pid", pm.delete)
 

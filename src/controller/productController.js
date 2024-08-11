@@ -34,13 +34,15 @@ export default class productController {
     async uploadProducts(req,res) {
         try{
             let product = req.body
-            if (!req.files || req.files.length === 0){
-                product.thumbail = []
-            }else{
-                let paths_array = req.files.map(file => file.path)
-                product.thumbnail = paths_array
+            if (req.file) {
+                const complete_path = req.file.path;
+                const path = complete_path.split("public")[1];
+                product.image = path;
+            } else {
+                product.image = "No image";  // Si no se sube una imagen, dejamos el campo vacío o le damos un valor por defecto
             }
-            if (!product.title || !product.price || !product.code || !product.stock || !product.description || !product.category){
+
+            if (!product.title || !product.price || !product.code || !product.stock || !product.description || !product.category || !product.owner) {
                 CustomError.createError(
                     {
                         name: "ProductError",
@@ -52,9 +54,16 @@ export default class productController {
                 return res.status(400).send({error: "Campos de producto incompletos"})
             }
             await productsService.createProduct(product)
-            return res.status(200).send({message: "Producto agregado correctamente"})
+            return res.render(
+                "alerts",
+                {
+                    title: "alerts",
+                    style: "index.css",
+                    messages: [{message: "Producto subido con éxito"}]
+                }
+            )
         }catch(err){
-            res.status(400).send({error: "Error al agregar el producto"})
+            res.status(400).send({error: err.message})
         }
     }
 
