@@ -89,12 +89,33 @@ Contar con una capa de servicio impide que los accesos a persistencia se hagan d
 
 Además, son el punto clave para aplicar un patrón repository.
 
+## Diagramas
 
+### Diagrama de secuencia de una solicitud al backend
 
+1. Primer contacto: capa de ruteo
 
+    La petición tuvo que realizarse a partir de un endpoint, el cual entra a la capa de ruteo y designa cuál de todas las rutas corresponden a la acción que desea realizar el cliente.
 
+2. Segundo contacto: capa de controlador
 
+    Cada ruta está relacionada con algún método o función de un controlador, así, cuando el router reconoce adónde está apuntando el cliente, sabe llevarlo a la función adecuada. (En esta explicación, el usuario quiere obtener los usuarios)
 
+3. Tercer contacto: capa de servicio
+
+    Por ejemplo para poder obtener los usuarios, la función getUsers requerirá acceder al userService, que es el punto intermedio entre el controlador y entre la capa de persistencia.
+
+4. Cuarto contacto: capa de persistencia
+    El servicio de usuarios sabe que debe acceder a usuarios, el detalle es ¿de qué persistencia? ¿Memoria, archivos, base de datos? El servicio sabrá a qué persistencia conectar y obtendrá los datos
+
+5. Regreso: vuelta de datos y envío al cliente.
+    Una vez obtenidos los datos a partir de la persistencia, el controlador termina de procesarlos y puede finalmente enviarlos al cliente para terminar el procesamiento de esa petición.
+
+![Backend arq](/public/img/backend_arq.png)
+
+### Diagrama de secuencia del sistema de autenticacion
+
+![Auth system](/public/img/login_arq.png)
 
 ## Patrones de diseño utilizados en la capa de persistencia
 
