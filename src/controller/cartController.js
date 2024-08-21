@@ -1,5 +1,11 @@
 import { cartsService,productsService,usersService } from "../repositories/index.js";
 import TicketController from "./ticketController.js";
+import config from "../config/config.js";
+import Stripe from 'stripe';
+import { MercadoPagoConfig, Preference } from 'mercadopago';
+
+const clientStr = new Stripe(config.stripe_key);
+const clientMP = new MercadoPagoConfig({ accessToken: config.mercadopago_key });
 
 let ticketController = new TicketController();
 
@@ -16,6 +22,71 @@ export default class cartController {
             res.status(200).send({message: "Carrito agregado correctamente",payload: result})
         }catch(err){
             res.status(400).send({error: "Error al agregar el carrito"})
+        }
+    }
+
+    async checkoutStr(req,res){
+        try {
+            const { cart_id } = req.params;
+            const cart_items = await cartsService.getProductsFromCart(cart_id);
+            const line_items = []
+
+            for (let item of cart_items) {
+                line_items.push({
+                    price_data: {
+                        product_data: {
+                            name: item.product.title
+                        },
+                        currency: 'usd',
+                        unit_amount: item.product.price * 100,
+                    },
+                    quantity: item.quantity
+                });
+            }
+
+            const data = {
+                line_items: line_items,
+                mode: 'payment',
+                success_url: `${config.base_url}/api/carts/${cart_id}/purchase`,
+                cancel_url: `${config.base_url}/api/carts/cancel`
+            };
+            const payment = await clientStr.checkout.sessions.create(data);
+            res.status(200).send(payment);
+        } catch (err) {
+            res.status(500).send(err.message);
+        }
+    }
+
+    async checkoutmp(req,res){
+        try {
+            const { cart_id } = req.params;
+            const cart_items = await cartsService.getProductsFromCart(cart_id);
+            const items = []
+
+            for (let item of cart_items) {
+                items.push({
+                    title: item.product.title,
+                    unit_price: item.product.price,
+                    quantity: item.quantity,
+                    currency_id: 'ARS'
+                });
+            }
+
+            const data = {
+                items: items,
+                back_urls: {
+                    success: `${config.base_url}/api/carts/${cart_id}/purchase`,
+                    failure: `${config.base_url}/api/carts/cancel`
+                },
+                auto_return: 'approved'
+            }
+    
+            const service = new Preference(clientMP);
+            const payment = await service.create({ body: data });
+            
+            res.status(200).send({ url: payment.sandbox_init_point });
+        } catch (err) {
+            res.status(500).send(err.message);
         }
     }
 
