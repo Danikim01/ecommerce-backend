@@ -39,7 +39,7 @@ app.set("views", path.join(__dirname, 'views'));
 //Establecemos el motor de renderizado
 app.set("view engine", "handlebars");
 
-app.use(express.static(`${__dirname}/../public`));
+app.use('/static',express.static(`${__dirname}/../public`));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
