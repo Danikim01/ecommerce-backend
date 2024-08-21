@@ -1,7 +1,7 @@
 <div class="box">
     <div class="pro-details">
         {{#if this.image}}
-            <div class="single-pro-image"><img src="{{this.image}}" alt="Imagen del producto"></div>
+            <div class="single-pro-image"><img src="/static/{{this.image}}" alt="Imagen del producto"></div>
         {{/if}}
         <div class="single-pro-details">
             <h1 id="product-title">{{this.title}}</h1>
@@ -10,7 +10,7 @@
             <p id="product-description">{{this.description}}</p>
             <p>Stock: {{this.stock}}</p>
             <p>Dueño: {{this.owner}}</p>
-            <button id="carrito-button" onclick="addProductToCart('{{this._id}}','{{this.userId}}')">Agregar al Carrito</button>
+            <button id="carrito-button" onclick="addProductToCart('{{this._id}}','{{this.userId}}','{{this.title}}','{{this.price}}')">Agregar al Carrito</button>
         </div>
     </div>
     <a href="/views/products/" class="button-home" style="margin-top: 20px;">Volver</a>
@@ -18,4 +18,5 @@
 
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/cart.js"></script>
+<script src="/static/js/cart.js"></script>
+

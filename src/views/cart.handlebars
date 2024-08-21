@@ -16,7 +16,8 @@
             </div>
         {{/each}}
         {{#if user_cart_id}}
-            <a href="/api/carts/{{user_cart_id}}/purchase" class="button-home">Comprar</a>
+            <button id="checkoutBtn" class="button-home" onclick="purchase('{{user_cart_id}}')"><b>Comprar!</b></button>
+            {{!-- <a href="/api/carts/{{user_cart_id}}/purchase" class="button-home">Comprar</a> --}}
         {{/if}}
     {{else}}
        <h2>Carrito Vacio</h2>
@@ -25,4 +26,4 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/cart.js"></script>
+<script src="/static/js/cart.js"></script>

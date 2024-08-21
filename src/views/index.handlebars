@@ -11,7 +11,7 @@
                 <div class="product-card" onclick="viewDetails('{{this._id}}')" style="cursor: pointer;">
                     <h2>{{this.title}}</h2>
                     {{#if this.image}}
-                        <div id="product-image"><img src="{{this.image}}" alt="Imagen del producto"></div>
+                        <div id="product-image"><img src="/static/{{this.image}}" alt="Imagen del producto"></div>
                     {{/if}}
                     <p>{{this.description}}</p>
                     <p>Precio: ${{this.price}}</p>
