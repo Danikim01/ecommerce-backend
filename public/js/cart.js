@@ -1,7 +1,7 @@
 const socket = io();
 
 const cart = [];
-const service = 'stripe';
+const service = 'mercadopago';
 
 function addProductToCart(pid,uid,title,price) {
     const message = {
@@ -46,9 +46,11 @@ window.onload = function() {
 };
 
 async function purchase(cart_id){
+    console.log("cart: ",cart)
     if (cart.length > 0) {
+        console.log("entraaa")
         const url = service === 'mercadopago' 
-            ? `/api/carts/checkoutmp` 
+            ? `/api/carts/${cart_id}/checkoutmp` 
             : `/api/carts/${cart_id}/checkoutstr`;
 
         const data = await fetch(url, {
