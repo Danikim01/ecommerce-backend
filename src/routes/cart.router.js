@@ -38,8 +38,8 @@ router.post('/:cart_id/checkoutmp', passport.authenticate("jwt", { session: fals
         const data = {
             items: req.body,
             back_urls: {
-                success: `https://google.com`,
-                failure: `https://google.com`
+                success: `${config.base_url}/api/carts/${cart_id}/purchase`,
+                failure: `${config.base_url}/api/carts/cancel`
             },
             auto_return: 'approved'
         }
@@ -53,27 +53,6 @@ router.post('/:cart_id/checkoutmp', passport.authenticate("jwt", { session: fals
     }
 });
 
-
-router.post('/checkoutmp', passport.authenticate("jwt", { session: false }), async (req, res) => {
-    try {
-        const { cart_id } = req.params;
-        const data = {
-            items: req.body,
-            back_urls: {
-                success: `https://google.com`,
-                failure: `https://google.com`
-            },
-            auto_return: 'approved'
-        }
-
-        const service = new Preference(clientMP);
-        const payment = await service.create({ body: data });
-        
-        res.status(200).send({ url: payment.sandbox_init_point });
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
 
 router.get("/:cid/purchase",passport.authenticate("jwt", { session: false }),cm.purchaseCart)
 router.get("/:cid", cm.getCart)
