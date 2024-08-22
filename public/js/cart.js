@@ -16,12 +16,21 @@ async function purchase(cart_id){
         ? `/api/carts/${cart_id}/checkoutmp` 
         : `/api/carts/${cart_id}/checkoutstr`;
 
-    const data = await fetch(url, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-    });
-    const jsonData = await data.json();
-    window.location.href = jsonData.url;    
+    try{
+        const data = await fetch(url, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const jsonData = await data.json();
+    
+        if (!data.ok) {
+            throw new Error('Network response was not ok');
+        }
+    
+        window.location.href = jsonData.url;    
+    }catch (error) {
+        alert(`Error during purchase: ${error}`);
+    }
 }
 
 //upon removing product reload the page to refresh the new changes in the cart

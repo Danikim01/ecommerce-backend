@@ -53,7 +53,8 @@ export default class cartController {
             const payment = await clientStr.checkout.sessions.create(data);
             res.status(200).send(payment);
         } catch (err) {
-            res.status(500).send(err.message);
+            console.error('Error processing Stripe checkout:', err);
+            res.status(500).json({ error: err.message }); // Enviar el error como JSON
         }
     }
 
@@ -86,7 +87,8 @@ export default class cartController {
             
             res.status(200).send({ url: payment.sandbox_init_point });
         } catch (err) {
-            res.status(500).send(err.message);
+            console.error('Error processing MP checkout:', err);
+            res.status(500).json({ error: err.message }); // Enviar el error como JSON
         }
     }
 
